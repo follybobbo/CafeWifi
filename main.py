@@ -7,7 +7,10 @@ app = Flask(__name__)
 @app.route("/")
 def say_hello():
 
-    return "Hello Boy"
+    return render_template("index.html")
+
+
+
 
 
 
