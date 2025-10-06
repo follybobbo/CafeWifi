@@ -5,9 +5,14 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def say_hello():
+def home():
 
     return render_template("index.html")
+
+@app.route("/add")
+def add_place():
+
+    return render_template("add.html")
 
 
 
