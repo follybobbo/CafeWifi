@@ -14,6 +14,11 @@ def add_place():
 
     return render_template("add.html")
 
+@app.route("/<city>")
+def show_venue():
+
+    return render_template()
+
 
 
 
