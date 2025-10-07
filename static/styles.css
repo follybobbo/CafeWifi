@@ -66,6 +66,20 @@
 }
 
 
+/* SHOWVENUE.HTML */
+
+
+.show-container {
+  display: grid;
+  grid-template-columns: 30% 35% 35%;
+  height: 100vh;
+}
+
+.show-container > div {
+  text-align: center;
+  border: 1px solid black;
+}
+
 
 
 
