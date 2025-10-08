@@ -1,7 +1,56 @@
 from flask import Flask, render_template
-
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import Integer, String, Boolean
 
 app = Flask(__name__)
+#INITIALIZE THE EXTENSION
+# create DB object
+class Base(DeclarativeBase):
+    pass
+
+
+db = SQLAlchemy(model_class=Base)
+
+#CONFIGURE THE EXTENSION: Connect extension to flask app
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
+
+db.init_app(app)
+
+#  DEFINE MODEL
+
+class Cafe(db.Model):
+    __tablename__ = "cafe"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    map_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    location: Mapped[str] = mapped_column(String(250), nullable=False)
+    has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    has_toilets: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    seats: Mapped[str] = mapped_column(String(250), nullable=False)
+    coffee_price: Mapped[str] = mapped_column(String(250), nullable=False)
+
+
+
+with app.app_context():
+    db.create_all()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route("/")
