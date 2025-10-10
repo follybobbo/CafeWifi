@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
@@ -18,6 +19,11 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
 
 db.init_app(app)
 
+
+#Cache setup
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
+
 #  DEFINE MODEL
 
 class Cafe(db.Model):
@@ -28,7 +34,7 @@ class Cafe(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=False)
     location: Mapped[str] = mapped_column(String(250), nullable=False)
     has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    has_toilets: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
     has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
     can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
     seats: Mapped[str] = mapped_column(String(250), nullable=False)
@@ -54,9 +60,19 @@ with app.app_context():
 
 
 @app.route("/")
+@cache.cached(timeout=50)
 def home():
+    #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
+    cafe = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars()
+    cafes = cafe.all()
+    location_list = []
+    for items in cafes:
+        location = items.location
+        if location not in location_list:
+            location_list.append(location)
 
-    return render_template("index.html")
+
+    return render_template("index.html", location_list=location_list)
 
 @app.route("/add")
 def add_place():
@@ -65,6 +81,8 @@ def add_place():
 
 @app.route("/city")
 def show_venue():
+
+
 
     return render_template("show-venue.html")
 

@@ -44,6 +44,13 @@
             <h1>PERSONAL-TIME EVERYWHERE</h1>
             <p>From coffe shops to hotel lobbies, discover everyday places to work and connect</p>
             <button class="explore-button">Explore "Dynamic Location"</button>
+            {% for location in location_list: %}
+            <div>
+               <span>
+                   <a href="#">{{location}} </a>
+               </span>
+            </div>
+            {% endfor %}
             <p> show all cities that have been entered. </p>
 
         </div>
