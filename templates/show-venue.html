@@ -12,7 +12,7 @@
 
 <nav class="navbar navbar-expand-lg navigation-foot">
   <div class="container-fluid">
-    <a class="navbar-brand mx-3" href="#">Navbar</a>
+    <a class="navbar-brand mx-3" href="{{url_for('home')}}">Navbar</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,9 +42,19 @@
     </div>
 
     <div class="venues">
-        <h1>{{city}}</h1>
+        <h1>{{location}}</h1>
         <p>The best work and study-friendly cafes, restaurants, libraries, and hotel lobbies in {{city}}. Expand your
             coworking map with our list of casual spots with free and reliable Wi-Fi, ample power sockets, and comfy seating areas</p>
+
+        <div class="cities-container">
+           {% for cafe in cafes_list: %}
+            <div>
+                <img src="{{cafe.img_url}}">
+                <p>{{cafe.name}}</p>
+            </div>
+           {% endfor %}
+        </div>
+
     </div>
 
     <div class="map">

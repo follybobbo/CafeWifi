@@ -82,6 +82,23 @@
 }
 
 
+.cities-container{
+    display: flex;
+    flex-wrap: non-wrap;
+    flex-direction: column;
+
+    align-content: flex-start;
+}
+
+.city {
+    padding: 5px;
+}
+
+.venues img {
+    width: 50%;
+    height: 200px;
+}
+
 
 
 

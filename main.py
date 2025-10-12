@@ -77,14 +77,17 @@ def home():
 @app.route("/add")
 def add_place():
 
+
     return render_template("add.html")
 
-@app.route("/city")
-def show_venue():
+@app.route("/<location>")
+def show_venue(location):
+    #reads db for cafes with specified location.
+    cafe = db.session.execute(db.select(Cafe).where(Cafe.location == location)).scalars()
+    cafes_list = cafe.all()
+    # print(len(cafes_list))
 
-
-
-    return render_template("show-venue.html")
+    return render_template("show-venue.html", cafes_list=cafes_list, location=location)
 
 
 
