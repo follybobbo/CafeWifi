@@ -48,11 +48,17 @@
 
         <div class="cities-container">
            {% for cafe in cafes_list: %}
-            <div>
+            <div class="pub-container">
                 <img src="{{cafe.img_url}}">
                 <p>{{cafe.name}}</p>
             </div>
            {% endfor %}
+
+            <div class="pub-container">
+                <img src="#">
+                <p>SUGGEST A PLACE</p>
+            </div>
+
         </div>
 
     </div>

@@ -86,9 +86,29 @@
     display: flex;
     flex-wrap: non-wrap;
     flex-direction: column;
-
+    transition: all 0.3s ease; /* smooth animation */
     align-content: flex-start;
 }
+
+.cities-container div:hover {
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  color: blue;
+
+
+}
+
+.pub-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 20px 20px 10px 20px;
+}
+
+.pub-container p {
+   padding-left: 10px;
+}
+
 
 .city {
     padding: 5px;
@@ -96,7 +116,7 @@
 
 .venues img {
     width: 50%;
-    height: 200px;
+    height: 150px;
 }
 
 
