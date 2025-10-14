@@ -39,7 +39,12 @@
          <h1>ADD NEW PLACE</h1>
          <p>Let Everyone know about a new work-friendly venue!!</p>
      </div>
-     {{form}}
+     <form method="POST" action="/">
+
+         {{form.csrf_token}}
+         {{form.location.label}} {{form.location(size=20)}}
+
+     </form>
 
 <!--     <div>-->
 <!--         <div class="venue-search">-->

@@ -1,12 +1,17 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
 from forms import SearchVenue
 from forms import VenueInfo
+import secrets
+# from flask_bootstrap import Bootstrap5
 
 app = Flask(__name__)
+key = secrets.token_hex(16)
+app.secret_key = key
+
 #INITIALIZE THE EXTENSION
 # create DB object
 class Base(DeclarativeBase):
@@ -77,11 +82,24 @@ def home():
     return render_template("index.html", location_list=location_list)
 
 
-@app.route("/add")
+@app.route("/add", methods=["GET", "POST"])
 def add_place():
+    form_search_venue = SearchVenue()
+    form_venue_info = VenueInfo()
+
+    step = int(request.args.get("step", 1))
+
+    if form_search_venue.validate_on_submit():
+        step += 1
+    if form_venue_info.validate_on_submit():
+        pass
+
+    if step == 1:
+        return render_template("add.html", form=form_search_venue)
+    elif step == 2:
+        return render_template("add.html", form=form_venue_info)
 
 
-    return render_template("add.html")
 
 
 @app.route("/<location>")
