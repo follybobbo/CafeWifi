@@ -71,7 +71,7 @@
 
 .show-container {
   display: grid;
-  grid-template-columns: 30% 35% 35%;
+  grid-template-columns: 40% 60%;
   height: 100vh;
 }
 
@@ -116,7 +116,12 @@
 
 .venues img {
     width: 50%;
-    height: 150px;
+    height: 300px;
+}
+
+.heading {
+  text-align: left;
+  padding: 5px 0px 10px 20px;
 }
 
 

@@ -74,11 +74,13 @@ def home():
 
     return render_template("index.html", location_list=location_list)
 
+
 @app.route("/add")
 def add_place():
 
 
     return render_template("add.html")
+
 
 @app.route("/<location>")
 def show_venue(location):
