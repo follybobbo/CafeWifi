@@ -3,6 +3,8 @@ from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
+from forms import SearchVenue
+from forms import VenueInfo
 
 app = Flask(__name__)
 #INITIALIZE THE EXTENSION
