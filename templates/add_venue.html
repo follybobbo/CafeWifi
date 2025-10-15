@@ -42,13 +42,11 @@
      </div>
      <form method="POST" action="{{url_for('add_place')}}">
          {{form.csrf_token}}
-         <ol>
-             <li>{{form.location.label(class="form-label")}} {{form.location(size=100, class="form-input")}}</li>
-             <li class="hidden">{{ form.location_url.label(class="form-label")}} {{form.location_url(size=100, class="form-input")}}</li>
-             <li class="hidden">{{form.photo.label(class="form-label")}} {{form.photo(class="form-input")}}</li>
-         </ol>
+         <h2>VENUE INFORMATION</h2>
+             {{form.name.label(class="form-label")}} {{form.name(size=100, class="form-input")}}
+             {{ form.street.label(class="form-label")}} {{form.street(size=100, class="form-input")}}
 
-         {{form.next(class="form_btn")}}
+             {{form.next(class="form_btn")}}
      </form>
 
  </div>

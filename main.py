@@ -8,6 +8,7 @@ from forms import VenueInfo
 import secrets
 # from flask_bootstrap import Bootstrap5
 
+
 app = Flask(__name__)
 key = secrets.token_hex(16)
 app.secret_key = key
@@ -89,15 +90,21 @@ def add_place():
 
     step = int(request.args.get("step", 1))
 
+
     if form_search_venue.validate_on_submit():
+        #store details in sessions.
         step += 1
-    if form_venue_info.validate_on_submit():
-        pass
+        return redirect(url_for("add_place", step=step))
+    elif form_venue_info.validate_on_submit():
+        # store details in sessions.
+        return redirect(url_for("home"))
+
 
     if step == 1:
         return render_template("add.html", form=form_search_venue)
     elif step == 2:
-        return render_template("add.html", form=form_venue_info)
+        return render_template("add_venue.html", form=form_venue_info)
+
 
 
 

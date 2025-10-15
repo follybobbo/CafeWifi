@@ -5,14 +5,16 @@ from flask_ckeditor import CKEditorField
 
 
 class SearchVenue(FlaskForm):
-    location = StringField("name", validators=[DataRequired()])
-    location_url = StringField("location_url", validators=[DataRequired(), URL()])
-    photo = StringField("photo_url", validators=[DataRequired(), URL()])
+    location = StringField("SEARCH THE VENUE", validators=[DataRequired()])
+    location_url = StringField("LOCATION URL", validators=[DataRequired()])
+    photo = StringField("choose a photo", validators=[DataRequired()])
 
 
-    next = SubmitField("next")
+    next = SubmitField("NEXT")
 
 
 class VenueInfo(FlaskForm):
-    name = StringField("name", validators=[DataRequired()])
-    street = StringField("street", validators=[DataRequired()])
+    name = StringField("Name", validators=[DataRequired()])
+    street = StringField("Street", validators=[DataRequired()])
+
+    next = SubmitField("NEXT")

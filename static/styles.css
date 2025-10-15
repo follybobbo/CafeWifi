@@ -64,6 +64,25 @@
   box-sizing: border-box; /* Ensures padding doesn’t affect total width */
 }
 
+.form-input {
+ display: block;
+}
+
+form ol {
+ padding: 10px 0 100px 5px;
+}
+
+form li {
+  padding: 10px 0 10px 0;
+}
+
+/*.hidden {
+  display: none;
+}*/
+
+.form_btn {
+  padding: 5px 70px 5px 70px;
+}
 
 /* SHOWVENUE.HTML */
 
