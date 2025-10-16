@@ -6,7 +6,11 @@ from sqlalchemy import Integer, String, Boolean
 from forms import SearchVenue
 from forms import VenueInfo
 import secrets
+import os
 # from flask_bootstrap import Bootstrap5
+
+
+
 
 
 app = Flask(__name__)
@@ -55,7 +59,9 @@ with app.app_context():
 
 
 
+GOOGLE_PLACES_API_KEY = os.environ.get("API")
 
+print(GOOGLE_PLACES_API_KEY)
 
 
 
@@ -101,7 +107,7 @@ def add_place():
 
 
     if step == 1:
-        return render_template("add.html", form=form_search_venue)
+        return render_template("add.html", form=form_search_venue, api_key=GOOGLE_PLACES_API_KEY)
     elif step == 2:
         return render_template("add_venue.html", form=form_venue_info)
 

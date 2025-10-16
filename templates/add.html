@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <!--    <link rel="stylesheet" href="./static/styles.css">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+ <gmpx-api-loader key="{{api_key}}" solution-channel="GMP_GE_placepicker_v2"></gmpx-api-loader>
 
  <nav class="navbar navbar-expand-lg navigation-foot">
   <div class="container-fluid">
@@ -42,8 +44,21 @@
      </div>
      <form method="POST" action="{{url_for('add_place')}}">
          {{form.csrf_token}}
+
+<!--         <div id="place-picker-box">-->
+<!--            <div id="place-picker-container">-->
+<!--               <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>-->
+<!--            </div>-->
+<!--         </div>-->
+
          <ol>
-             <li>{{form.location.label(class="form-label")}} {{form.location(size=100, class="form-input")}}</li>
+<!--             <li>{{form.location.label(class="form-label")}} {{form.location(size=100, class="form-input")}}</li>-->
+             <li>
+                 {{form.location.label(class="form-label")}}
+                 {{form.location(size=100, class="form-input", id="location-input")}}
+                 <gmpx-place-picker id="placePicker"></gmpx-place-picker>
+
+             </li>
              <li class="hidden">{{ form.location_url.label(class="form-label")}} {{form.location_url(size=100, class="form-input")}}</li>
              <li class="hidden">{{form.photo.label(class="form-label")}} {{form.photo(class="form-input")}}</li>
          </ol>
@@ -79,5 +94,6 @@
     </footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>
