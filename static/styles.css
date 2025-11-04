@@ -79,9 +79,9 @@ form li {
   padding: 10px 0 10px 0;
 }
 
-/*.hidden {
+#location-input {
   display: none;
-}*/
+}
 
 .form_btn {
   padding: 5px 70px 5px 70px;
