@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"></script>
+     <script src="http://maps.google.com/maps/api/js?key=AIzaSyB8zhCUAaW6WF0jXVr2jQITbAuCt_yQrP4"
+          type="text/javascript"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <!--    <link rel="stylesheet" href="./static/styles.css">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -63,7 +65,8 @@
              <li class="hidden">
                  {{ form.location_url.label(class="form-label")}}
 <!--                 {{form.location_url(size=100, class="form-input", id="location-url")}}-->
-                 <gmp-map id="map" style="height: 400px; width: 100%; margin-top: 16px;"></gmp-map>
+<!--                 <gmp-map id="map" style="height: 400px; width: 100%; margin-top: 16px;"></gmp-map>-->
+                 <div id="map" style="height: 400px; width: 100%; margin-top: 16px;"></div>
              </li>
              <li class="hidden">{{form.photo.label(class="form-label")}} {{form.photo(class="form-input")}}</li>
          </ol>

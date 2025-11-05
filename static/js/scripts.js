@@ -4,11 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const placePicker = document.getElementById("placePicker");
   const locationInput = document.getElementById("location-input");
   const locationUrl = document.getElementById("location-url");
-  const map = document.getElementById("map");
-
 
   // Listen for selection event from Google Place Picker
-  map.addEventListener("gmp-map-ready", function () {console.log("hello map")})
+
   placePicker.addEventListener("gmpx-placechange", () => {
     const place = placePicker.value;
     console.log(place);
@@ -29,21 +27,24 @@ document.addEventListener("DOMContentLoaded", () => {
 //      console.log(place.displayName);
         const lat = Number(place.location.lat());
         const lng = Number(place.location.lng());
-        console.log(lat);
-        console.log(lng);
-        map.center = {lat, lng};
-        map.zoom = 15;
+
+
+        let refinedMap = new google.maps.Map(document.getElementById("map"), {
+           zoom: 15,
+           center: new google.maps.LatLng(lat, lng),
+           mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
 
 
 
-//        const classMap = map.map;
-//        const marker = new google.maps.marker.AdvancedMarkerElement({
-//        map: classMap,
-//        position: {lat, lng},
-//        title: place.displayName,
-//
-//
-//        });
+        const point = new google.maps.LatLng(lat, lng);
+
+
+        marker = new google.maps.Marker({
+           map: refinedMap,
+           position: point,
+           title: place.displayName,
+        });
 
 
 
@@ -58,5 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
+
+
 
 
