@@ -11,16 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const place = placePicker.value;
     console.log(place);
     if (place) {
+//        DISPLAY MAP AND MARKER
         console.log(place.formattedAddress);
-        let pictureArray = place.photos;
-        console.log(pictureArray);
-        pictureArray.forEach(function (object, index) {
-              const authorAttributions = object.authorAttributions;
-//              console.log(authorAttributions[0].photoURI);
-//            let img = document.createElement('img');
-//            img.src =  photo.getURI()
-//            console.log(img.src)
-        })
+
 //        console.log(place.displayName);
 //      locationInput.value = place.formattedAddress || place.displayName || "";
 //      console.log(place.formattedAddress);
@@ -38,13 +31,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         const point = new google.maps.LatLng(lat, lng);
-
-
         marker = new google.maps.Marker({
            map: refinedMap,
            position: point,
            title: place.displayName,
         });
+
+
+        let pictureArray = place.photos;
+        console.log(pictureArray);
+        pictureArray.forEach(function (object, index) {
+//              const authorAttributions = object.authorAttributions;
+//              console.log(authorAttributions[0].photoURI);
+            let img = document.createElement('img');
+            img.src =  object.getURI();
+            console.log(img.src);
+        })
 
 
 
@@ -60,6 +62,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
+let pictures = document.querySelectorAll(".location-picture");
+
+pictures.forEach(function (object) {
+   object.addEventListener("click", function () {
+     console.log(this)
+     const selectedPicture = this;
+   });
+   object.addEventListener("mouseenter", function () {
+     this.classList.toggle("add-focus");
+   });
+
+   object.addEventListener("mouseleave", function () {
+     this.classList.toggle("add-focus");
+   });
+
+});
 
 
 

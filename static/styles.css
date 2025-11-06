@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+
+
+
+
+
 /* INDEX.HTML */
 
 .nav-list {
@@ -40,6 +45,12 @@
   border-radius: 10px;
   margin: 40px 0px 30px 0px;
 }
+
+
+
+
+
+
 
 
 /* ADD.HTML */
@@ -86,6 +97,27 @@ form li {
 .form_btn {
   padding: 5px 70px 5px 70px;
 }
+
+.picture-row-1 {
+   display: inline-block;
+}
+
+.location-picture {
+   height: 200px;
+   width: 200px;
+   margin: 3px;
+   padding: 5px;
+   border: 1px solid black;
+}
+
+.add-focus {
+  background-color: #8FABD4;
+}
+
+
+
+
+
 
 /* SHOWVENUE.HTML */
 
