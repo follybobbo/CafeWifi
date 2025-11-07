@@ -96,6 +96,7 @@ form li {
 
 .form_btn {
   padding: 5px 70px 5px 70px;
+  margin: 0 0 30px 0;
 }
 
 .picture-row-1 {
@@ -114,6 +115,13 @@ form li {
   background-color: #8FABD4;
 }
 
+.hidden {
+   display: none;
+}
+
+.show-hidden {
+   display: block;
+}
 
 
 

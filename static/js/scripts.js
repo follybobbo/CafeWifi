@@ -10,14 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   placePicker.addEventListener("gmpx-placechange", () => {
     const place = placePicker.value;
     console.log(place);
+    /*IF A PLACE IS CHOSEN RUN THE CODE BELOW*/
     if (place) {
 //        DISPLAY MAP AND MARKER
-        console.log(place.formattedAddress);
+//        console.log(place.formattedAddress);
 
-//        console.log(place.displayName);
-//      locationInput.value = place.formattedAddress || place.displayName || "";
-//      console.log(place.formattedAddress);
-//      console.log(place.displayName);
+        console.log(place.displayName);
+//        SETS DISPLAY NAME TO FORM INPUT
+        locationInput.value = place.displayName;
+
+
         const lat = Number(place.location.lat());
         const lng = Number(place.location.lng());
 
@@ -37,24 +39,36 @@ document.addEventListener("DOMContentLoaded", () => {
            title: place.displayName,
         });
 
-
+//        GET PICTURES AND DISPLAY ON PAGE
         let pictureArray = place.photos;
-        console.log(pictureArray);
+        let pictures = document.querySelectorAll(".location-picture");
+//        console.log(pictures.length);
+        noOfPictures = pictures.length;
+//        console.log(pictureArray);
         pictureArray.forEach(function (object, index) {
 //              const authorAttributions = object.authorAttributions;
 //              console.log(authorAttributions[0].photoURI);
             let img = document.createElement('img');
             img.src =  object.getURI();
-            console.log(img.src);
-        })
+
+            if (index < noOfPictures) {
+               pictures[index].setAttribute("src", img.src);
+//               console.log(pictures[index]);
+            }
+        });
+
+
+//        GET HIDDEN ITEMS  TO DISPLAY AFTER EVERYTHING IS SET
+         let itemsToShow = document.querySelectorAll(".hidden");
+         itemsToShow.forEach( function (object) {
+            object.classList.add("show-hidden")
+         });
 
 
 
 
-//    1  GET MAP PICTURE AND ASSIGN INT VARIABLE AND SET ATTRIBUTE
-
-//    2 GET PICTURES OF PLACES FOR USER TO SELECT
     }
+
 
 
   });
@@ -63,11 +77,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+
+
 let pictures = document.querySelectorAll(".location-picture");
 
 pictures.forEach(function (object) {
    object.addEventListener("click", function () {
-     console.log(this)
+//     console.log(this)
      const selectedPicture = this;
    });
    object.addEventListener("mouseenter", function () {
