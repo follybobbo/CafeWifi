@@ -95,13 +95,20 @@ def add_place():
     form_venue_info = VenueInfo()
 
     step = int(request.args.get("step", 1))
+    print(step)
 
+    if request.method == "POST" and step == 1:
 
-    if form_search_venue.validate_on_submit():
         #store details in sessions.
+        location = form_search_venue.location.data
+        picture_url = form_search_venue.photo.data
+
+        print(location)
+        print(picture_url)
         step += 1
+        print(step)
         return redirect(url_for("add_place", step=step))
-    elif form_venue_info.validate_on_submit():
+    elif request.method == "POST" and step == 2:
         # store details in sessions.
         return redirect(url_for("home"))
 
