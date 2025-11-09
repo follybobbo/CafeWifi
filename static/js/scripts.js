@@ -76,12 +76,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 let pictures = document.querySelectorAll(".location-picture");
+let clickedArray = []
 
 pictures.forEach(function (object, index) {
    object.addEventListener("click", function () {
-     const selectedPicture = this;
+
+//     LOGIC TO REMOVE STYLE FROM PREVIOUSLY SELECTED PHOTO WHEN NEW PHOTO IS SELECTED.
+     if (clickedArray.length > 0) {
+        clickedArray[0].classList.remove("clicked");   //CHECK IF CLICKED ARRAY HAS ANY CONTENT UPON NEW CLICK, IF SO REMOVE STYLE
+     }
+     clickedArray.length = 0;
+
+
      let clickedIndex = index;
+     const selectedPicture = this;
+
+//     STORES SELECTED PICTURE IN CLICKED ARRAY
+     clickedArray.push(this);
+
+//     WTF FORM INPUT ASSIGNED TO VARIABLE
      let urlFormInput = document.querySelector("#url-value");
+
+//     ASSIGNS SRC VALUE TO FORM INPUT VARIABLE
      urlFormInput.value = this.getAttribute("src");
      console.log(urlFormInput.value);
      this.classList.toggle("clicked");
