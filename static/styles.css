@@ -90,7 +90,7 @@ form li {
   padding: 10px 0 10px 0;
 }
 
-#location-input {
+#location-input, #url-value {
   display: none;
 }
 
@@ -111,6 +111,8 @@ form li {
    border: 1px solid black;
 }
 
+
+
 .add-focus {
   background-color: #8FABD4;
 }
@@ -118,6 +120,8 @@ form li {
 .hidden {
    display: none;
 }
+
+
 
 .show-hidden {
    display: block;

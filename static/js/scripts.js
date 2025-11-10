@@ -5,33 +5,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const locationInput = document.getElementById("location-input");
   const locationUrl = document.getElementById("location-url");
 
+  const rowOne = document.querySelector(".picture-row-1");
+  const rowTwo = document.querySelector(".picture-row-2");
+
+
+
   // Listen for selection event from Google Place Picker
 
-  placePicker.addEventListener("gmpx-placechange", () => {
+
+    placePicker.addEventListener("gmpx-placechange", () => {
     const place = placePicker.value;
-    console.log(place);
+
     /*IF A PLACE IS CHOSEN RUN THE CODE BELOW*/
     if (place) {
-//        DISPLAY MAP AND MARKER
-//        console.log(place.formattedAddress);
-
+//      DISPLAY MAP AND MARKER
+        rowOne.innerHTML = "";
+        rowTwo.innerHTML = "";
         console.log(place.displayName);
-//        SETS DISPLAY NAME TO FORM INPUT
+//      SETS DISPLAY NAME TO FORM INPUT
         locationInput.value = place.displayName;
-
 
         const lat = Number(place.location.lat());
         const lng = Number(place.location.lng());
 
-//           create map object using latitude and longitude
+//      create map object using latitude and longitude
         let refinedMap = new google.maps.Map(document.getElementById("map"), {
            zoom: 15,
            center: new google.maps.LatLng(lat, lng),
            mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
-
-//         create marker to be displayed on map
+//      create marker to be displayed on map
         const point = new google.maps.LatLng(lat, lng);
         marker = new google.maps.Marker({
            map: refinedMap,
@@ -39,46 +43,64 @@ document.addEventListener("DOMContentLoaded", () => {
            title: place.displayName,
         });
 
-//        GET PICTURES AND DISPLAY ON PAGE
-        let pictureArray = place.photos;                                    //picture array is stored in place.photos attributes.
-        let pictures = document.querySelectorAll(".location-picture");      //select all location picture html elements.
-//        console.log(pictures.length);
-        noOfPictures = pictures.length;
-//        console.log(pictureArray);
-        pictureArray.forEach(function (object, index) {
-//              const authorAttributions = object.authorAttributions;
-//              console.log(authorAttributions[0].photoURI);
-            let img = document.createElement('img');
-            img.src =  object.getURI();                                       //get src using getURI()
+//      GET PICTURES AND DISPLAY ON PAGE
+        function loadIt() {
+          return new Promise(function (resolve, reject) {
+            let pictureArray = place.photos;
+            let lenOfPictureArray = pictureArray.length;
 
-            if (index < noOfPictures) {
-               pictures[index].setAttribute("src", img.src);
-//               console.log(pictures[index]);
+            pictureArray.forEach(function (object, index) {
+
+//           let img = document.createElement('img');
+            if (index < 4) {
+
+               let imgUri =  object.getURI();
+               let img = document.createElement('img');
+               img.setAttribute("src", imgUri);
+               img.alt = "picture of location";
+               img.tabIndex = -1;
+               img.classList.add("location-picture");
+
+
+               if (index < 2) {
+                  let rowOne = document.querySelector(".picture-row-1");
+                  rowOne.appendChild(img);
+               } else {
+                   let rowTwo = document.querySelector(".picture-row-2");
+                   rowTwo.appendChild(img);
+               }
             }
-        });
 
+           });
 
-//        GET HIDDEN ITEMS  TO DISPLAY AFTER EVERYTHING IS SET
+//         GET HIDDEN ITEMS  TO DISPLAY AFTER EVERYTHING IS SET
          let itemsToShow = document.querySelectorAll(".hidden");
-         itemsToShow.forEach( function (object) {
-            object.classList.add("show-hidden")
+         itemsToShow.forEach( function (object, index) {
+            object.classList.add("show-hidden");
+
          });
 
+            let pictures = document.querySelectorAll(".location-picture");
+            resolve(pictures);
+          });
+        }
+
+        loadIt().then(addIt);  //adds event listener when all img elements have beem successfully loaded.
+
     }
-
   });
-
-
 });
 
 
 
 
 
-let pictures = document.querySelectorAll(".location-picture");
-let clickedArray = []
+//EVENT LISTENER SECTION
 
-pictures.forEach(function (object, index) {
+function addIt(data) {
+   let clickedArray = [];
+
+   data.forEach(function (object, index) {
    object.addEventListener("click", function () {
 
 //     LOGIC TO REMOVE STYLE FROM PREVIOUSLY SELECTED PHOTO WHEN NEW PHOTO IS SELECTED.
@@ -102,13 +124,8 @@ pictures.forEach(function (object, index) {
      console.log(urlFormInput.value);
      this.classList.toggle("clicked");
 
-//     if (!index) {
-//        this.classList.toggle("clicked");
-//     }
-
-
-
    });
+
    object.addEventListener("mouseenter", function () {
      this.classList.toggle("add-focus");
    });
@@ -118,6 +135,11 @@ pictures.forEach(function (object, index) {
    });
 
 });
+
+
+}
+
+
 
 
 
