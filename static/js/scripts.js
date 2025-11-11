@@ -21,12 +21,36 @@ document.addEventListener("DOMContentLoaded", () => {
 //      DISPLAY MAP AND MARKER
         rowOne.innerHTML = "";
         rowTwo.innerHTML = "";
-        console.log(place.displayName);
-//      SETS DISPLAY NAME TO FORM INPUT
-        locationInput.value = place.displayName;
+        console.log(place.addressComponents.length)
+        console.log(place.addressComponents)
 
-        const lat = Number(place.location.lat());
-        const lng = Number(place.location.lng());
+        let addressComponentArray = place.addressComponents
+
+        addressComponentArray.forEach(
+          function(object, index) {
+             if (object["types"][0] == "route") {
+                console.log(object["longText"])
+             } else if (object["types"][0] == "country") {
+                let country = object["longText"];
+                console.log(object["longText"])
+             } else if (object["types"][0] == "street_number") {
+                console.log(object["longText"])
+             } else if (object["types"][0] == "administrative_area_level_2") {
+                 let city = object["longText"];
+//                console.log(object["longText"])
+             } else if (object["types"][0] == "postal_code") {
+                console.log(object["longText"])
+             }
+          }
+        );
+
+//        console.log(place.formattedAddress)
+//        console.log(place.displayName);
+//      SETS DISPLAY NAME TO FORM INPUT
+        locationInput.value = place.displayName;        //NEEDED
+
+        const lat = Number(place.location.lat());      //NEEDED
+        const lng = Number(place.location.lng());      //NEEDED
 
 //      create map object using latitude and longitude
         let refinedMap = new google.maps.Map(document.getElementById("map"), {
@@ -120,7 +144,7 @@ function addIt(data) {
      let urlFormInput = document.querySelector("#url-value");
 
 //     ASSIGNS SRC VALUE TO FORM INPUT VARIABLE
-     urlFormInput.value = this.getAttribute("src");
+     urlFormInput.value = this.getAttribute("src");   //NEEDED
      console.log(urlFormInput.value);
      this.classList.toggle("clicked");
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -61,13 +61,14 @@ with app.app_context():
 
 GOOGLE_PLACES_API_KEY = os.environ.get("API")
 
-print(GOOGLE_PLACES_API_KEY)
 
 
 
 
 
 
+
+# VARIABLES
 
 
 
@@ -94,19 +95,18 @@ def add_place():
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
 
+
     step = int(request.args.get("step", 1))
-    print(step)
 
     if request.method == "POST" and step == 1:
 
         #store details in sessions.
-        location = form_search_venue.location.data
-        picture_url = form_search_venue.photo.data
 
-        print(location)
-        print(picture_url)
+        # form_venue_info.name.data = location_name
+        session["location_name"] = form_search_venue.location.data
+        session["picture_url"] = form_search_venue.photo.data
         step += 1
-        print(step)
+
         return redirect(url_for("add_place", step=step))
     elif request.method == "POST" and step == 2:
         # store details in sessions.
@@ -116,7 +116,8 @@ def add_place():
     if step == 1:
         return render_template("add.html", form=form_search_venue, api_key=GOOGLE_PLACES_API_KEY)
     elif step == 2:
-        return render_template("add_venue.html", form=form_venue_info)
+        location_name = session.get("location_name", "")
+        return render_template("add_venue.html", form=form_venue_info, name_of_venue=location_name)
 
 
 
