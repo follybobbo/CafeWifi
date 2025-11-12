@@ -95,10 +95,10 @@ def add_place():
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
 
+    #Sets session["step"] only when session[step] doesn't exist
 
-    # step = int(request.args.get("step", 1))
-    if "step" not in session:
-        session["step"] = 1
+    # if "step" not in session:
+    #     session["step"] = 1
 
     step = session.get("step", 1)
 
