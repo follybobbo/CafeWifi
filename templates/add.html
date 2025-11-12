@@ -70,15 +70,21 @@
                  {{form.photo.label(class="form-label")}}
                  <div class="picture-container">
                      <div class="picture-row-1">
-<!--                         <img src="" class="location-picture" tabindex="-1" id="pic-1">-->
-<!--                         <img src="" class="location-picture" tabindex="-1" id="pic-2">-->
+
                      </div>
                       <div class="picture-row-2">
-<!--                         <img src="" class="location-picture" tabindex="-1" id="pic-3">-->
-<!--                          <img src="" class="location-picture" tabindex="-1" id="pic-4">-->
+
                      </div>
                  </div>
                  {{form.photo(class="form-input", id="url-value")}}
+             </li>
+             <li class="other-input">
+                 {{form.city.label(class="form-label")}}
+                 {{form.city(class="city")}}
+             </li>
+             <li class="other-input">
+                 {{form.country.label(class="form-label")}}
+                 {{form.country(class="country")}}
              </li>
          </ol>
 

@@ -23,26 +23,32 @@ document.addEventListener("DOMContentLoaded", () => {
         rowTwo.innerHTML = "";
         console.log(place.addressComponents.length)
         console.log(place.addressComponents)
-
+//        LOOP THROUGH ADDRESS COMPONENT AND GET DETAILS OF LOCATION
         let addressComponentArray = place.addressComponents
-
+        let streetName, country, streetNo, city, postalCode;
         addressComponentArray.forEach(
           function(object, index) {
              if (object["types"][0] == "route") {
-                console.log(object["longText"])
+                streetName = object["longText"];                     //STREET NAME
              } else if (object["types"][0] == "country") {
-                let country = object["longText"];
-                console.log(object["longText"])
+                country = object["longText"];                        //COUNTRY
              } else if (object["types"][0] == "street_number") {
-                console.log(object["longText"])
+                streetNo = object["longText"];                      //STREET NO
              } else if (object["types"][0] == "administrative_area_level_2") {
-                 let city = object["longText"];
-//                console.log(object["longText"])
+                 city = object["longText"];                          //CITY
              } else if (object["types"][0] == "postal_code") {
-                console.log(object["longText"])
+                postalCode = object["longText"];                     //POSTAL CODE
              }
           }
         );
+
+        let address = streetNo + " " + streetName + ", " + city + ", " + postalCode + ", " + country;
+//        TRANSFER CITY AND COUNTRY TO FORM INPUT
+        let formCity = document.querySelector(".city");
+        formCity.value = city
+
+        let formCountry = document.querySelector(".country");
+        formCountry.value = country;
 
 //        console.log(place.formattedAddress)
 //        console.log(place.displayName);
