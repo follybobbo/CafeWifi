@@ -50,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
         let formCountry = document.querySelector(".country");
         formCountry.value = country;
 
+        let formStreet = document.querySelector(".street-one");
+        formStreet.value = address;
+
 //        console.log(place.formattedAddress)
 //        console.log(place.displayName);
 //      SETS DISPLAY NAME TO FORM INPUT

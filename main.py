@@ -96,7 +96,11 @@ def add_place():
     form_venue_info = VenueInfo()
 
 
-    step = int(request.args.get("step", 1))
+    # step = int(request.args.get("step", 1))
+    if "step" not in session:
+        session["step"] = 1
+
+    step = session.get("step", 1)
 
     if request.method == "POST" and step == 1:
 
@@ -105,19 +109,31 @@ def add_place():
         # form_venue_info.name.data = location_name
         session["location_name"] = form_search_venue.location.data
         session["picture_url"] = form_search_venue.photo.data
-        step += 1
+        session["country"] = form_search_venue.country.data
+        session["city"] = form_search_venue.city.data
+        session["street_name"] = form_search_venue.street_one.data
+        session["step"] = 2
 
-        return redirect(url_for("add_place", step=step))
+
+        print("form one submitted")
+
+        return redirect(url_for("add_place"))
     elif request.method == "POST" and step == 2:
+        print("step 2 done form submitted")
+
         # store details in sessions.
+
+        #then clear session
         return redirect(url_for("home"))
 
 
     if step == 1:
         return render_template("add.html", form=form_search_venue, api_key=GOOGLE_PLACES_API_KEY)
-    elif step == 2:
+    elif session["step"] == 2:
+        print(step)
         location_name = session.get("location_name", "")
-        return render_template("add_venue.html", form=form_venue_info, name_of_venue=location_name)
+        street_name = session.get("street_name", "")
+        return render_template("add_venue.html", form=form_venue_info, name_of_venue=location_name, street=street_name, step=step)
 
 
 
@@ -131,6 +147,13 @@ def show_venue(location):
     # print(len(cafes_list))
 
     return render_template("show-venue.html", cafes_list=cafes_list, location=location)
+
+
+# @app.route("/review")
+# def review_venue_info():
+#
+#
+#     return
 
 
 

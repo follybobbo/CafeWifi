@@ -10,6 +10,7 @@ class SearchVenue(FlaskForm):
     photo = StringField("choose a photo", validators=[DataRequired()])
     city = StringField("CITY", validators=[DataRequired()])
     country = StringField("COUNTRY", validators=[DataRequired()])
+    street_one = StringField("Street", validators=[DataRequired()])
 
 
     next = SubmitField("NEXT")

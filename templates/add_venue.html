@@ -43,10 +43,10 @@
      <form method="POST" action="{{url_for('add_place')}}">
          {{form.csrf_token}}
          <h2>VENUE INFORMATION</h2>
-             {{form.name.label(class="form-label")}} {{form.name(size=100, class="form-input", value=name_of_venue)}}
-             {{ form.street.label(class="form-label")}} {{form.street(size=100, class="form-input")}}
+         {{form.name.label(class="form-label")}} {{form.name(size=100, class="form-input", value=name_of_venue)}}
+         {{ form.street.label(class="form-label")}} {{form.street(size=100, class="form-input", value=street)}}
 
-             {{form.next(class="form_btn")}}
+         {{form.next(class="form_btn")}}
      </form>
 
  </div>
