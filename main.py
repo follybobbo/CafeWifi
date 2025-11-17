@@ -2,14 +2,16 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Boolean
+from sqlalchemy import Integer, String, Boolean, Float
 from forms import SearchVenue
 from forms import VenueInfo
 import secrets
 import os
+from reviewquestions import survey_data
+
 # from flask_bootstrap import Bootstrap5
 
-
+print(survey_data)
 
 
 
@@ -27,7 +29,7 @@ db = SQLAlchemy(model_class=Base)
 
 #CONFIGURE THE EXTENSION: Connect extension to flask app
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafess.db"
 
 db.init_app(app)
 
@@ -42,15 +44,19 @@ class Cafe(db.Model):
     __tablename__ = "cafe"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
-    map_url: Mapped[str] = mapped_column(String(500), nullable=False)
+    # map_url: Mapped[str] = mapped_column(String(500), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=False)
-    location: Mapped[str] = mapped_column(String(250), nullable=False)
+    address: Mapped[str] = mapped_column(String(250), nullable=False)
+    latitude: Mapped[float] = mapped_column(Float, nullable=False)
+    longitude: Mapped[float] = mapped_column(Float, nullable=False)
+    country: Mapped[str] = mapped_column(String(250), nullable=False)
     has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
     has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
     has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
     can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
     seats: Mapped[str] = mapped_column(String(250), nullable=False)
     coffee_price: Mapped[str] = mapped_column(String(250), nullable=False)
+
 
 
 
@@ -95,11 +101,11 @@ def add_place():
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
 
-    #Sets session["step"] only when session[step] doesn't exist
+
 
     # if "step" not in session:
     #     session["step"] = 1
-
+    # SET STEP = 1 IF STEP IS NOT IN SESSION
     step = session.get("step", 1)
 
     if request.method == "POST" and step == 1:
@@ -120,11 +126,13 @@ def add_place():
         return redirect(url_for("add_place"))
     elif request.method == "POST" and step == 2:
         print("step 2 done form submitted")
+        session["location_name"] = form_venue_info.name.data
+        session["street_name"] = form_venue_info.street.data
 
         # store details in sessions.
 
         #then clear session
-        return redirect(url_for("home"))
+        return redirect(url_for("review_venue_info"))
 
 
     if step == 1:
@@ -148,12 +156,15 @@ def show_venue(location):
 
     return render_template("show-venue.html", cafes_list=cafes_list, location=location)
 
+@app.route("/review", methods=["POST", "GET"])
+def review_venue_info():
 
-# @app.route("/review")
-# def review_venue_info():
-#
-#
-#     return
+    if request.method == "POST":
+        pass
+        # WRITE ALL NECCESSARY INFO TO DATA BASE
+    location_name = session.get("location_name", "")
+
+    return render_template("review.html", location=location_name, question_bank=survey_data)
 
 
 

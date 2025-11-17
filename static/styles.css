@@ -194,6 +194,62 @@ form li {
 }
 
 
+/*REVIEW HTML*/
+.one {
+  width: 40%;
+  display: inline-block;
+  padding: 20px 10px 20px 20px;
+
+}
+
+.two {
+  width: 40%;
+  display: inline-block;
+  padding: 20px 10px 20px 20px;
+
+}
+
+select {
+ width: 100%;
+ padding-left: 10px;
+ height: 20px;
+}
+
+.list-item {
+  border: 1px;
+  border-radius: 3px;
+  padding: 7px;
+  margin: 10px 0 5px 0;
+  background-color: #f0f0f0;
+}
+
+.row-questions {
+ width: 80%;
+ margin: auto;
+ display: flex;
+ justify-content: space-between;
+}
+
+.main-container {
+  margin: auto;
+  width: 80%;
+
+}
+
+.flex-container {
+  display: block;
+}
+
+.heading {
+ width: 80%;
+ margin: auto;
+}
+
+.body {
+  padding: 100px;
+}
+
+
 
 
 
