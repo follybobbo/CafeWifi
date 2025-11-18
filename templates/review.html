@@ -7,14 +7,17 @@
 </head>
 <body>
   <form method="POST" action="{{url_for('review_venue_info')}}">
-  <h1>{{location}} - review</h1>
+      <input name="csrf_token" type="hidden" value="{{csrf_token}}">
+
   <div class="total-container">
+      <h1 id="location-review">{{location}} - review</h1>
       <div class="topic">
           <h2 class="heading">PRODUCTIVITY</h2>
           <div class="row-questions">
               <div class="one">
-                  <p>Is there Wi-Fi</p>
-                  <select id="wifi" name="wifi-options">
+                  <p class="question">Is there Wi-Fi</p>
+                  <select id="wifi" name="wifi-options" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Yes, but can be unstable or limited</option>
                       <option class="list-item">Definitely, it's very reliable</option>
@@ -22,8 +25,9 @@
               </div>
 
               <div class="two">
-                  <p>Is it easy to find power sockets?</p>
-                  <select id="sockets" name="power-sockets">
+                  <p class="question">Is it easy to find power sockets?</p>
+                  <select id="sockets" name="power-sockets" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No (< 10% of seats have power sockets)</option>
                       <option class="list-item">So-so (10-50% of seats have power sockets)</option>
                       <option class="list-item">Definitely (> 50% of seats have power sockets)</option>
@@ -33,8 +37,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>How long can you comfortably stay and work?</p>
-                  <select id="duration" name="duration-for-work">
+                  <p class="question">How long can you comfortably stay and work?</p>
+                  <select id="duration" name="duration-for-work" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">While eating or drinking only</option>
                       <option class="list-item">Depends on how busy it gets</option>
                       <option class="list-item">I can stay as long as i want!</option>
@@ -42,8 +47,9 @@
               </div>
 
               <div class="two">
-                  <p>Are tables and chairs comfortable for work?</p>
-                  <select id="tables" name="chairs-comfortable">
+                  <p class="question">Are tables and chairs comfortable for work?</p>
+                  <select id="tables" name="chairs-comfortable" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No (or very small amount)</option>
                       <option class="list-item">Somewhat / it's mixed</option>
                       <option class="list-item">All tables and chairs are work friendly</option>
@@ -53,8 +59,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>Is it quiet?</p>
-                  <select id="quiet" name="it-quiet">
+                  <p class="question">Is it quiet?</p>
+                  <select id="quiet" name="it-quiet" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">So-so / Depends</option>
                       <option class="list-item">Definitely!</option>
@@ -62,8 +69,9 @@
               </div>
 
               <div class="two">
-                  <p>Can you comfortably make audio/video calls?</p>
-                  <select>
+                  <p class="question">Can you comfortably make audio/video calls?</p>
+                  <select required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Maybe / Depends</option>
                       <option class="list-item">Definitely!</option>
@@ -76,8 +84,9 @@
           <h2 class="heading">COMMUNITY</h2>
           <div class="row-questions">
               <div class="one">
-                  <p>Is it common to see other people working?</p>
-                  <select id="working" name="people-working">
+                  <p class="question">Is it common to see other people working?</p>
+                  <select id="working" name="people-working" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No, nobody is working</option>
                       <option class="list-item">Yes, some people are working</option>
                       <option class="list-item">Definitely, almost everyone is working!</option>
@@ -85,8 +94,9 @@
               </div>
 
               <div class="two">
-                  <p>Are there group tables (for 6+ people)</p>
-                  <select id="community-2" name="group-tables">
+                  <p class="question">Are there group tables (for 6+ people)</p>
+                  <select id="community-2" name="group-tables" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Yes</option>
                       <option class="list-item">Definitely! There's also a big community table</option>
@@ -99,8 +109,9 @@
           <h2 class="heading">SERVICE</h2>
           <div class="row-questions">
               <div class="one">
-                  <p>Is coffee available</p>
-                  <select id="service-1" name="coffee-available">
+                  <p class="question">Is coffee available</p>
+                  <select id="service-1" name="coffee-available" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Yes, but average quality</option>
                       <option class="list-item">Yes, and its of high quality!</option>
@@ -108,8 +119,9 @@
               </div>
 
               <div class="two">
-                  <p>Is food offered</p>
-                  <select id="service-2" name="food-offered">
+                  <p class="question">Is food offered</p>
+                  <select id="service-2" name="food-offered" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Only snacks, pastries, or salads</option>
                       <option class="list-item">Definitely, proper meals!</option>
@@ -119,8 +131,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>Are there veggie options</p>
-                  <select id="service-1" name="coffee-available">
+                  <p class="question">Are there veggie options</p>
+                  <select id="service-1" name="coffee-available" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Yes, but limited</option>
                       <option class="list-item">Definitely, with great veggie meals!</option>
@@ -128,8 +141,9 @@
               </div>
 
               <div class="two">
-                  <p>Is alcohol offered</p>
-                  <select id="service-2" name="food-offered">
+                  <p class="question">Is alcohol offered</p>
+                  <select id="service-2" name="food-offered" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Only a small selection (Beers, wines, ciders)</option>
                       <option class="list-item">Definitely, a wide selection (Liquors, cocktails, etc.)</option>
@@ -139,8 +153,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>Are credit cards accepted?</p>
-                  <select id="service-1" name="coffee-available">
+                  <p class="question">Are credit cards accepted?</p>
+                  <select id="service-1" name="coffee-available" required>
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Only some cards or amounts</option>
                       <option class="list-item">Definitely!</option>
@@ -156,8 +171,9 @@
 
            <div class="row-questions">
               <div class="one">
-                  <p>Is the space full of natural light</p>
+                  <p class="question">Is the space full of natural light</p>
                   <select id="working" name="people-working">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">So-so / Only some areas</option>
                       <option class="list-item">Definitely!</option>
@@ -165,8 +181,9 @@
               </div>
 
               <div class="two">
-                  <p>Is there an outdoor area? (Assuming nice weather)</p>
+                  <p class="question">Is there an outdoor area? (Assuming nice weather)</p>
                   <select id="community-2" name="group-tables">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Yes, but without power sockets</option>
                       <option class="list-item">Yes, with outdoor power sockets available too!</option>
@@ -176,8 +193,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>How large is the place ?</p>
+                  <p class="question">How large is the place ?</p>
                   <select id="working" name="people-working">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">it's small (less than 10 tables)</option>
                       <option class="list-item">it's medium (between 10 and 30 tables)</option>
                       <option class="list-item">it's large (more than 30 tables)</option>
@@ -185,8 +203,9 @@
               </div>
 
               <div class="two">
-                  <p>Is there a restroom</p>
+                  <p class="question">Is there a restroom</p>
                   <select id="community-2" name="group-tables">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Yes, but far away, dirty, or inconvenient</option>
                       <option class="list-item">Definitely, it's clean and easily accessible!</option>
@@ -196,8 +215,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>Is it easily accessible with a wheelchair</p>
+                  <p class="question">Is it easily accessible with a wheelchair</p>
                   <select id="working" name="people-working">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">So-So</option>
                       <option class="list-item">Definitely</option>
@@ -205,8 +225,9 @@
               </div>
 
               <div class="two">
-                  <p>Is the place air conditioned?</p>
+                  <p class="question">Is the place air conditioned?</p>
                   <select id="community-2" name="group-tables">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Only a small area (less than half of the tables)</option>
                       <option class="list-item">Definitely, most or all areas are air conditioned!</option>
@@ -216,8 +237,9 @@
 
            <div class="row-questions">
               <div class="one">
-                  <p>Is the space smoke free</p>
+                  <p class="question">Is the space smoke free</p>
                   <select id="working" name="people-working">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">There is a non-smoking area</option>
                       <option class="list-item">Definitely</option>
@@ -225,8 +247,9 @@
               </div>
 
               <div class="two">
-                  <p>Is it pet friendly</p>
+                  <p class="question">Is it pet friendly</p>
                   <select id="community-2" name="group-tables">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">Only some areas (e.g outdoors)</option>
                       <option class="list-item">Definitely</option>
@@ -236,8 +259,9 @@
 
           <div class="row-questions">
               <div class="one">
-                  <p>Is there a parking space</p>
+                  <p class="question">Is there a parking space</p>
                   <select id="working" name="people-working">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No</option>
                       <option class="list-item">There's street parking nearby</option>
                       <option class="list-item">There is dedicated parking!</option>
@@ -251,8 +275,9 @@
           <h2 class="heading">SUMMARY</h2>
           <div class="row-questions">
               <div class="one">
-                  <p>In general, do you like working from here?</p>
+                  <p class="question">In general, do you like working from here?</p>
                   <select id="working" name="people-working">
+                      <option value="">-- Choose an Option --</option>
                       <option class="list-item">No it's uncomfortable for work</option>
                       <option class="list-item">Yes, I got some work done</option>
                       <option class="list-item">Definitely, I feel very productive here!</option>
@@ -260,7 +285,7 @@
               </div>
           </div>
       </div>
-      <button id="botton">SUBMIT REVIEW</button>
+      <button id="button-submit">SUBMIT REVIEW</button>
 
   </div>
   </form>

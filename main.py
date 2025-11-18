@@ -160,11 +160,18 @@ def show_venue(location):
 def review_venue_info():
 
     if request.method == "POST":
-        pass
+        # Validates CSRF FORGERY
+        session_csrf_token = session.get("csrf_token")
+        form_csrf = request.form.get("csrf_token")
+        if session_csrf_token != form_csrf:
+            return 'CSRF token is missing or invalid', 400
+
         # WRITE ALL NECCESSARY INFO TO DATA BASE
     location_name = session.get("location_name", "")
+    csrf_token = secrets.token_hex(16)
+    session["csrf_token"] = csrf_token
 
-    return render_template("review.html", location=location_name, question_bank=survey_data)
+    return render_template("review.html", location=location_name, question_bank=survey_data, csrf_token=csrf_token)
 
 
 
