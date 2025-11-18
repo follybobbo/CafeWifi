@@ -1,4 +1,4 @@
-
+//ADD.HTML
 
 document.addEventListener("DOMContentLoaded", () => {
   const placePicker = document.getElementById("placePicker");
@@ -171,6 +171,12 @@ function addIt(data) {
 
 
 }
+
+
+
+//REVIEW.HTML
+
+
 
 
 
