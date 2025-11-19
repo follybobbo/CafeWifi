@@ -272,7 +272,17 @@ select {
  color: red;
 }
 
+.list-item-1 {
+ color: red;
+}
 
+.list-item-2 {
+ color: orange;
+}
+
+.list-item-3 {
+ color: green;
+}
 
 
 

@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, Float
 from forms import SearchVenue
 from forms import VenueInfo
 import secrets
 import os
+from typing import List
 from reviewquestions import survey_data
 
 # from flask_bootstrap import Bootstrap5
@@ -50,12 +51,18 @@ class Cafe(db.Model):
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)
     country: Mapped[str] = mapped_column(String(250), nullable=False)
-    has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    seats: Mapped[str] = mapped_column(String(250), nullable=False)
-    coffee_price: Mapped[str] = mapped_column(String(250), nullable=False)
+    user_review: Mapped[List["Review"]] = relationship(back_populates="cafe_details") #lets see
+    # has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    # has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    # has_wifi: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    # can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    # seats: Mapped[str] = mapped_column(String(250), nullable=False)
+    # coffee_price: Mapped[str] = mapped_column(String(250), nullable=False)
+
+
+
+class Review(db.Model):
+    __tablename__ = "review"
 
 
 
