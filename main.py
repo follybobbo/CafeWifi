@@ -158,18 +158,38 @@ def add_place():
         session["country"] = form_search_venue.country.data
         session["city"] = form_search_venue.city.data
         session["street_name"] = form_search_venue.street_one.data
+        session["longitude"] = form_search_venue.longitude.data
+        session["latitude"] = form_search_venue.latitude.data
         session["step"] = 2
 
 
-        print("form one submitted")
+
 
         return redirect(url_for("add_place"))
     elif request.method == "POST" and step == 2:
-        print("step 2 done form submitted")
+
         session["location_name"] = form_venue_info.name.data
         session["street_name"] = form_venue_info.street.data
 
+        # print(session.get("location_name"))
+        # print(session.get("picture_url"))
+        # print(session.get("street_name"))
+        # print(session.get("longitude"))
+        # print(session.get("latitude"))
+        # print(session.get("country"))
+
         # store details in sessions.
+        new_cafe = Cafe(
+            name= session.get("location_name"),
+            img_url= session.get("picture_url"),
+            address= session.get("street_name"),
+            latitude= session.get("longitude"),
+            longitude= session.get("latitude"),
+            country= session.get("country")
+        )
+
+        db.session.add(new_cafe)
+        db.session.commit()
 
         #then clear session
         return redirect(url_for("review_venue_info"))
@@ -187,14 +207,14 @@ def add_place():
 
 
 
-@app.route("/<location>")
-def show_venue(location):
-    #reads db for cafes with specified location.
-    cafe = db.session.execute(db.select(Cafe).where(Cafe.location == location)).scalars()
-    cafes_list = cafe.all()
-    # print(len(cafes_list))
-
-    return render_template("show-venue.html", cafes_list=cafes_list, location=location)
+# @app.route("/<location>")
+# def show_venue(location):
+#     #reads db for cafes with specified location.
+#     cafe = db.session.execute(db.select(Cafe).where(Cafe.location == location)).scalars()
+#     cafes_list = cafe.all()
+#     # print(len(cafes_list))
+#
+#     return render_template("show-venue.html", cafes_list=cafes_list, location=location)
 
 @app.route("/review", methods=["POST", "GET"])
 def review_venue_info():
@@ -206,7 +226,65 @@ def review_venue_info():
         if session_csrf_token != form_csrf:
             return 'CSRF token is missing or invalid', 400
 
+        # EXTRACTS FORM DATA, AND SAVE TO VARIABLE
+        wifi = request.form.get("wifi-options")
+        power_sockets = request.form.get("power-sockets")
+        length_of_work = request.form.get("duration-for-work")
+        tables_and_chairs = request.form.get("chairs-comfortable")
+        is_it_quiet = request.form.get("it-quiet")
+        audio_and_video = request.form.get("audio-video-calls")
 
+        other_people_working = request.form.get("people-working")
+        group_tables = request.form.get("group-tables")
+
+        coffee_available = request.form.get("coffee-available")
+        food_offered = request.form.get("food-offered")
+        veggie_options = request.form.get("veggie-options")
+        alcohol_offered = request.form.get("alcohol-offered")
+        credit_cards = request.form.get("credit-cards")
+
+        natural_light = request.form.get("natural-light")
+        outdoor_area = request.form.get("outdoor-area")
+        how_large = request.form.get("large-space")
+        restroom = request.form.get("restroom")
+        wheelchair_accessible = request.form.get("wheelchair-access")
+        air_conditioned = request.form.get("air-conditioned")
+        smoke_free = request.form.get("smoke-free")
+        pet_friendly = request.form.get("pet-friendly")
+        parking_space = request.form.get("parking-space")
+
+        summary = request.form.get("summary")
+
+        # STORE VARAIBLES IN DATABASE INSTANCE
+        new_review = Review(
+            wifi=wifi,
+            power_sockets=power_sockets,
+            length_of_work=length_of_work,
+            tables_and_chairs=tables_and_chairs,
+            is_it_quiet=is_it_quiet,
+            audio_and_video=audio_and_video,
+            other_people_working=other_people_working,
+            group_tables=group_tables,
+            coffee_available=coffee_available,
+            food_offered=food_offered,
+            veggie_options=veggie_options,
+            alcohol_offered=alcohol_offered,
+            credit_cards=credit_cards,
+            natural_light=natural_light,
+            outdoor_area=outdoor_area,
+            how_large=how_large,
+            restroom=restroom,
+            wheelchair_accessible=wheelchair_accessible,
+            air_conditioned=air_conditioned,
+            smoke_free=smoke_free,
+            pet_friendly=pet_friendly,
+            parking_space=parking_space,
+            summary=summary
+        )
+
+        # ADDS TO DATABASE
+        db.session.add(new_review)
+        db.session.commit()
 
         # WRITE ALL NECCESSARY INFO TO DATA BASE
     location_name = session.get("location_name", "")

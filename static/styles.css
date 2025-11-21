@@ -131,6 +131,9 @@ form li {
   background-color: black;
 }
 
+#lat-lng {
+  display: none;
+}
 
 
 

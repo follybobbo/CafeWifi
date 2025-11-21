@@ -61,6 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const lat = Number(place.location.lat());      //NEEDED
         const lng = Number(place.location.lng());      //NEEDED
 
+        let latitudeInput = document.querySelector("#latitude-input");
+        let longitudeInput = document.querySelector("#longitude-input")
+
+        latitudeInput.value = lat;
+        longitudeInput.value = lng;
+
 //      create map object using latitude and longitude
         let refinedMap = new google.maps.Map(document.getElementById("map"), {
            zoom: 15,

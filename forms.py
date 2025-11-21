@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, DecimalField
 from wtforms.validators import DataRequired, URL, Email
 from flask_ckeditor import CKEditorField
 
@@ -11,6 +11,8 @@ class SearchVenue(FlaskForm):
     city = StringField("CITY", validators=[DataRequired()])
     country = StringField("COUNTRY", validators=[DataRequired()])
     street_one = StringField("Street", validators=[DataRequired()])
+    latitude = DecimalField("latitude", validators=[DataRequired()])
+    longitude = DecimalField("longitude", validators=[DataRequired()])
 
 
     next = SubmitField("NEXT")
