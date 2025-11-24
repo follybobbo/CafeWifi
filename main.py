@@ -126,6 +126,18 @@ def de_slugify(slugified_text):
 
 
 # VARIABLES
+@app.route("/api/restaurants")
+def get_list_of_places():
+    list_of_places = []
+    with app.app_context():
+        restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
+
+    for restaurant in restaurants:
+        list_of_places.append(restaurant.name)
+
+    return list_of_places
+
+
 
 
 
@@ -175,11 +187,15 @@ def add_place():
         session["step"] = 2
 
         #CHECK FOR PRESENCE OF CAFE
+        # HANDLE IF RESTAURANT ALREADY EXISTS
+        # IF RESTAURANT DOESN'T EXIST SAFE NEW RESTAURANT TO DATA BASE
+        cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == session["location_name"])).scalar()
+        if cafe_instance:
+            flash("This This place is already listed! Check it out", "error")
+        else:
+            session["step"] = 2
 
-
-
-
-        return redirect(url_for("add_place"))
+            return redirect(url_for("add_place"))
     elif request.method == "POST" and step == 2:
 
         session["location_name"] = form_venue_info.name.data
@@ -188,36 +204,27 @@ def add_place():
 
 
         # store details in sessions.
-        #HANDLE IF RESTAURANT ALREADY EXISTS
-
-        cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == session["location_name"])).scalar()
-
-        if cafe_instance is not None:
-            #MEANS CAFE ALREADY EXISTS.
-            #FLASH MESSAGE
-            print("dont store")
-        else:
-            #IF RESTAURANT DOESN'T EXIST SAFE NEW RESTAURANT TO DATA BASE
-
-            new_cafe = Cafe(
-                name= session.get("location_name"),
-                img_url= session.get("picture_url"),
-                city= session.get("city"),
-                address= session.get("street_name"),
-                latitude= session.get("latitude"),
-                longitude= session.get("longitude"),
-                country= session.get("country")
-            )
-
-            db.session.add(new_cafe)
-            db.session.commit()
 
 
-            str_city = slugify(session.get("city"))
-            str_location_name = slugify(session.get("location_name"))
+        new_cafe = Cafe(
+            name= session.get("location_name"),
+            img_url= session.get("picture_url"),
+            city= session.get("city"),
+            address= session.get("street_name"),
+            latitude= session.get("latitude"),
+            longitude= session.get("longitude"),
+            country= session.get("country")
+        )
 
-            #then clear session
-            return redirect(url_for("review_venue_info", city=str_city, cafe_name=str_location_name))
+        db.session.add(new_cafe)
+        db.session.commit()
+
+
+        str_city = slugify(session.get("city"))
+        str_location_name = slugify(session.get("location_name"))
+
+        #then clear session
+        return redirect(url_for("review_venue_info", city=str_city, cafe_name=str_location_name))
 
 
     if step == 1:
@@ -244,15 +251,6 @@ def add_place():
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
     normal_cafe_name = de_slugify(cafe_name)
-
-    cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == normal_cafe_name)).scalar()
-    cafe_id = cafe_instance.id
-    # print(cafe_id)
-    #
-    #
-    # print(f"city {city}")
-    # print(f"cafe {cafe_name}")
-    #GET ID OF CAFE AND USE TO STORE IN DB
 
     if request.method == "POST":
         # Validates CSRF FORGERY
@@ -290,10 +288,12 @@ def review_venue_info(city, cafe_name):
         parking_space = request.form.get("parking-space")
 
         summary = request.form.get("summary")
+
+        # GET ID OF CAFE AND USE TO STORE IN DB
         cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == normal_cafe_name)).scalar()
         cafe_id = cafe_instance.id
 
-        # STORE VARAIBLES IN DATABASE INSTANCE
+        # STORE VARIABLES IN DATABASE INSTANCE
         new_review = Review(
             wifi=wifi,
             power_sockets=power_sockets,
@@ -325,10 +325,11 @@ def review_venue_info(city, cafe_name):
         db.session.add(new_review)
         db.session.commit()
 
+        #CLEAR SESSION IN NEXT ROUTE
         return redirect(url_for("home"))
 
 
-        # WRITE ALL NECCESSARY INFO TO DATA BASE
+
     location_name = session.get("location_name", "")
     csrf_token = secrets.token_hex(16)
     session["csrf_token"] = csrf_token

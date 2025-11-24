@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*IF A PLACE IS CHOSEN RUN THE CODE BELOW*/
     if (place) {
+        //FETCH DATA FROM BACKEND AND CHECK
+
+
+
 //      DISPLAY MAP AND MARKER
         rowOne.innerHTML = "";
         rowTwo.innerHTML = "";
