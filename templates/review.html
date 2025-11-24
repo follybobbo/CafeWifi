@@ -6,10 +6,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <form method="POST" action="{{url_for('review_venue_info')}}">
+  <form method="POST" action="{{url_for('review_venue_info', city=city, cafe_name=cafe)}}">
 <!--      manual csrf protection-->
       <input name="csrf_token" type="hidden" value="{{csrf_token}}">
-
+  <div>{{city}}</div>
+      <div>{{cafe}}</div>
   <div class="total-container">
       <h1 id="location-review">{{location}} - review</h1>
       <div class="topic">
@@ -297,37 +298,3 @@
 
 
 
-<!--  <div class="main-container">-->
-
-
-<!--  {% for (section, value) in question_bank.items(): %}-->
-<!--     <h2>{{section}}</h2>-->
-<!--      <div class="flex-container">-->
-<!--     {% for (question, answer_list) in value.items(): %}-->
-
-<!--        {% if loop.index0 % 2 == 0: %}-->
-<!--          <span class="container-1">-->
-<!--              <p>{{question}}</p>-->
-<!--              <ul>-->
-<!--                  {% for options in answer_list: %}-->
-<!--                    <li>{{options}}</li>-->
-<!--                  {% endfor %}-->
-<!--              </ul>-->
-<!--          </span>-->
-<!--        {% else: %}-->
-<!--           <span class="container-2">-->
-<!--               <p>{{question}}</p>-->
-<!--               <ul>-->
-<!--                {% for options in answer_list: %}-->
-<!--                   <li>{{options}}</li>-->
-<!--                {% endfor %}-->
-<!--               </ul>-->
-
-<!--           </span>-->
-<!--        {% endif %}-->
-
-<!--     {% endfor %}-->
-<!--     </div>-->
-<!--  {% endfor %}-->
-
-<!--  </div>-->
