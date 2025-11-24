@@ -23,122 +23,125 @@
         console.log(exists);
 
         if (exists) {
+            console.log("place already exist");
+            //HIDE ALL VISIBLE SECTIONS THAT SHOULD ONLY SHOW WHEN SELECTION IS SUCCESFULL
+            let stuffToHide = document.querySelectorAll(".hidden");
+            stuffToHide.forEach(function (obj, index) {
+              obj.classList.toggle("show-hidden")
 
+            });
+            //DISPLAY ERROR MESSAGE
         } else {
 
-        }
+    //      DISPLAY MAP AND MARKER
+            rowOne.innerHTML = "";
+            rowTwo.innerHTML = "";
+    //        console.log(place.addressComponents.length)
+    //        console.log(place.addressComponents)
+    //        LOOP THROUGH ADDRESS COMPONENT AND GET DETAILS OF LOCATION
+            let addressComponentArray = place.addressComponents
+            let streetName, country, streetNo, city, postalCode;
+            addressComponentArray.forEach(
+              function(object, index) {
+                 if (object["types"][0] == "route") {
+                    streetName = object["longText"];                     //STREET NAME
+                 } else if (object["types"][0] == "country") {
+                    country = object["longText"];                        //COUNTRY
+                 } else if (object["types"][0] == "street_number") {
+                    streetNo = object["longText"];                      //STREET NO
+                 } else if (object["types"][0] == "administrative_area_level_2") {
+                     city = object["longText"];                          //CITY
+                 } else if (object["types"][0] == "postal_code") {
+                    postalCode = object["longText"];                     //POSTAL CODE
+                 }
+              }
+            );
+
+            let address = streetNo + " " + streetName + ", " + city + ", " + postalCode + ", " + country;
+    //        TRANSFER CITY AND COUNTRY TO FORM INPUT
+            let formCity = document.querySelector(".city");
+            formCity.value = city
+
+            let formCountry = document.querySelector(".country");
+            formCountry.value = country;
+
+            let formStreet = document.querySelector(".street-one");
+            formStreet.value = address;
+
+    //        console.log(place.formattedAddress)
+    //        console.log(place.displayName);
+    //      SETS DISPLAY NAME TO FORM INPUT
+            locationInput.value = place.displayName;        //NEEDED
+
+            const lat = Number(place.location.lat());      //NEEDED
+            const lng = Number(place.location.lng());      //NEEDED
+
+            let latitudeInput = document.querySelector("#latitude-input");
+            let longitudeInput = document.querySelector("#longitude-input")
+
+            latitudeInput.value = lat;
+            longitudeInput.value = lng;
+
+    //      create map object using latitude and longitude
+            let refinedMap = new google.maps.Map(document.getElementById("map"), {
+               zoom: 15,
+               center: new google.maps.LatLng(lat, lng),
+               mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+    //      create marker to be displayed on map
+            const point = new google.maps.LatLng(lat, lng);
+            marker = new google.maps.Marker({
+               map: refinedMap,
+               position: point,
+               title: place.displayName,
+            });
+
+    //      GET PICTURES AND DISPLAY ON PAGE
+            function loadIt() {
+              return new Promise(function (resolve, reject) {
+                let pictureArray = place.photos;
+                let lenOfPictureArray = pictureArray.length;
+
+                pictureArray.forEach(function (object, index) {
+
+    //           let img = document.createElement('img');
+                if (index < 4) {
+
+                   let imgUri =  object.getURI();
+                   let img = document.createElement('img');
+                   img.setAttribute("src", imgUri);
+                   img.alt = "picture of location";
+                   img.tabIndex = -1;
+                   img.classList.add("location-picture");
 
 
+                   if (index < 2) {
+                      let rowOne = document.querySelector(".picture-row-1");
+                      rowOne.appendChild(img);
+                   } else {
+                       let rowTwo = document.querySelector(".picture-row-2");
+                       rowTwo.appendChild(img);
+                   }
+                }
 
+               });
 
-//      DISPLAY MAP AND MARKER
-        rowOne.innerHTML = "";
-        rowTwo.innerHTML = "";
-//        console.log(place.addressComponents.length)
-//        console.log(place.addressComponents)
-//        LOOP THROUGH ADDRESS COMPONENT AND GET DETAILS OF LOCATION
-        let addressComponentArray = place.addressComponents
-        let streetName, country, streetNo, city, postalCode;
-        addressComponentArray.forEach(
-          function(object, index) {
-             if (object["types"][0] == "route") {
-                streetName = object["longText"];                     //STREET NAME
-             } else if (object["types"][0] == "country") {
-                country = object["longText"];                        //COUNTRY
-             } else if (object["types"][0] == "street_number") {
-                streetNo = object["longText"];                      //STREET NO
-             } else if (object["types"][0] == "administrative_area_level_2") {
-                 city = object["longText"];                          //CITY
-             } else if (object["types"][0] == "postal_code") {
-                postalCode = object["longText"];                     //POSTAL CODE
-             }
-          }
-        );
+    //         GET HIDDEN ITEMS  TO DISPLAY AFTER EVERYTHING IS SET
+             let itemsToShow = document.querySelectorAll(".hidden");
+             itemsToShow.forEach( function (object, index) {
+                object.classList.add("show-hidden");
 
-        let address = streetNo + " " + streetName + ", " + city + ", " + postalCode + ", " + country;
-//        TRANSFER CITY AND COUNTRY TO FORM INPUT
-        let formCity = document.querySelector(".city");
-        formCity.value = city
+             });
 
-        let formCountry = document.querySelector(".country");
-        formCountry.value = country;
-
-        let formStreet = document.querySelector(".street-one");
-        formStreet.value = address;
-
-//        console.log(place.formattedAddress)
-//        console.log(place.displayName);
-//      SETS DISPLAY NAME TO FORM INPUT
-        locationInput.value = place.displayName;        //NEEDED
-
-        const lat = Number(place.location.lat());      //NEEDED
-        const lng = Number(place.location.lng());      //NEEDED
-
-        let latitudeInput = document.querySelector("#latitude-input");
-        let longitudeInput = document.querySelector("#longitude-input")
-
-        latitudeInput.value = lat;
-        longitudeInput.value = lng;
-
-//      create map object using latitude and longitude
-        let refinedMap = new google.maps.Map(document.getElementById("map"), {
-           zoom: 15,
-           center: new google.maps.LatLng(lat, lng),
-           mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-
-//      create marker to be displayed on map
-        const point = new google.maps.LatLng(lat, lng);
-        marker = new google.maps.Marker({
-           map: refinedMap,
-           position: point,
-           title: place.displayName,
-        });
-
-//      GET PICTURES AND DISPLAY ON PAGE
-        function loadIt() {
-          return new Promise(function (resolve, reject) {
-            let pictureArray = place.photos;
-            let lenOfPictureArray = pictureArray.length;
-
-            pictureArray.forEach(function (object, index) {
-
-//           let img = document.createElement('img');
-            if (index < 4) {
-
-               let imgUri =  object.getURI();
-               let img = document.createElement('img');
-               img.setAttribute("src", imgUri);
-               img.alt = "picture of location";
-               img.tabIndex = -1;
-               img.classList.add("location-picture");
-
-
-               if (index < 2) {
-                  let rowOne = document.querySelector(".picture-row-1");
-                  rowOne.appendChild(img);
-               } else {
-                   let rowTwo = document.querySelector(".picture-row-2");
-                   rowTwo.appendChild(img);
-               }
+                let pictures = document.querySelectorAll(".location-picture");
+                resolve(pictures);
+              });
             }
 
-           });
+            loadIt().then(addIt);  //adds event listener when all img elements have beem successfully loaded.
 
-//         GET HIDDEN ITEMS  TO DISPLAY AFTER EVERYTHING IS SET
-         let itemsToShow = document.querySelectorAll(".hidden");
-         itemsToShow.forEach( function (object, index) {
-            object.classList.add("show-hidden");
-
-         });
-
-            let pictures = document.querySelectorAll(".location-picture");
-            resolve(pictures);
-          });
-        }
-
-        loadIt().then(addIt);  //adds event listener when all img elements have beem successfully loaded.
-
+    }
     }
   });
  });
