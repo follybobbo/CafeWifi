@@ -1,6 +1,5 @@
 //ADD.HTML
-
-document.addEventListener("DOMContentLoaded", () => {
+ document.addEventListener("DOMContentLoaded", () => {
   const placePicker = document.getElementById("placePicker");
   const locationInput = document.getElementById("location-input");
   const locationUrl = document.getElementById("location-url");
@@ -13,20 +12,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // Listen for selection event from Google Place Picker
 
 
-    placePicker.addEventListener("gmpx-placechange", () => {
+    placePicker.addEventListener("gmpx-placechange", async () => {
     const place = placePicker.value;
 
     /*IF A PLACE IS CHOSEN RUN THE CODE BELOW*/
     if (place) {
         //FETCH DATA FROM BACKEND AND CHECK
+        const listOfPlaces = await fetchListOfPlaces();
+        let exists = checkIfPlaceExist(listOfPlaces, place.displayName);
+        console.log(exists);
+
+        if (exists) {
+
+        } else {
+
+        }
+
 
 
 
 //      DISPLAY MAP AND MARKER
         rowOne.innerHTML = "";
         rowTwo.innerHTML = "";
-        console.log(place.addressComponents.length)
-        console.log(place.addressComponents)
+//        console.log(place.addressComponents.length)
+//        console.log(place.addressComponents)
 //        LOOP THROUGH ADDRESS COMPONENT AND GET DETAILS OF LOCATION
         let addressComponentArray = place.addressComponents
         let streetName, country, streetNo, city, postalCode;
@@ -132,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
   });
-});
+ });
 
 
 
@@ -184,7 +193,28 @@ function addIt(data) {
 
 
 
-//REVIEW.HTML
+async function fetchListOfPlaces() {
+  try {
+    const response = await fetch("/api/restaurants");
+    if (!response.ok) {
+      throw new Error("HTTP error! status: $(response.status)");
+    }
+    const placeList = await response.json();
+
+    return placeList;
+
+  } catch(error) {
+     console.log("Fetch Failed", error)
+  }
+}
+
+//FUNCTION CHECKS IF RESTAURANT INPUT BY USER EXISTS.
+//ARGUMENTS LIST = LIST OF PLACES SENT FROM BACKEND, PLACE, NAME OF RESTAURANT ENETERED BY USER.
+function checkIfPlaceExist(List, place) {
+
+  return List.includes(place)
+
+}
 
 
 

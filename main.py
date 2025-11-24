@@ -133,6 +133,7 @@ def get_list_of_places():
         restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
 
     for restaurant in restaurants:
+        print(type(restaurant.name))
         list_of_places.append(restaurant.name)
 
     return list_of_places
