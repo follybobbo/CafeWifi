@@ -135,6 +135,15 @@ form li {
   display: none;
 }
 
+.error-msg {
+ display: none;
+}
+
+.show-err-msg {
+ display: block;
+}
+
+
 
 
 

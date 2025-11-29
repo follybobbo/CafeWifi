@@ -25,13 +25,20 @@
         if (exists) {
             console.log("place already exist");
             //HIDE ALL VISIBLE SECTIONS THAT SHOULD ONLY SHOW WHEN SELECTION IS SUCCESFULL
-            let stuffToHide = document.querySelectorAll(".hidden");
+            let stuffToHide = document.querySelectorAll(".hidden");  //selects all inputs that are currently hidden
             stuffToHide.forEach(function (obj, index) {
-              obj.classList.toggle("show-hidden")
+              obj.classList.remove("show-hidden")    //removes show-hidden class if the restaurant entered exists in the data base
 
             });
             //DISPLAY ERROR MESSAGE
+            let errorMessage = document.querySelector(".error-msg");
+            errorMessage.classList.add("show-err-msg");
+
+            //clear any previously stored elements to prevent posting wrong things to backend
         } else {
+            //removes error message from screen if place search does not exist in database
+            let errorMessage = document.querySelector(".error-msg");
+            errorMessage.classList.remove("show-err-msg");
 
     //      DISPLAY MAP AND MARKER
             rowOne.innerHTML = "";
@@ -83,7 +90,7 @@
             longitudeInput.value = lng;
 
     //      create map object using latitude and longitude
-            let refinedMap = new google.maps.Map(document.getElementById("map"), {
+            let refinedMap = await new google.maps.Map(document.getElementById("map"), {
                zoom: 15,
                center: new google.maps.LatLng(lat, lng),
                mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -195,6 +202,7 @@ function addIt(data) {
 }
 
 
+//uses async function to fetch restaurant that exist in the database
 
 async function fetchListOfPlaces() {
   try {
