@@ -138,6 +138,15 @@ def get_list_of_places():
 
     return list_of_places
 
+@app.route("/api/latlong")
+def get_lat_and_long():
+
+    city = request.args.get("city")
+    result = db.session.execute(db.select(Cafe).where(Cafe.city == city)).scalars().all()
+
+
+    return result
+
 
 
 
@@ -249,7 +258,7 @@ def show_venue(location):
     print(cafes_list)
     # print(len(cafes_list))
 
-    return render_template("show-venue.html", cafes_list=cafes_list, location=location)
+    return render_template("show-venue.html", cafes_list=cafes_list, location=location, api_key=GOOGLE_PLACES_API_KEY)
 
 
 
