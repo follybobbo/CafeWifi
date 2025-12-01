@@ -46,8 +46,8 @@
             <button class="explore-button">Explore "Dynamic Location"</button>
 
             <div class="cities-containers">
-               {% for location in location_list: %}
-                    <a class="city" href="#">{{location}}</a>
+               {% for location in location_list %}
+                    <a class="city" href="{{ url_for('show_venue', location=location) }}">{{location}}</a>
                {% endfor %}
             </div>
 

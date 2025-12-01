@@ -240,14 +240,18 @@ def add_place():
 
 
 
-# @app.route("/<location>")
-# def show_venue(location):
-#     #reads db for cafes with specified location.
-#     cafe = db.session.execute(db.select(Cafe).where(Cafe.location == location)).scalars()
-#     cafes_list = cafe.all()
-#     # print(len(cafes_list))
-#
-#     return render_template("show-venue.html", cafes_list=cafes_list, location=location)
+@app.route("/<location>")
+def show_venue(location):
+    print(f"location is {location}")
+    #reads db for cafes with specified location.
+    cafe = db.session.execute(db.select(Cafe).where(Cafe.city == location)).scalars()
+    cafes_list = cafe.all()
+    print(cafes_list)
+    # print(len(cafes_list))
+
+    return render_template("show-venue.html", cafes_list=cafes_list, location=location)
+
+
 
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
@@ -327,6 +331,7 @@ def review_venue_info(city, cafe_name):
         db.session.commit()
 
         #CLEAR SESSION IN NEXT ROUTE
+        session.clear()
         return redirect(url_for("home"))
 
 
