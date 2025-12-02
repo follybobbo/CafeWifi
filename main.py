@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -138,14 +138,23 @@ def get_list_of_places():
 
     return list_of_places
 
+
+#view searches through db and gets result for latitude and longitude in list
 @app.route("/api/latlong")
 def get_lat_and_long():
-
+    lat_long_list = []
     city = request.args.get("city")
+
     result = db.session.execute(db.select(Cafe).where(Cafe.city == city)).scalars().all()
 
+    for restaurant in result:
+        latitude = restaurant.latitude
+        longitude = restaurant.longitude
 
-    return result
+        lat_long_list.append({"lat": latitude, "lng": longitude, "title": restaurant.name})
+
+
+    return lat_long_list  #returns list of latitude and longitude of each location
 
 
 
@@ -251,11 +260,11 @@ def add_place():
 
 @app.route("/<location>")
 def show_venue(location):
-    print(f"location is {location}")
+    # print(f"location is {location}")
     #reads db for cafes with specified location.
     cafe = db.session.execute(db.select(Cafe).where(Cafe.city == location)).scalars()
     cafes_list = cafe.all()
-    print(cafes_list)
+    # print(cafes_list)
     # print(len(cafes_list))
 
     return render_template("show-venue.html", cafes_list=cafes_list, location=location, api_key=GOOGLE_PLACES_API_KEY)
