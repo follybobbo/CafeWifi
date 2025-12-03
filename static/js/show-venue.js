@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log(data)
 
     const map =  new google.maps.Map(document.getElementById("sv-map"), {
-      zoom: 4,
+      zoom: 1,
       center: data[0]
     });
 
@@ -27,14 +27,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         title: location.title
       });
 
-      marker.addListener("click", () => {
+
+      // makes info window open and close when user moves cursor in and out of marker
+
+      marker.addListener("mouseover", () => {
         infoWindow.setContent(
            `<div style="font-size: 14px; padding: 10px 10px 10px 10px; text-align: centre;">
-            <strong>${location.title}</strong><br>
-          </div>`
+               <strong>${location.title}</strong><br>
+           </div>`
         );
         infoWindow.open(map, marker)
       });
+
+      marker.addListener("mouseout", () => {
+        infoWindow.close();
+      });
+
+
+//      marker.addListener("mouseover", () => {
+//        infoWindow.setContent(
+//           showWindow(location.title)
+//        );
+//        infoWindow.open(map, marker)
+//      });
 
       bounds.extend({lat: location.lat, lng: location.lng})
 
@@ -47,3 +62,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
 });
+
+
+function showWindow(title) {
+  `<div style="font-size: 14px; padding: 10px 10px 10px 10px; text-align: centre;">
+     <strong>${title}</strong><br>
+  </div>`
+
+}
