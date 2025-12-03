@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const bounds = await new google.maps.LatLngBounds();
     const infoWindow = new google.maps.InfoWindow();
-
+    let markerList = []
     //loop through list of lat/long, then use latitude and logitude to generate map.
     data.forEach( location => {
       const marker =  new google.maps.Marker({
@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         map,
         title: location.title
       });
+      markerList.push(marker);
+
 
 
       // makes info window open and close when user moves cursor in and out of marker
@@ -48,7 +50,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       bounds.extend({lat: location.lat, lng: location.lng})
 
     } );
-    map.fitBounds(bounds)
+    map.fitBounds(bounds);
+    showInfoWindowOnHover(markerList, map, infoWindow);
 
   } catch(error) {
     console.log("Fetch failed", error);
@@ -79,3 +82,34 @@ function showInfoWindow (mark, loc, window, map) {
         window.close();
   });
 }
+
+function showInfoWindowOnHover(listOfMarker, map, window) {
+  let listOfPlaces = document.querySelectorAll(".pub-container")
+
+  listOfPlaces.forEach((places_container, index) => {
+
+    places_container.addEventListener("mouseover", () => {
+      let placeToDisplay = places_container.children[1].innerText;
+
+      listOfMarker.forEach((marker, index)=> {
+         if (marker.title == placeToDisplay) {
+           console.log(marker)
+           let latitude = marker.internalPosition.lat()
+           let longitude = marker.internalPosition.lng()
+
+           window.setContent(
+           `<div style="font-size: 14px; padding: 10px 10px 10px 10px; text-align: centre;">
+               <strong>${marker.title}</strong><br>
+           </div>`
+           );
+
+           window.open(map, marker)
+
+         }
+      });
+    });
+
+  });
+}
+
+
