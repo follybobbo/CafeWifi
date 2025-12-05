@@ -34,18 +34,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       showInfoWindow(marker, location, infoWindow, map);
 
 
-//      marker.addListener("mouseover", () => {
-//        infoWindow.setContent(
-//           `<div style="font-size: 14px; padding: 10px 10px 10px 10px; text-align: centre;">
-//               <strong>${location.title}</strong><br>
-//           </div>`
-//        );
-//        infoWindow.open(map, marker)
-//      });
-//
-//      marker.addListener("mouseout", () => {
-//        infoWindow.close();
-//      });
 
       bounds.extend({lat: location.lat, lng: location.lng})
 
@@ -61,11 +49,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 
-//function showWindow(title) {
-//  `<div style="font-size: 14px; padding: 10px 10px 10px 10px; text-align: centre;">
-//     <strong>${title}</strong><br>
-//  </div>`
-//}
 
 
 function showInfoWindow (mark, loc, window, map) {

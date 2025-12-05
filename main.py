@@ -133,7 +133,7 @@ def get_list_of_places():
         restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
 
     for restaurant in restaurants:
-        print(type(restaurant.name))
+        print(restaurant.name)
         list_of_places.append(restaurant.name)
 
     return list_of_places
@@ -183,6 +183,7 @@ def home():
 
 @app.route("/add", methods=["GET", "POST"])
 def add_place():
+
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
 
@@ -241,6 +242,7 @@ def add_place():
 
         str_city = slugify(session.get("city"))
         str_location_name = slugify(session.get("location_name"))
+        print(str_location_name)
 
         #then clear session
         return redirect(url_for("review_venue_info", city=str_city, cafe_name=str_location_name))
@@ -273,7 +275,8 @@ def show_venue(location):
 
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
-    normal_cafe_name = de_slugify(cafe_name)
+    normal_cafe_name = session.get("location_name")
+    print(normal_cafe_name)
 
     if request.method == "POST":
         # Validates CSRF FORGERY
@@ -314,6 +317,9 @@ def review_venue_info(city, cafe_name):
 
         # GET ID OF CAFE AND USE TO STORE IN DB
         cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == normal_cafe_name)).scalar()
+        print(cafe_instance)
+        if not cafe_instance:
+            print("Gobe")
         cafe_id = cafe_instance.id
 
         # STORE VARIABLES IN DATABASE INSTANCE
@@ -350,6 +356,7 @@ def review_venue_info(city, cafe_name):
 
         #CLEAR SESSION IN NEXT ROUTE
         session.clear()
+
         return redirect(url_for("home"))
 
 
