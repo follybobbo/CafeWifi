@@ -367,6 +367,34 @@ def review_venue_info(city, cafe_name):
 
     return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name)
 
+@app.route("/cities")
+def show_cities():
+    city_dict = {}
+    data = db.session.execute(db.select(Cafe).order_by(Cafe.country)).scalars()
+
+
+    for rows in data:
+        country = rows.country
+
+        country_list = city_dict.keys()
+
+        if country in country_list:
+            city_list = city_dict.get(country)
+
+            if rows.city not in city_list:
+                city_list.append(rows.city)
+        else:
+            city_dict[country] = [rows.city]
+
+
+    print(city_dict)
+
+
+
+
+
+    return render_template("cities.html", city_dict=city_dict)
+
 
 
 
