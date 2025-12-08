@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Cities{% endblock %}
 
 
+{% block content %}
+<h1>CITIES</h1>
+{% for country, city_list in city_dict.items() %}
+    <section class="country-section">
+        <h2>{{ country }}</h2>
+        {% for city in city_list %}
+        <a href="{{ url_for('show_venue', location=city) }}">{{ city }}</a>
+        {% endfor %}
+    </section>
+{% endfor %}
 
-</body>
-</html>
+{% endblock %}
