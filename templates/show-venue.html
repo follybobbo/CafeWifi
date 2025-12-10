@@ -49,10 +49,12 @@
         <h2 class="sv-heading">{{cafes_list | length}} WORK-FRIENDLY PLACES</h2>
         <div class="cities-container">
            {% for cafe in cafes_list: %}
+            <a href="{{ url_for('show_location', name=cafe.name, city=cafe.city) }}">
             <div class="pub-container">
                 <img src="{{cafe.img_url}}">
                 <p>{{cafe.name}}</p>
             </div>
+            </a>
            {% endfor %}
 
             <div id="suggest">
