@@ -396,9 +396,10 @@ def show_cities():
     return render_template("cities.html", city_dict=city_dict)
 
 
-@app.route("/city/name")
-def show_location():
-    return render_template("location.html")
+@app.route("/<city>/<name>")
+def show_location(city, name):
+    #open dv and fetch all values
+    return render_template("location.html", name=name, city=city)
 
 
 
