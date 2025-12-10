@@ -372,7 +372,7 @@ def show_cities():
     city_dict = {}
     data = db.session.execute(db.select(Cafe).order_by(Cafe.country)).scalars()
 
-
+   #use google api to get current country, and make current country first on the list of countries/
     for rows in data:
         country = rows.country
 
@@ -395,6 +395,10 @@ def show_cities():
 
     return render_template("cities.html", city_dict=city_dict)
 
+
+@app.route("/city/name")
+def show_location():
+    return render_template("location.html")
 
 
 
