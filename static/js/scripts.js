@@ -21,6 +21,8 @@
         const listOfPlaces = await fetchListOfPlaces();
         let exists = checkIfPlaceExist(listOfPlaces, place.displayName);
         console.log(exists);
+        console.log(place.id);
+
 
         if (exists) {
             console.log("place already exist");
@@ -41,7 +43,7 @@
             errorMessage.classList.remove("show-err-msg");
 
     //      DISPLAY MAP AND MARKER
-            rowOne.innerHTML = "";
+            rowOne.innerHTML = "";   //make rowOne and rowTwo empty
             rowTwo.innerHTML = "";
     //        console.log(place.addressComponents.length)
     //        console.log(place.addressComponents)
@@ -80,8 +82,8 @@
     //      SETS DISPLAY NAME TO FORM INPUT
             locationInput.value = place.displayName;        //NEEDED
 
-            const lat = Number(place.location.lat());      //NEEDED
-            const lng = Number(place.location.lng());      //NEEDED
+            const lat = Number(place.location.lat());      //NEEDED PROBABLY SDK
+            const lng = Number(place.location.lng());      //NEEDED PROBABLY SDK
 
             let latitudeInput = document.querySelector("#latitude-input");
             let longitudeInput = document.querySelector("#longitude-input")
@@ -104,14 +106,19 @@
                title: place.displayName,
             });
 
+            let pictureArray = place.photos;
+            console.log(pictureArray.at(0).name)
+
     //      GET PICTURES AND DISPLAY ON PAGE
+    //      A PROMISE WAS USED HERE SO IT WILL BE EASY TO ADD EVENT LISTENERS TO THE IMAGES AFTER THEY HAVE BEEN LOADED.
+    //      IT WAS DIFFICULT WITHOUT USING PROMISES BECAUSE ADDING THE EVENT LISTENER PREVIOUSLY HAPPENED BEFORE THE PICTURES WERE LOADED SUCCESSFULLY/
             function loadIt() {
               return new Promise(function (resolve, reject) {
                 let pictureArray = place.photos;
                 let lenOfPictureArray = pictureArray.length;
 
                 pictureArray.forEach(function (object, index) {
-
+                console.log(object.name);
     //           let img = document.createElement('img');
                 if (index < 4) {
 
@@ -145,7 +152,7 @@
                 resolve(pictures);
               });
             }
-
+            // ONLY ADD EVENT LISTENER AFTER ALL IMAGE ELELMENT HAVE BEEN SUCCESSFULLY LOADED.
             loadIt().then(addIt);  //adds event listener when all img elements have beem successfully loaded.
 
     }
@@ -158,7 +165,7 @@
 
 
 //EVENT LISTENER SECTION
-
+//data is the promise returned from the loadIt function
 function addIt(data) {
    let clickedArray = [];
 

@@ -399,7 +399,9 @@ def show_cities():
 @app.route("/<city>/<name>")
 def show_location(city, name):
     #open dv and fetch all values
-    return render_template("location.html", name=name, city=city)
+    cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
+    print(cafe_info.img_url)
+    return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url)
 
 
 

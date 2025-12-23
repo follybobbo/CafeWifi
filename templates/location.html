@@ -1,11 +1,109 @@
 {% extends "base.html " %}
 
 {% block content %}
-  <div>
-      first
+  <div class="grid-container">
+      <header>
+          <img class="header-img" src="{{img_url}}">
+      </header>
+      <section class="section-grid">
+           <div class="outer-container">
+               <p>TODAY</p>
+               <P>Visits: 0</P>
+               <div>
+                 <p>BEEN HERE</p>
+               </div>
+           </div>
+
+<!--          <div class="reviews">-->
+<!--              -->
+<!--          </div>-->
+          <div class="outer-container">
+              <p>PRODUCTIVITY</p>
+              <div class="feelings-container">
+                  <div class="inner-div">
+                      <p>Stable Wi-Fi</p>
+                      <p>Long stays</p>
+                      <p>Quiet</p>
+                  </div>
+                  <div class="inner-div">
+                      <p>Power sockets</p>
+                      <p>Work friendly tables</p>
+                      <p>Video/audio calls</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="outer-container">
+              <p>COMMUNITY</p>
+              <div class="feelings-container">
+                 <div class="inner-div">
+                     <p>People working</p>
+                 </div>
+                  <div class="inner-div">
+                     <p>Group tables</p>
+                 </div>
+              </div>
+          </div>
+
+          <div class="outer-container">
+              <p>SERVICE</p>
+              <div class="feelings-container">
+                  <div class="inner-div">
+                      <p>Coffee</p>
+                      <p>Veggie</p>
+                      <p>Credit cards</p>
+                  </div>
+                  <div class="inner-div">
+                      <p>Food</p>
+                      <p>Alcohol</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="outer-container">
+              <p>SPACE</p>
+              <div class="feelings-container">
+                  <div class="inner-div">
+                      <p>Natural light</p>
+                      <p>Spacious</p>
+                      <p>Accessible</p>
+                      <p>Smoke free</p>
+                      <p>Parking</p>
+                  </div>
+                  <div class="inner-div">
+                      <p>Outdoor area</p>
+                      <p>Restroom</p>
+                      <p>Air conditioned</p>
+                      <p>Pet friendly</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="outer-container">
+              <p>Do you like working from here?</p>
+              <div class="unto">
+                  <span>Emoji 1</span>
+                  <span>Emoji 2</span>
+                  <span>Emoji 3</span>
+              </div>
+          </div>
+
+          <div class="outer-container">
+              <div>
+                  <span>icon</span>
+                  <span>Address</span>
+              </div>
+          </div>
+
+          <div class="outer-container">
+              <p>Missing or incorrect information?</p>
+              <button>UPDATE PAGE</button>
+              <button>REPORT CLOSED</button>
+          </div>
+
+
+      </section>
   </div>
-  <div>
-      other
-  </div>
+
 
 {% endblock %}
