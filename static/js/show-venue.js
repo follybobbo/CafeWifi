@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", async function () {
+  //selects value of sv-heading in show-venue.html which will be the value of the city selected.
   let location = document.querySelector(".sv-heading");
   let locationValue = location.innerText;
 
-
+  //this is am async request.
   try {
+    //makes a get request to /api/latlong end point with city as a request argument, the value of the city argument is used to select
+    //which city whose data is read from the data base.
     const response = await fetch(`/api/latlong?city=${encodeURIComponent(locationValue)}`);
     if (!response.ok) {
        throw new Error("HTTP error! status: $(response.status)");
@@ -11,12 +14,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     const data = await response.json();
     console.log(data)
 
+    //create new maps object
     const map =  new google.maps.Map(document.getElementById("sv-map"), {
       zoom: 1,
       center: data[0]
     });
 
+    //create new bounds object
     const bounds = await new google.maps.LatLngBounds();
+
+    //create new infoWindow object
     const infoWindow = new google.maps.InfoWindow();
     let markerList = []
     //loop through list of lat/long, then use latitude and logitude to generate map.
@@ -67,13 +74,15 @@ function showInfoWindow (mark, loc, window, map) {
 }
 
 function showInfoWindowOnHover(listOfMarker, map, window) {
+
   let listOfPlaces = document.querySelectorAll(".pub-container")
+
 
   listOfPlaces.forEach((places_container, index) => {
 
     places_container.addEventListener("mouseover", () => {
       let placeToDisplay = places_container.children[1].innerText;
-
+      //add marker in the respective lat and lng position on the map upon mouseover event
       listOfMarker.forEach((marker, index)=> {
          if (marker.title == placeToDisplay) {
            console.log(marker)
@@ -86,11 +95,16 @@ function showInfoWindowOnHover(listOfMarker, map, window) {
            </div>`
            );
 
-           window.open(map, marker)
+           window.open(map, marker);
 
          }
       });
     });
+    // close window when mouseout event occurs.
+    places_container.addEventListener("mouseout", () => {
+      window.close();
+
+    })
 
   });
 }
