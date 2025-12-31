@@ -417,6 +417,26 @@ select {
 
 } */
 
+#item-eight button {
+  margin: 5px;
+}
+
+.btn-ltn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+}
+
+.btn-ltn:hover {
+  background-color: #45a049;
+}
+
+
 
 
 
@@ -442,13 +462,15 @@ select {
    .section-grid {
      display: grid;
      grid-template-columns: 60% 40%;
-     grid-template-rows: repeat(6, 1fr);
+     grid-template-rows: repeat(6, auto);
      grid-auto-flow: column;
-
+     /*grid-auto-rows: auto;
+     align-content: space-evenly;
+     justify-content: center;*/
 
   }
   .outer-container {
-    padding: 0;
+    padding: 30px 0;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -459,6 +481,14 @@ select {
 
   #item-eight {
    order: 11;
+   align-self: start;
+   border: none;
+   padding: 0;
+
+  }
+
+  #item-six{
+   align-self: start;
 
   }
 }
