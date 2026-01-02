@@ -23,14 +23,36 @@
               <p class="header">PRODUCTIVITY</p>
               <div class="feelings-container">
                   <div class="inner-div">
-                      <p>Stable Wi-Fi</p>
-                      <p>Long stays</p>
-                      <p>Quiet</p>
+                      <div class="tooltip-container">
+                         <p>Stable Wi-Fi</p>
+                         <div class="tooltip">Is there Wi-Fi</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Long stays</p>
+                         <div class="tooltip">How long can you comfortably stay and work?</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Quiet</p>
+                         <div class="tooltip">Is it quiet?</div>
+                      </div>
                   </div>
                   <div class="inner-div">
-                      <p>Power sockets</p>
-                      <p>Work friendly tables</p>
-                      <p>Video/audio calls</p>
+                      <div class="tooltip-container">
+                         <p>Power sockets</p>
+                         <div class="tooltip">Is it easy to find power sockets"</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Work friendly tables</p>
+                         <div class="tooltip">Are tables and chairs comfortable for work </div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Video/audio calls</p>
+                         <div class="tooltip">Can you comfortably make audio/video calls?</div>
+                      </div>
                   </div>
               </div>
           </div>
@@ -40,10 +62,17 @@
               <p class="header">COMMUNITY</p>
               <div class="feelings-container">
                  <div class="inner-div">
-                     <p>People working</p>
+                     <div class="tooltip-container">
+                         <p>People working</p>
+                         <div class="tooltip">Is it common to see other people working?</div>
+                     </div>
                  </div>
+
                   <div class="inner-div">
-                     <p>Group tables</p>
+                      <div class="tooltip-container">
+                         <p>Group tables</p>
+                         <div class="tooltip">Are there group tables (for 6+ people)</div>
+                     </div>
                  </div>
               </div>
           </div>
@@ -53,13 +82,31 @@
               <p class="header">SERVICE</p>
               <div class="feelings-container">
                   <div class="inner-div">
-                      <p>Coffee</p>
-                      <p>Veggie</p>
-                      <p>Credit cards</p>
+                      <div class="tooltip-container">
+                         <p>Coffee</p>
+                         <div class="tooltip">Is coffee available</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Veggie</p>
+                         <div class="tooltip">Are there veggie options</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Credit cards</p>
+                         <div class="tooltip">Are credit cards accepted?</div>
+                      </div>
                   </div>
                   <div class="inner-div">
-                      <p>Food</p>
-                      <p>Alcohol</p>
+                      <div class="tooltip-container">
+                         <p>Food</p>
+                         <div class="tooltip">Is food offered</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Alcohol</p>
+                         <div class="tooltip">Is alcohol offered</div>
+                      </div>
                   </div>
               </div>
           </div>
@@ -69,17 +116,51 @@
               <p class="header">SPACE</p>
               <div class="feelings-container">
                   <div class="inner-div">
-                      <p>Natural light</p>
-                      <p>Spacious</p>
-                      <p>Accessible</p>
-                      <p>Smoke free</p>
-                      <p>Parking</p>
+                      <div class="tooltip-container">
+                         <p>Natural light</p>
+                         <div class="tooltip">Is the space full of natural light</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Spacious</p>
+                         <div class="tooltip">How large is the place ?</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Accessible</p>
+                         <div class="tooltip">Is it easily accessible with a wheelchair</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Smoke free</p>
+                         <div class="tooltip">Is the space smoke free</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Parking</p>
+                         <div class="tooltip">Is there a parking space</div>
+                      </div>
                   </div>
                   <div class="inner-div">
-                      <p>Outdoor area</p>
-                      <p>Restroom</p>
-                      <p>Air conditioned</p>
-                      <p>Pet friendly</p>
+                      <div class="tooltip-container">
+                         <p>Outdoor area</p>
+                         <div class="tooltip">Is there an outdoor area? (Assuming nice weather)</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Restroom</p>
+                         <div class="tooltip">Is there a restroom</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Air conditioned</p>
+                         <div class="tooltip">Is the place air conditioned ?</div>
+                      </div>
+
+                      <div class="tooltip-container">
+                         <p>Pet friendly</p>
+                         <div class="tooltip">Is it pet friendly</div>
+                      </div>
                   </div>
               </div>
           </div>
@@ -98,7 +179,7 @@
 
               <div style="margin-left: 10px;">
                   <span>icon</span>
-                  <span>Address</span>
+                  <span>{{address}}</span>
               </div>
           </div>
 
@@ -114,4 +195,8 @@
   </div>
 
 
+{% endblock %}
+
+{% block script %}
+  <script src="{{url_for('static', filename='js/location.js')}}"></script>
 {% endblock %}
