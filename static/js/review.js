@@ -70,6 +70,29 @@
 //});
 
 
+document.addEventListener("DOMContentLoaded", function () {
+  let selectList = document.querySelectorAll("select");
+
+  selectList.forEach(function (selectEntry, index) {
+    selectEntry.addEventListener("change", function () {
+      console.log(this.selectedIndex);
+      let index = this.selectedIndex;
+      let valueSelected = this.value
+//      console.log(this.value)
+      if (index == 1) {
+        valueSelected = "low"
+      } else if (index == 2) {
+        valueSelected = "medium"
+      } else if (index == 3) {
+        valueSelected = "high";
+      }
+      console.log(valueSelected);
+
+    });
+  });
+});
+
+
 
 
 
