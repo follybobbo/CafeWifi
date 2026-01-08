@@ -385,8 +385,14 @@ select {
 }
 
 .unto {
- display: inline;
+ display: flex;
+ justify-content: space-around;
 
+}
+
+.unto span:hover {
+  color: red;
+  background-color: green;
 }
 
 .outer-container {
@@ -445,6 +451,35 @@ select {
   opacity: 1;
   z-index: 1;
 }
+
+.header-container {
+  position: relative;
+}
+
+.location-name {
+  position: absolute;
+  left: 15%;
+  top: 80%;
+  color: white;
+}
+
+.laptop-friendly-div {
+  position: absolute;
+  top: 70%;
+  left: 15%;
+  border: 2px solid white;
+  color: white;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-weight: bold;
+
+}
+
+.rating-emoji {
+  font-size: 2.5rem;
+}
+
+
 
 
 
