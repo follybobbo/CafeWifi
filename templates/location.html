@@ -34,7 +34,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[:3] %}
                              <div class="tooltip-container">
-                                 <p>{{key}}</p>
+                                 <p class="{{item[1]}}">{{key}}</p>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -42,7 +42,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[3:] %}
                              <div class="tooltip-container">
-                                 <p>{{key}}</p>
+                                 <p class="{{item[1]}}">{{key}}</p>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -51,7 +51,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[:5] %}
                              <div class="tooltip-container">
-                                 <p>{{key}}</p>
+                                 <p class="{{item[1]}}">{{key}}</p>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -59,7 +59,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[5:] %}
                              <div class="tooltip-container">
-                                 <p>{{key}}</p>
+                                 <p class="{{item[1]}}">{{key}}</p>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -68,7 +68,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[1:] %}
                              <div class="tooltip-container">
-                                 <p>{{key}}</p>
+                                 <p class="{{item[1]}}">{{key}}</p>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -76,13 +76,12 @@
                        <div class="inner-div">
                            {% for key, item in content_list[:1] %}
                              <div class="tooltip-container">
-                                 <p>{{key}}</p>
+                                 <p class="{{item[1]}}">{{key}}</p>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
                        </div>
                      {% endif %}
-
                  </div>
              </div>
           {% endfor %}
