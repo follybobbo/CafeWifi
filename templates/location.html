@@ -1,9 +1,16 @@
 {% extends "base.html " %}
 
+
+
 {% block content %}
   <div class="grid-container">
-      <header>
+      <header class="header-container">
           <img class="header-img" src="{{img_url}}">
+          <div class="laptop-friendly-div">
+              <span id="emoji">Emoji</span>
+              <span> | {{percentage_love}} LAPTOP FRIENDLY</span>
+          </div>
+          <h2 class="location-name">{{name}}</h2>
       </header>
       <section class="section-grid">
            <div class="outer-container" id="item-one">
@@ -18,172 +25,243 @@
 <!--          <div class="reviews">-->
 <!--              -->
 <!--          </div>-->
-          <div class="outer-container" id="item-two">
+          {% for header, contents in data_dict.items() %}
+             <div class="outer-container">
+                 <p>{{header}}</p>
+                 <div class="feelings-container">
+                     {% set content_list = contents.items() | list %}
+                     {% if content_list | length == 5 or content_list | length == 6 %}
+                       <div class="inner-div">
+                           {% for key, item in content_list[:3] %}
+                             <div class="tooltip-container">
+                                 <p>{{key}}</p>
+                                 <div class="tooltip">{{item[0]}}</div>
+                             </div>
+                           {% endfor %}
+                       </div>
+                       <div class="inner-div">
+                           {% for key, item in content_list[3:] %}
+                             <div class="tooltip-container">
+                                 <p>{{key}}</p>
+                                 <div class="tooltip">{{item[0]}}</div>
+                             </div>
+                           {% endfor %}
+                       </div>
+                     {% elif content_list | length > 6 %}
+                       <div class="inner-div">
+                           {% for key, item in content_list[:5] %}
+                             <div class="tooltip-container">
+                                 <p>{{key}}</p>
+                                 <div class="tooltip">{{item[0]}}</div>
+                             </div>
+                           {% endfor %}
+                       </div>
+                       <div class="inner-div">
+                           {% for key, item in content_list[5:] %}
+                             <div class="tooltip-container">
+                                 <p>{{key}}</p>
+                                 <div class="tooltip">{{item[0]}}</div>
+                             </div>
+                           {% endfor %}
+                       </div>
+                     {% else %}
+                       <div class="inner-div">
+                           {% for key, item in content_list[1:] %}
+                             <div class="tooltip-container">
+                                 <p>{{key}}</p>
+                                 <div class="tooltip">{{item[0]}}</div>
+                             </div>
+                           {% endfor %}
+                       </div>
+                       <div class="inner-div">
+                           {% for key, item in content_list[:1] %}
+                             <div class="tooltip-container">
+                                 <p>{{key}}</p>
+                                 <div class="tooltip">{{item[0]}}</div>
+                             </div>
+                           {% endfor %}
+                       </div>
+                     {% endif %}
 
-              <p class="header">PRODUCTIVITY</p>
-              <div class="feelings-container">
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Stable Wi-Fi</p>
-                         <div class="tooltip">Is there Wi-Fi</div>
-                      </div>
-
-                      <div class="tooltip-container">
-                         <p>Long stays</p>
-                         <div class="tooltip">How long can you comfortably stay and work?</div>
-                      </div>
-
-                      <div class="tooltip-container">
-                         <p>Quiet</p>
-                         <div class="tooltip">Is it quiet?</div>
-                      </div>
-                  </div>
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Power sockets</p>
-                         <div class="tooltip">Is it easy to find power sockets"</div>
-                      </div>
-
-                      <div class="tooltip-container">
-                         <p>Work friendly tables</p>
-                         <div class="tooltip">Are tables and chairs comfortable for work </div>
-                      </div>
-
-                      <div class="tooltip-container">
-                         <p>Video/audio calls</p>
-                         <div class="tooltip">Can you comfortably make audio/video calls?</div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <div class="outer-container" id="item-three">
-
-              <p class="header">COMMUNITY</p>
-              <div class="feelings-container">
-                 <div class="inner-div">
-                     <div class="tooltip-container">
-                         <p>People working</p>
-                         <div class="tooltip">Is it common to see other people working?</div>
-                     </div>
                  </div>
+             </div>
+          {% endfor %}
 
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Group tables</p>
-                         <div class="tooltip">Are there group tables (for 6+ people)</div>
-                     </div>
-                 </div>
-              </div>
-          </div>
 
-          <div class="outer-container" id="item-four">
+<!--          <div class="outer-container" id="item-two">-->
 
-              <p class="header">SERVICE</p>
-              <div class="feelings-container">
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Coffee</p>
-                         <div class="tooltip">Is coffee available</div>
-                      </div>
+<!--              <p class="header">PRODUCTIVITY</p>-->
+<!--              <div class="feelings-container">-->
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Stable Wi-Fi</p>-->
+<!--                         <div class="tooltip">Is there Wi-Fi</div>-->
+<!--                      </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Veggie</p>
-                         <div class="tooltip">Are there veggie options</div>
-                      </div>
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Long stays</p>-->
+<!--                         <div class="tooltip">How long can you comfortably stay and work?</div>-->
+<!--                      </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Credit cards</p>
-                         <div class="tooltip">Are credit cards accepted?</div>
-                      </div>
-                  </div>
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Food</p>
-                         <div class="tooltip">Is food offered</div>
-                      </div>
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Quiet</p>-->
+<!--                         <div class="tooltip">Is it quiet?</div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Power sockets</p>-->
+<!--                         <div class="tooltip">Is it easy to find power sockets"</div>-->
+<!--                      </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Alcohol</p>
-                         <div class="tooltip">Is alcohol offered</div>
-                      </div>
-                  </div>
-              </div>
-          </div>
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Work friendly tables</p>-->
+<!--                         <div class="tooltip">Are tables and chairs comfortable for work </div>-->
+<!--                      </div>-->
 
-          <div class="outer-container" id="item-five">
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Video/audio calls</p>-->
+<!--                         <div class="tooltip">Can you comfortably make audio/video calls?</div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--              </div>-->
+<!--          </div>-->
 
-              <p class="header">SPACE</p>
-              <div class="feelings-container">
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Natural light</p>
-                         <div class="tooltip">Is the space full of natural light</div>
-                      </div>
+<!--          <div class="outer-container" id="item-three">-->
 
-                      <div class="tooltip-container">
-                         <p>Spacious</p>
-                         <div class="tooltip">How large is the place ?</div>
-                      </div>
+<!--              <p class="header">COMMUNITY</p>-->
+<!--              <div class="feelings-container">-->
+<!--                 <div class="inner-div">-->
+<!--                     <div class="tooltip-container">-->
+<!--                         <p>People working</p>-->
+<!--                         <div class="tooltip">Is it common to see other people working?</div>-->
+<!--                     </div>-->
+<!--                 </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Accessible</p>
-                         <div class="tooltip">Is it easily accessible with a wheelchair</div>
-                      </div>
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Group tables</p>-->
+<!--                         <div class="tooltip">Are there group tables (for 6+ people)</div>-->
+<!--                     </div>-->
+<!--                 </div>-->
+<!--              </div>-->
+<!--          </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Smoke free</p>
-                         <div class="tooltip">Is the space smoke free</div>
-                      </div>
+<!--          <div class="outer-container" id="item-four">-->
 
-                      <div class="tooltip-container">
-                         <p>Parking</p>
-                         <div class="tooltip">Is there a parking space</div>
-                      </div>
-                  </div>
-                  <div class="inner-div">
-                      <div class="tooltip-container">
-                         <p>Outdoor area</p>
-                         <div class="tooltip">Is there an outdoor area? (Assuming nice weather)</div>
-                      </div>
+<!--              <p class="header">SERVICE</p>-->
+<!--              <div class="feelings-container">-->
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Coffee</p>-->
+<!--                         <div class="tooltip">Is coffee available</div>-->
+<!--                      </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Restroom</p>
-                         <div class="tooltip">Is there a restroom</div>
-                      </div>
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Veggie</p>-->
+<!--                         <div class="tooltip">Are there veggie options</div>-->
+<!--                      </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Air conditioned</p>
-                         <div class="tooltip">Is the place air conditioned ?</div>
-                      </div>
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Credit cards</p>-->
+<!--                         <div class="tooltip">Are credit cards accepted?</div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Food</p>-->
+<!--                         <div class="tooltip">Is food offered</div>-->
+<!--                      </div>-->
 
-                      <div class="tooltip-container">
-                         <p>Pet friendly</p>
-                         <div class="tooltip">Is it pet friendly</div>
-                      </div>
-                  </div>
-              </div>
-          </div>
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Alcohol</p>-->
+<!--                         <div class="tooltip">Is alcohol offered</div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--              </div>-->
+<!--          </div>-->
 
-          <div class="outer-container" id="item-six">
+<!--          <div class="outer-container" id="item-five">-->
+
+<!--              <p class="header">SPACE</p>-->
+<!--              <div class="feelings-container">-->
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Natural light</p>-->
+<!--                         <div class="tooltip">Is the space full of natural light</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Spacious</p>-->
+<!--                         <div class="tooltip">How large is the place ?</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Accessible</p>-->
+<!--                         <div class="tooltip">Is it easily accessible with a wheelchair</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Smoke free</p>-->
+<!--                         <div class="tooltip">Is the space smoke free</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Parking</p>-->
+<!--                         <div class="tooltip">Is there a parking space</div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--                  <div class="inner-div">-->
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Outdoor area</p>-->
+<!--                         <div class="tooltip">Is there an outdoor area? (Assuming nice weather)</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Restroom</p>-->
+<!--                         <div class="tooltip">Is there a restroom</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Air conditioned</p>-->
+<!--                         <div class="tooltip">Is the place air conditioned ?</div>-->
+<!--                      </div>-->
+
+<!--                      <div class="tooltip-container">-->
+<!--                         <p>Pet friendly</p>-->
+<!--                         <div class="tooltip">Is it pet friendly</div>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--              </div>-->
+<!--          </div>-->
+
+          <div class="outer-container" id="item-six" style="text-align: center">
 
               <p>Do you like working from here?</p>
-              <div class="unto" style="margin-left: 10px;">
-                  <span>Emoji 1</span>
-                  <span>Emoji 2</span>
-                  <span>Emoji 3</span>
+              <div class="unto">
+                  <span>
+                      <i class="bi bi-heartbreak rating-emoji"></i>
+                  </span>
+                  <span>
+                      <i class="bi bi-heart rating-emoji"></i>
+                  </span>
+                  <span>
+                      <i class="bi bi-heart rating-emoji"></i>
+                  </span>
               </div>
           </div>
 
           <div class="outer-container" id="item-seven">
 
               <div style="margin-left: 10px;">
-                  <span>icon</span>
-                  <span>{{address}}</span>
+                  <span>
+                      <i class="bi bi-geo-alt-fill"></i>
+                  </span>
+                  <span>{{location_address}}</span>
               </div>
           </div>
 
-          <div class="outer-container" id="item-eight">
+          <div class="outer-container" id="item-eight" style="text-align: center">
 
               <p>Missing or incorrect information?</p>
               <button class="btn-ltn">UPDATE PAGE</button>
