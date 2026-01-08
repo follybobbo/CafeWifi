@@ -225,7 +225,7 @@ def add_place():
 
         # store details in sessions.
 
-
+        #write new cafe to database
         new_cafe = Cafe(
             name= session.get("location_name"),
             img_url= session.get("picture_url"),
@@ -239,12 +239,12 @@ def add_place():
         db.session.add(new_cafe)
         db.session.commit()
 
-
+        #slugify both city and location name as they both will be used for url building in the next view
         str_city = slugify(session.get("city"))
         str_location_name = slugify(session.get("location_name"))
         print(str_location_name)
 
-        #then clear session
+        #redirect to review_venue_info view.
         return redirect(url_for("review_venue_info", city=str_city, cafe_name=str_location_name))
 
 
@@ -272,7 +272,7 @@ def show_venue(location):
     return render_template("show-venue.html", cafes_list=cafes_list, location=location, api_key=GOOGLE_PLACES_API_KEY)
 
 
-
+#uses slugified city and cafe_name
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
     normal_cafe_name = session.get("location_name")
@@ -400,8 +400,50 @@ def show_cities():
 def show_location(city, name):
     #open dv and fetch all values
     cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
+    cafe_id = cafe_info.id
+    location_address = cafe_info.address
+
+    #open review section of db
+
+    review_info = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
     print(cafe_info.img_url)
-    return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url)
+
+    data_dict = {
+
+        "PRODUCTIVITY": {
+            #display_text: [tooltip_text, data_for_review]
+            "stable wifi": ["is there wifi", review_info.wifi],
+            "power sockets": ["Is it easy to find power sockets", review_info.power_sockets],
+            "length of work": ["How long can you comfortably stay and work ?", review_info.length_of_work],
+            "tables and chairs": ["Are tables and chairs comfortable for work ?", review_info.tables_and_chairs],
+            "is it quiet": ["Is it quiet ?", review_info.is_it_quiet],
+            "audio and video": ["Can you comfortably make audio/video calls ?", review_info.audio_and_video]
+        },
+        "COMMUNITY": {
+            "people working": ["Is it common to see other people working ?", review_info.other_people_working],
+            "group tables": ['Are there group tables (for 6+ people)', review_info.group_tables]
+        },
+        "SERVICE": {
+            "coffee": ["Is coffee available", review_info.coffee_available],
+            "food": ["Is food offered", review_info.food_offered],
+            "veggie": ["Are there veggie options", review_info.veggie_options],
+            "Alcohol": ["Is alcohol offered", review_info.alcohol_offered],
+            "credit cards": ["Are credit cards accepted ?", review_info.credit_cards]
+        },
+        "SPACE": {
+            "Natural light": ["Is the space full of natural light", review_info.natural_light],
+            "Outdoor area": ["Is there an outdoor area?", review_info.outdoor_area],
+            "Spacious": ["How large is the place ?", review_info.how_large],
+            "Restroom": ["Is there a restroom", review_info.restroom],
+            "Accessible": ["Is it easily accessible with a wheelchair", review_info.wheelchair_accessible],
+            "Air conditioned": ["Is the place air conditioned ?", review_info.air_conditioned],
+            "Smoke free": ["Is the space smoke free", review_info.smoke_free],
+            "Pet friendly": ["Is it pet friendly", review_info.pet_friendly],
+            "Parking": ["Is there a parking space", review_info.parking_space]
+        }
+    }
+
+    return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address)
 
 
 
