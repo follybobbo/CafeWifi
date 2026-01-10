@@ -390,10 +390,10 @@ select {
 
 }
 
-.unto span:hover {
+/*.unto span:hover {
   color: red;
   background-color: green;
-}
+}*/
 
 .outer-container {
  text-align: left;
@@ -421,6 +421,8 @@ select {
  border-bottom: 2px solid black;
 
 }
+
+
 
 .tooltip-container {
    width: 200px;
@@ -477,6 +479,22 @@ select {
 
 .rating-emoji {
   font-size: 2.5rem;
+}
+
+/*.bi-heart-fill {
+
+}*/
+
+.lo {
+  color: red;
+}
+
+.med {
+  color: yellow;
+}
+
+.hig {
+ color: green;
 }
 
 
