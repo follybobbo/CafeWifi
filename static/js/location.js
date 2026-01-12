@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  let borderToChangeList = document.querySelectorAll(".tooltip-container p");
+  let borderToChangeList = document.querySelectorAll(".tooltip-container a");
 
   borderToChangeList.forEach(function (borderToChange, index) {
     let classOfElement = borderToChange.classList.value;
@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   reactionEmojiList.forEach(function (reactionEmoji, index) {
        reactionEmoji.dataset.clicked = false;
-       let clicked = (reactionEmoji.dataset.clicked.toString() === "true");
-//       console.log(clicked + " outer check")
+//       let clicked = (reactionEmoji.dataset.clicked.toString() === "true");
+
 
        reactionEmoji.addEventListener("mouseover", function () {
             clicked = (this.dataset.clicked.toString() === "true");
@@ -67,6 +67,12 @@ document.addEventListener("DOMContentLoaded", function () {
               let className = reactionEmoji.classList[1];
               this.classList.replace(className, className); //dont need to fill or de-fill because on clicking user is already hovering hence fill class already applied.
               changeBackgroundColor(index, reactionEmoji);
+
+              let containerOfHeaderEmoji = document.querySelector("#emoji");
+              let cloneOfEmoji = this.cloneNode(true);
+              cloneOfEmoji.style.fontSize = "22px";
+              containerOfHeaderEmoji.replaceChildren();
+              containerOfHeaderEmoji.appendChild(cloneOfEmoji);
 
               //take that and put up there,
               //store value of selection for calculation.

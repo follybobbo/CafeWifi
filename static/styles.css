@@ -404,6 +404,7 @@ select {
 
 .outer-container > p {
  margin-left: 10px;
+ font-weight: bold;
 }
 
 .inner-div {
@@ -411,14 +412,26 @@ select {
 
 }
 
-.inner-div > p {
+/*.inner-div > p {
 
  border-bottom: 2px solid black;
  position: relative;
-}
+}*/
 
-.tooltip-container > p {
+/*.tooltip-container > p {
  border-bottom: 2px solid black;
+ position: relative;
+
+}*/
+
+.tooltip-container > a {
+ border-bottom: 2px solid black;
+ display: block;
+ color: inherit;
+ cursor: pointer;
+ text-decoration: none;
+ padding: 10px 0;
+ /*position: relative;*/
 
 }
 
@@ -427,6 +440,7 @@ select {
 .tooltip-container {
    width: 200px;
    position: relative;
+   cursor: pointer;
 }
 
 
@@ -445,6 +459,7 @@ select {
  text-align: center;
  font-weight: bold;
 
+
 }
 
 
@@ -452,6 +467,7 @@ select {
   visibility: visible;
   opacity: 1;
   z-index: 1;
+
 }
 
 .header-container {
@@ -472,7 +488,7 @@ select {
   border: 2px solid white;
   color: white;
   border-radius: 3px;
-  padding: 3px 8px;
+  padding: 7px 8px;
   font-weight: bold;
 
 }
