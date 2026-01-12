@@ -6,10 +6,10 @@
   <form method="POST" action="{{url_for('review_venue_info', city=city, cafe_name=cafe)}}">
 <!--      manual csrf protection-->
       <input name="csrf_token" type="hidden" value="{{csrf_token}}">
-  <div>{{city}}</div>
-      <div>{{cafe}}</div>
+<!--      <div>{{city}}</div>-->
+<!--      <div>{{cafe}}</div>-->
   <div class="total-container">
-      <h1 id="location-review">{{location}} - review</h1>
+      <h1 id="location-review" style="text-transform: uppercase;">{{cafe or cafe_name}} - review</h1>
       <div class="topic">
           <h2 class="heading">PRODUCTIVITY</h2>
           <div class="row-questions">
