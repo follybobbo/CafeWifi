@@ -212,6 +212,7 @@ def add_place():
         cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == session["location_name"])).scalar()
         if cafe_instance:
             flash("This This place is already listed! Check it out", "error")
+            session.clear()
         else:
             session["step"] = 2
 
@@ -276,6 +277,7 @@ def show_venue(location):
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
     normal_cafe_name = session.get("location_name")
+    location_name = session.get("location_name", "")
     print(normal_cafe_name)
 
     if request.method == "POST":
@@ -360,12 +362,20 @@ def review_venue_info(city, cafe_name):
         return redirect(url_for("home"))
 
 
+    #check if review exist first
+    cafe_db = db.session.execute(db.select(Cafe).where(Cafe.name == cafe_name)).scalar()
+    cafe_id = cafe_db.id
+    review_db = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
+    if review_db:
+        summary_rating = review_db.summary
+        csrf_token = secrets.token_hex(16)
+        session["csrf_token"] = csrf_token
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, summary=summary_rating)
+    else:
+        csrf_token = secrets.token_hex(16)
+        session["csrf_token"] = csrf_token
 
-    location_name = session.get("location_name", "")
-    csrf_token = secrets.token_hex(16)
-    session["csrf_token"] = csrf_token
-
-    return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name)
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name)
 
 @app.route("/cities")
 def show_cities():
@@ -406,7 +416,8 @@ def show_location(city, name):
     #open review section of db
 
     review_info = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
-    print(cafe_info.img_url)
+    summary = review_info.summary
+
 
     data_dict = {
 
@@ -443,7 +454,7 @@ def show_location(city, name):
         }
     }
 
-    return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address)
+    return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
 
 
@@ -451,8 +462,6 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-"""SHOW VENUE"""
-"""WRITE LOGIC TO COVERT REVIEW INPUT TO CUSTOM STYLES.
 
 
 
@@ -471,23 +480,3 @@ if __name__ == "__main__":
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""

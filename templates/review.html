@@ -275,11 +275,12 @@
           <div class="row-questions">
               <div class="one">
                   <p class="question">In general, do you like working from here?</p>
+
                   <select id="working" name="summary">
                       <option value="">-- Choose an Option --</option>
-                      <option value="0" class="list-item-1">No it's uncomfortable for work</option>
-                      <option value="50" class="list-item-2">Yes, I got some work done</option>
-                      <option value="100" class="list-item-3">Definitely, I feel very productive here!</option>
+                      <option value="0" class="list-item-1" {{ 'selected' if summary == '0' else '' }}>No it's uncomfortable for work</option>
+                      <option value="50" class="list-item-2" {{ 'selected' if summary == '50' else '' }}>Yes, I got some work done</option>
+                      <option value="100" class="list-item-3" {{ 'selected' if summary == '100' else '' }}>Definitely, I feel very productive here!</option>
                   </select>
               </div>
           </div>
