@@ -16,6 +16,9 @@ from reviewquestions import survey_data
 
 
 
+
+
+
 app = Flask(__name__)
 key = secrets.token_hex(16)
 app.secret_key = key
@@ -272,15 +275,20 @@ def show_venue(location):
 
     return render_template("show-venue.html", cafes_list=cafes_list, location=location, api_key=GOOGLE_PLACES_API_KEY)
 
-
+#LOGIN REQUIRED TO POST
 #uses slugified city and cafe_name
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
     normal_cafe_name = session.get("location_name")
     location_name = session.get("location_name", "")
-    print(normal_cafe_name)
 
-    if request.method == "POST":
+    cafe_db = db.session.execute(db.select(Cafe).where(Cafe.name == cafe_name)).scalar()
+    cafe_id = cafe_db.id
+    review_db = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
+
+    #if user submits review form on first creation of review run first condition, else if review already exists and user
+    # wants to update contents of review, run second condition
+    if request.method == "POST" and not review_db:
         # Validates CSRF FORGERY
         session_csrf_token = session.get("csrf_token")
         form_csrf = request.form.get("csrf_token")
@@ -289,12 +297,12 @@ def review_venue_info(city, cafe_name):
             return 'CSRF token is missing or invalid', 400
 
         # EXTRACTS FORM DATA, AND SAVE TO VARIABLE
-        wifi = request.form.get("wifi-options")
-        power_sockets = request.form.get("power-sockets")
-        length_of_work = request.form.get("duration-for-work")
-        tables_and_chairs = request.form.get("chairs-comfortable")
-        is_it_quiet = request.form.get("it-quiet")
-        audio_and_video = request.form.get("audio-video-calls")
+        wifi = request.form.get("wifi")
+        power_sockets = request.form.get("sockets")
+        length_of_work = request.form.get("duration")
+        tables_and_chairs = request.form.get("tables")
+        is_it_quiet = request.form.get("quiet")
+        audio_and_video = request.form.get("audio")
 
         other_people_working = request.form.get("people-working")
         group_tables = request.form.get("group-tables")
@@ -359,23 +367,22 @@ def review_venue_info(city, cafe_name):
         #CLEAR SESSION IN NEXT ROUTE
         session.clear()
 
-        return redirect(url_for("home"))
+        return redirect(url_for("show_location", city=city, name=normal_cafe_name))
+    elif request.method == "POST" and review_db:
+        #dynamically only update what has been filled, if user does not fill other parts, do not update them.
 
+        return redirect(url_for("show_location", city=city, name=normal_cafe_name))
 
-    #check if review exist first
-    cafe_db = db.session.execute(db.select(Cafe).where(Cafe.name == cafe_name)).scalar()
-    cafe_id = cafe_db.id
-    review_db = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
+    #if review is being edited, hence existed previously, run first condition, else  run second condition
     if review_db:
         summary_rating = review_db.summary
         csrf_token = secrets.token_hex(16)
         session["csrf_token"] = csrf_token
-        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, summary=summary_rating)
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, summary=summary_rating, survey_data=survey_data)
     else:
         csrf_token = secrets.token_hex(16)
         session["csrf_token"] = csrf_token
-
-        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name)
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, survey_data=survey_data)
 
 @app.route("/cities")
 def show_cities():
@@ -465,7 +472,8 @@ if __name__ == "__main__":
 
 
 
-
+#NEEDS USER LOGIN/REGISTER TO EDIT ANYTHING/ MAKE ADDITION
+#NON USER CAN ONLY VIEW STUFF
 
 
 
