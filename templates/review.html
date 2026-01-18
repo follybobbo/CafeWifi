@@ -16,6 +16,7 @@
         {% set question_bank_list = question_bank.items() | list %}
 <!--         PRODUCTIVITY-->
         {% if question_bank_list | length == 6 %}
+           {% set productivity = review_data["PRODUCTIVITY"] %}
            <div class="topic">
                <h2 class="heading">{{header}}</h2>
                <div class="row-questions">
@@ -26,7 +27,7 @@
                          <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                              <option value="">-- Choose an Option --</option>
                              {% for option in item_tuple[0] %}
-                             <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                             <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if productivity[index] == option[1] else ''}}>{{option[0]}}</option>
                              {% endfor %}
                          </select>
                      </div>
@@ -40,7 +41,7 @@
                          <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                              <option value="">-- Choose an Option --</option>
                              {% for option in item_tuple[0] %}
-                             <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                             <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if productivity[index] == option[1] else ''}}>{{option[0]}}</option>
                              {% endfor %}
                          </select>
                      </div>
@@ -54,7 +55,7 @@
                          <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                              <option value="">-- Choose an Option --</option>
                              {% for option in item_tuple[0] %}
-                             <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                             <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if productivity[index] == option[1] else ''}}>{{option[0]}}</option>
                              {% endfor %}
                          </select>
                      </div>
@@ -64,6 +65,7 @@
            <hr>
         {% elif question_bank_list | length == 2 %}
 <!--           COMMUNITY-->
+        {% set community = review_data["COMMUNITY"] %}
            <div class="topic">
                <h2 class="heading">{{header}}</h2>
                <div class="row-questions">
@@ -74,7 +76,7 @@
                          <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                              <option value="">-- Choose an Option --</option>
                              {% for option in item_tuple[0] %}
-                             <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                             <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if community[index] == option[1] else ''}}>{{option[0]}}</option>
                              {% endfor %}
                          </select>
                      </div>
@@ -83,6 +85,7 @@
            </div>
            <hr>
         {% elif question_bank_list | length == 5 %}
+         {% set service = review_data["SERVICE"] %}
 <!--           SERVICE-->
            <div class="topic">
                <h2 class="heading">{{header}}</h2>
@@ -94,7 +97,7 @@
                      <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                        <option value="">-- Choose an Option --</option>
                        {% for option in item_tuple[0] %}
-                       <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                       <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if service[index] == option[1] else ''}}>{{option[0]}}</option>
                        {% endfor %}
                      </select>
                    </div>
@@ -109,7 +112,7 @@
                          <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                            <option value="">-- Choose an Option --</option>
                            {% for option in item_tuple[0] %}
-                           <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                           <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if service[index] == option[1] else ''}}>{{option[0]}}</option>
                            {% endfor %}
                          </select>
                        </div>
@@ -124,7 +127,7 @@
                              <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                                <option value="">-- Choose an Option --</option>
                                {% for option in item_tuple[0] %}
-                               <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                               <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if service[index] == option[1] else ''}}>{{option[0]}}</option>
                                {% endfor %}
                              </select>
                            </div>
@@ -133,6 +136,7 @@
            </div>
            <hr>
         {% elif question_bank_list | length == 9 %}
+          {% set space = review_data["SPACE"] %}
 <!--          SPACE-->
           <div class="topic">
                <h2 class="heading">{{header}}</h2>
@@ -144,7 +148,7 @@
                       <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                           <option value="">-- Choose an Option --</option>
                           {% for option in item_tuple[0] %}
-                          <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                          <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if space[index] == option[1] else ''}}>{{option[0]}}</option>
                           {% endfor %}
                       </select>
                   </div>
@@ -159,7 +163,7 @@
                       <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                           <option value="">-- Choose an Option --</option>
                           {% for option in item_tuple[0] %}
-                          <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                          <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if space[index] == option[1] else ''}}>{{option[0]}}</option>
                           {% endfor %}
                       </select>
                   </div>
@@ -174,7 +178,7 @@
                       <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                           <option value="">-- Choose an Option --</option>
                           {% for option in item_tuple[0] %}
-                          <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                          <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if space[index] == option[1] else ''}}>{{option[0]}}</option>
                           {% endfor %}
                       </select>
                   </div>
@@ -189,7 +193,7 @@
                           <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                               <option value="">-- Choose an Option --</option>
                               {% for option in item_tuple[0] %}
-                              <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                              <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if space[index] == option[1] else ''}}>{{option[0]}}</option>
                               {% endfor %}
                           </select>
                       </div>
@@ -204,7 +208,7 @@
                           <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                               <option value="">-- Choose an Option --</option>
                               {% for option in item_tuple[0] %}
-                              <option value="{% if loop.index0 == 0%}low{% elif loop.index0 == 1 %}medium{% else %}high{% endif %}" class="list-item-{{ loop.index }}">{{option}}</option>
+                              <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if space[index] == option[1] else ''}}>{{option[0]}}</option>
                               {% endfor %}
                           </select>
                       </div>
@@ -224,7 +228,7 @@
                      <select id="{{item_tuple[1]}}" name="{{item_tuple[1]}}" required>
                        <option value="">-- Choose an Option --</option>
                        {% for option in item_tuple[0] %}
-                       <option value="{% if loop.index0 == 0%}0{% elif loop.index0 == 1 %}50{% else %}100{% endif %}" class="list-item-{{ loop.index }}" >{{option}}</option>
+                       <option value={{option[1]}} class="list-item-{{ loop.index }}" {{'selected' if summary == option[1] else ''}}>{{option[0]}}</option>
                        {% endfor %}
                      </select>
                    </div>
