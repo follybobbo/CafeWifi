@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet"/>
 <!--    <script src=f"http://maps.google.com/maps/api/js?key={{api_key}}" type="text/javascript"></script>-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="./static/styles.css">
@@ -57,12 +58,12 @@
             </a>
            {% endfor %}
 
-            <div id="suggest">
-                <img src="#">
+            <a href="{{url_for('add_place')}}" id="suggest" style="text-decoration: none; padding: 100px 0; display: inline; width: 50%">
+                <i class="bi bi-house-add-fill" style="font-size: 2.5rem;"></i>
                 <p>SUGGEST A PLACE</p>
-            </div>
-
+            </a>
         </div>
+
 
     </div>
 
