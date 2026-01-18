@@ -376,9 +376,19 @@ def review_venue_info(city, cafe_name):
     #if review is being edited, hence existed previously, run first condition, else  run second condition
     if review_db:
         summary_rating = review_db.summary
+        data_dict = {
+
+            "PRODUCTIVITY": [review_db.wifi, review_db.power_sockets, review_db.length_of_work, review_db.tables_and_chairs, review_db.is_it_quiet, review_db.audio_and_video],
+
+            "COMMUNITY": [review_db.other_people_working, review_db.group_tables],
+
+            "SERVICE": [review_db.coffee_available, review_db.food_offered, review_db.veggie_options, review_db.alcohol_offered, review_db.credit_cards],
+
+            "SPACE": [review_db.natural_light, review_db.outdoor_area, review_db.how_large, review_db.restroom, review_db.wheelchair_accessible, review_db.air_conditioned, review_db.smoke_free, review_db.pet_friendly, review_db.parking_space]
+        }
         csrf_token = secrets.token_hex(16)
         session["csrf_token"] = csrf_token
-        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, summary=summary_rating, survey_data=survey_data)
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, summary=summary_rating, survey_data=survey_data, review_data=data_dict)
     else:
         csrf_token = secrets.token_hex(16)
         session["csrf_token"] = csrf_token
@@ -415,7 +425,7 @@ def show_cities():
 
 @app.route("/<city>/<name>")
 def show_location(city, name):
-    #open dv and fetch all values
+    #open db and fetch all values
     cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
     cafe_id = cafe_info.id
     location_address = cafe_info.address
