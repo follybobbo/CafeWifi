@@ -98,8 +98,10 @@ function applyChanges(classOf, borderToChang) {
     borderToChang.style.borderColor = "red";
   } else if(classOf == "medium") {
     borderToChang.style.borderColor = "orange";
-  } else {
+  } else if (classOf == "high") {
     borderToChang.style.borderColor = "green";
+  } else {
+    borderToChang.classList.add("disabled-link")
   }
 }
 

@@ -212,6 +212,11 @@ form li {
 
 }
 
+/*#location-header {
+ text-transform: uppercase;
+ font-size: 1rem;
+}*/
+
 
 /*REVIEW HTML*/
 .one {
@@ -513,6 +518,17 @@ select {
 .hig {
  color: green;
 }
+
+
+.disabled-link {
+  color: #999;
+  background-color: #eee;
+  cursor: not-allowed;
+  pointer-events: none;
+
+
+}
+
 
 
 
