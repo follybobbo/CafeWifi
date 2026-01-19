@@ -521,20 +521,14 @@ select {
 
 
 .disabled-link {
-  color: #999;
-  background-color: #eee;
   cursor: not-allowed;
   pointer-events: none;
-
-
 }
 
-
-
-
-
-
-
+/*.disabled-styling {
+  color: #999;
+  background-color: #eee;
+}*/
 
 
 /*

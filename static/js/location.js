@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let borderToChangeList = document.querySelectorAll(".tooltip-container a");
 
+
   borderToChangeList.forEach(function (borderToChange, index) {
     let classOfElement = borderToChange.classList.value;
     applyChanges(classOfElement, borderToChange);
@@ -92,9 +93,10 @@ document.addEventListener("DOMContentLoaded", function () {
 //  Report closed mechanism
   let closedButton = document.querySelector("#report-closed");
   let closedBanner = document.querySelector("#closed");
-  console.log(closedBanner);
+  let updatePageButton = document.querySelector("#update-button");
+
   let valueOfClosedButton = closedButton.textContent;
-  console.log(valueOfClosedButton);
+
 
 //  check for current value of button before assigning dataset
   if (valueOfClosedButton == "REPORT CLOSED") {
@@ -102,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     closedButton.dataset.opened = false;
   }
+
 //  IF USER CLICKS ON REPORT CLOSED BUTTON
   closedButton.addEventListener("click", function(){
 
@@ -113,6 +116,18 @@ document.addEventListener("DOMContentLoaded", function () {
 //      ADD CLOSED BANNER
       closedBanner.classList.toggle("closed-display");
 //      DISABLE ALL BUTTONS TILL REPORT OPENED
+      console.log(reactionEmojiList);
+//          REACTION EMOJI's
+      reactionEmojiList.forEach(function(obj, index){
+        obj.classList.add("disabled-link");
+      });
+//            tooltips links
+      borderToChangeList.forEach(function(obj, ind) {
+       obj.classList.add("disabled-link")
+      });
+
+//         update buttons
+     updatePageButton.classList.add("disabled-link");
 
 //      ADD CLOSED HEADER
     } else {
@@ -120,6 +135,14 @@ document.addEventListener("DOMContentLoaded", function () {
       this.dataset.opened = true;
 //      REMOVE CLOSED BANNER
       closedBanner.classList.toggle("closed-display");
+
+      reactionEmojiList.forEach(function(obj, index){
+        obj.classList.remove("disabled-link");
+      });
+      borderToChangeList.forEach(function(obj, ind) {
+       obj.classList.remove("disabled-link")
+      });
+      updatePageButton.classList.remove("disabled-link");
 
     }
 
@@ -177,3 +200,4 @@ function removeBackgroundColor(index, Emoji) {
     Emoji.classList.remove("hig");
   }
 }
+
