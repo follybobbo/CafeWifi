@@ -258,14 +258,14 @@
                   <span>
                       <i class="bi bi-geo-alt-fill"></i>
                   </span>
-                  <span>{{location_address}}</span>
+                  <a style="text-decoration: none; color: black;" href="#">{{location_address}}</a>
               </div>
           </div>
 
           <div class="outer-container" id="item-eight" style="text-align: center">
 
               <p>Missing or incorrect information?</p>
-              <a class="btn-ltn" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">UPDATE PAGE</a>
+              <a class="btn-ltn" id="update-button" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">UPDATE PAGE</a>
               <a class="btn-ltn" id="report-closed">REPORT CLOSED</a>
           </div>
 
