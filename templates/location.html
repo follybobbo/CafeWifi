@@ -4,6 +4,7 @@
 
 {% block content %}
   <div class="grid-container">
+      <div class="closed-display" id="closed">This place has been reported as closed!</div>
       <header class="header-container">
           <img class="header-img" src="{{img_url}}">
           <div class="laptop-friendly-div">
@@ -264,8 +265,8 @@
           <div class="outer-container" id="item-eight" style="text-align: center">
 
               <p>Missing or incorrect information?</p>
-              <button class="btn-ltn">UPDATE PAGE</button>
-              <button class="btn-ltn">REPORT CLOSED</button>
+              <a class="btn-ltn" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">UPDATE PAGE</a>
+              <a class="btn-ltn" id="report-closed">REPORT CLOSED</a>
           </div>
 
 <!--          <div class="inner-div">-->

@@ -88,6 +88,42 @@ document.addEventListener("DOMContentLoaded", function () {
             }
       });
   });
+
+//  Report closed mechanism
+  let closedButton = document.querySelector("#report-closed");
+  let closedBanner = document.querySelector("#closed");
+  console.log(closedBanner);
+  let valueOfClosedButton = closedButton.textContent;
+  console.log(valueOfClosedButton);
+
+//  check for current value of button before assigning dataset
+  if (valueOfClosedButton == "REPORT CLOSED") {
+    closedButton.dataset.opened = true;
+  } else {
+    closedButton.dataset.opened = false;
+  }
+//  IF USER CLICKS ON REPORT CLOSED BUTTON
+  closedButton.addEventListener("click", function(){
+
+//    CHECK DATASET OF BUTTON
+    isOpened = this.dataset.opened.toString() === "true"
+    if (isOpened) {
+      closedButton.textContent = "NOT CLOSED";
+      this.dataset.opened = false;
+//      ADD CLOSED BANNER
+      closedBanner.classList.toggle("closed-display");
+//      DISABLE ALL BUTTONS TILL REPORT OPENED
+
+//      ADD CLOSED HEADER
+    } else {
+      closedButton.textContent = "REPORT CLOSED";
+      this.dataset.opened = true;
+//      REMOVE CLOSED BANNER
+      closedBanner.classList.toggle("closed-display");
+
+    }
+
+  });
 });
 
 

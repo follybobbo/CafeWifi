@@ -557,6 +557,7 @@ select {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  text-decoration: none;
 
 }
 
@@ -567,6 +568,22 @@ select {
 .header {
   font-weight: bold;
 }
+
+#closed {
+  background-color: pink;
+  color: black;
+  text-align: center;
+  padding: 15px 0;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+
+}
+
+.closed-display{
+ display: none;
+}
+
 
 
 
