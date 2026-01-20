@@ -180,6 +180,10 @@ def home():
         if location not in location_list:
             location_list.append(location)
 
+    #ENSURES ALL SESSION DATA IS CLEARED INCASE USER COMES TO HOME ROUTE FRPM ADD_PLACE WHERE SESSION IS USED HEAVILY TO STORE TEMP DATA
+    if session:
+        session.clear()
+
 
     return render_template("index.html", location_list=location_list)
 
@@ -196,6 +200,7 @@ def add_place():
     #     session["step"] = 1
     # SET STEP = 1 IF STEP IS NOT IN SESSION
     step = session.get("step", 1)
+
 
     if request.method == "POST" and step == 1:
 
@@ -416,6 +421,10 @@ def show_cities():
 
     print(city_dict)
 
+    # ENSURES ALL SESSION DATA IS CLEARED INCASE USER COMES TO HOME ROUTE FROM ADD_PLACE WHERE SESSION IS USED HEAVILY TO STORE TEMP DATA
+    if session:
+        session.clear()
+
 
 
 
@@ -472,6 +481,34 @@ def show_location(city, name):
     }
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
+
+@app.route("/<restaurant_name>/closed-or-opened", method=["PATCH"])
+def report_closed_or_opened(restaurant_name):
+    restaurant_name = restaurant_name
+    restaurant_to_update = db.session.execute(db.select(Cafe).where(Cafe.name == restaurant_name)).scalar()
+    status = restaurant_to_update.status
+
+    if status == "Opened":
+        restaurant_to_update.status = "Closed"
+        db.session.commit()
+    elif status == "Closed":
+        restaurant_to_update.status = "Opened"
+        db.session.commit()
+
+
+
+
+
+@app.route("/<restaurant_name>/status", method=["GET"])
+def check_restaurant_status(restaurant_name):
+    db_restaurant = db.session.execute(db.select(Cafe).where(Cafe.name == restaurant_name)).scalar()
+
+    if db_restaurant:
+        status = db_restaurant.status
+        if status == "Opened":
+            return True
+
+    # ELSE RETURN ERROR OR HANDLE ERROR
 
 
 
