@@ -55,7 +55,9 @@ class Cafe(db.Model):
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)
     country: Mapped[str] = mapped_column(String(250), nullable=False)
+    status: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     user_review: Mapped["Review"] = relationship(back_populates="input_restaurant")
+
 
     # has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
     # has_toilet: Mapped[bool] = mapped_column(Boolean, nullable=False)
@@ -242,7 +244,8 @@ def add_place():
             address= session.get("street_name"),
             latitude= session.get("latitude"),
             longitude= session.get("longitude"),
-            country= session.get("country")
+            country= session.get("country"),
+            status= True
         )
 
         db.session.add(new_cafe)
@@ -284,10 +287,15 @@ def show_venue(location):
 #uses slugified city and cafe_name
 @app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
 def review_venue_info(city, cafe_name):
+
+    de_sluged_cafe_name = de_slugify(cafe_name)
     normal_cafe_name = session.get("location_name")
     location_name = session.get("location_name", "")
+    print(f"{normal_cafe_name} session")
+    print(f"{cafe_name} cafe_name")
+    print(f"{de_sluged_cafe_name} deslugged")
 
-    cafe_db = db.session.execute(db.select(Cafe).where(Cafe.name == cafe_name)).scalar()
+    cafe_db = db.session.execute(db.select(Cafe).where(Cafe.name == de_sluged_cafe_name)).scalar()
     cafe_id = cafe_db.id
     review_db = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
 
@@ -375,6 +383,7 @@ def review_venue_info(city, cafe_name):
         return redirect(url_for("show_location", city=city, name=normal_cafe_name))
     elif request.method == "POST" and review_db:
         #dynamically only update what has been filled, if user does not fill other parts, do not update them.
+        # USE AJAX ?
 
         return redirect(url_for("show_location", city=city, name=normal_cafe_name))
 
@@ -393,11 +402,12 @@ def review_venue_info(city, cafe_name):
         }
         csrf_token = secrets.token_hex(16)
         session["csrf_token"] = csrf_token
-        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, summary=summary_rating, survey_data=survey_data, review_data=data_dict)
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=de_sluged_cafe_name, summary=summary_rating, survey_data=survey_data, review_data=data_dict)
     else:
         csrf_token = secrets.token_hex(16)
         session["csrf_token"] = csrf_token
-        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=cafe_name, survey_data=survey_data)
+        data_dict = {}
+        return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=de_sluged_cafe_name, survey_data=survey_data, review_data=data_dict)
 
 @app.route("/cities")
 def show_cities():
@@ -482,7 +492,7 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
-@app.route("/<restaurant_name>/closed-or-opened", method=["PATCH"])
+@app.route("/<restaurant_name>/closed-or-opened", methods=["PATCH"])
 def report_closed_or_opened(restaurant_name):
     restaurant_name = restaurant_name
     restaurant_to_update = db.session.execute(db.select(Cafe).where(Cafe.name == restaurant_name)).scalar()
@@ -499,8 +509,9 @@ def report_closed_or_opened(restaurant_name):
 
 
 
-@app.route("/<restaurant_name>/status", method=["GET"])
-def check_restaurant_status(restaurant_name):
+@app.route("/restaurant/status/", methods=["GET"])
+def check_restaurant_status():
+    restaurant_name = request.args.get("name")
     db_restaurant = db.session.execute(db.select(Cafe).where(Cafe.name == restaurant_name)).scalar()
 
     if db_restaurant:
