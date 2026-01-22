@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
   let borderToChangeList = document.querySelectorAll(".tooltip-container a");
 
@@ -91,58 +91,63 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 //  Report closed mechanism
-  let closedButton = document.querySelector("#report-closed");
+  let closedButton = document.querySelector("#report-closed");  //will go
   let closedBanner = document.querySelector("#closed");
   let updatePageButton = document.querySelector("#update-button");
 
-  let valueOfClosedButton = closedButton.textContent;
+  let valueOfClosedButton = closedButton.innerText;
+  let nameOfRestaurant = document.querySelector(".location-name").innerText;
+
 
 
 //  check for current value of button before assigning dataset
-  if (valueOfClosedButton == "REPORT CLOSED") {
-    closedButton.dataset.opened = true;
+//  if (valueOfClosedButton == "REPORT CLOSED") {
+//    closedButton.dataset.opened = true;
+//  } else {
+//    closedButton.dataset.opened = false;
+//  }
+//CHECK STATUS THEN DO EFFECT OR NOT
+
+  let closedStatusData = await checkStatus(nameOfRestaurant)
+  let isOpenedOnLoad = closedStatusData.status
+  console.log(isOpenedOnLoad)
+
+  //FUNCTION TO EFFECT CHANGE
+  if (isOpenedOnLoad) {
+      console.log("True")
+      removeEffectOnRestaurantOpen(closedButton, closedBanner, reactionEmojiList, borderToChangeList, updatePageButton);
   } else {
-    closedButton.dataset.opened = false;
+      console.log("False")
+      addEffectOnRestaurantClose(closedButton, closedBanner, reactionEmojiList, borderToChangeList, updatePageButton);
   }
 
 //  IF USER CLICKS ON REPORT CLOSED BUTTON
-  closedButton.addEventListener("click", function(){
+  closedButton.addEventListener("click", async function(){
+    let statusData = await checkStatus(nameOfRestaurant);
+    let isOpened = statusData.status
+
 
 //    CHECK DATASET OF BUTTON
-    isOpened = this.dataset.opened.toString() === "true"
+//    isOpened = this.dataset.opened.toString() === "true"
     if (isOpened) {
-      closedButton.textContent = "NOT CLOSED";
-      this.dataset.opened = false;
-//      ADD CLOSED BANNER
-      closedBanner.classList.toggle("closed-display");
-//      DISABLE ALL BUTTONS TILL REPORT OPENED
-      console.log(reactionEmojiList);
-//          REACTION EMOJI's
-      reactionEmojiList.forEach(function(obj, index){
-        obj.classList.add("disabled-link");
-      });
-//            tooltips links
-      borderToChangeList.forEach(function(obj, ind) {
-       obj.classList.add("disabled-link")
-      });
-
-//         update buttons
-     updatePageButton.classList.add("disabled-link");
-
-//      ADD CLOSED HEADER
+//      REPORT CLOSED
+      let report_res = await reportClosedOrOpened(nameOfRestaurant);
+      addEffectOnRestaurantClose(closedButton, closedBanner, reactionEmojiList, borderToChangeList, updatePageButton);
     } else {
-      closedButton.textContent = "REPORT CLOSED";
-      this.dataset.opened = true;
-//      REMOVE CLOSED BANNER
-      closedBanner.classList.toggle("closed-display");
-
-      reactionEmojiList.forEach(function(obj, index){
-        obj.classList.remove("disabled-link");
-      });
-      borderToChangeList.forEach(function(obj, ind) {
-       obj.classList.remove("disabled-link")
-      });
-      updatePageButton.classList.remove("disabled-link");
+      let report_res = await reportClosedOrOpened(nameOfRestaurant)
+      removeEffectOnRestaurantOpen(closedButton, closedBanner, reactionEmojiList, borderToChangeList, updatePageButton);
+//      closedButton.textContent = "REPORT CLOSED";
+////      this.dataset.opened = true;
+////      REMOVE CLOSED BANNER
+//      closedBanner.classList.toggle("closed-display");
+//
+//      reactionEmojiList.forEach(function(obj, index){
+//        obj.classList.remove("disabled-link");
+//      });
+//      borderToChangeList.forEach(function(obj, ind) {
+//       obj.classList.remove("disabled-link")
+//      });
+//      updatePageButton.classList.remove("disabled-link");
 
     }
 
@@ -201,3 +206,78 @@ function removeBackgroundColor(index, Emoji) {
   }
 }
 
+async function checkStatus(nameOfRestaurant) {
+  try{
+     const response = await fetch(`/restaurant/status?name=${encodeURIComponent(nameOfRestaurant)}`);
+     if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+     }
+     const data = await response.json()
+//     console.log(data)
+//     console.log("AJAX FETCH");
+     return data
+  } catch(error) {
+    console.log(error)
+  }
+
+}
+
+//USED ID LATER
+async function reportClosedOrOpened(nameOfRestaurant) {
+    try {
+//        MAKE PATCH REQUEST
+        const response = await fetch(`/restaurant/closed-or-opened`, {
+        method: "PATCH",
+        headers: {
+         "Content-Type": "application/json"
+        },
+        body: JSON.stringify({name: nameOfRestaurant})
+        });
+
+       if(!response.ok) {
+        throw new Error(`HTTP error ${response.status}`)
+       }
+       const data = await response.json();
+       console.log(data)
+
+    }catch(error) {
+        console.log(error)
+    }
+
+}
+
+
+function addEffectOnRestaurantClose(button, banner, emojiList, listOfBorderToChange, updateButton) {
+    button.textContent = "NOT CLOSED";
+
+    banner.classList.remove("closed-display");
+
+    emojiList.forEach(function(obj, index){
+        obj.classList.add("disabled-link");
+    });
+
+    listOfBorderToChange.forEach(function(obj, ind) {
+       obj.classList.add("disabled-link")
+    });
+
+    updateButton.classList.add("disabled-link");
+
+
+}
+
+function removeEffectOnRestaurantOpen(button, banner, emojiList, listOfBorderToChange, updateButton) {
+    button.textContent = "REPORT CLOSED";
+
+    banner.classList.add("closed-display");
+
+    emojiList.forEach(function(obj, index){
+        obj.classList.remove("disabled-link");
+    });
+
+    listOfBorderToChange.forEach(function(obj, ind) {
+       obj.classList.remove("disabled-link")
+    });
+
+    updateButton.classList.remove("disabled-link");
+
+}
