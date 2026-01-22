@@ -492,32 +492,39 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
-@app.route("/<restaurant_name>/closed-or-opened", methods=["PATCH"])
-def report_closed_or_opened(restaurant_name):
-    restaurant_name = restaurant_name
+@app.route("/restaurant/closed-or-opened", methods=["PATCH"])
+def report_closed_or_opened():
+    request_body = request.get_json()
+    restaurant_name = request_body.get("name")
     restaurant_to_update = db.session.execute(db.select(Cafe).where(Cafe.name == restaurant_name)).scalar()
     status = restaurant_to_update.status
 
-    if status == "Opened":
-        restaurant_to_update.status = "Closed"
-        db.session.commit()
-    elif status == "Closed":
-        restaurant_to_update.status = "Opened"
+    if status:
+        restaurant_to_update.status = False
         db.session.commit()
 
+        return jsonify({"status": "closed"})
+    else:
+        restaurant_to_update.status = True
+        db.session.commit()
+
+        return jsonify({"status": "opened"})
 
 
 
 
-@app.route("/restaurant/status/", methods=["GET"])
+
+@app.route("/restaurant/status", methods=["GET"])
 def check_restaurant_status():
     restaurant_name = request.args.get("name")
     db_restaurant = db.session.execute(db.select(Cafe).where(Cafe.name == restaurant_name)).scalar()
 
     if db_restaurant:
         status = db_restaurant.status
-        if status == "Opened":
-            return True
+        if status:
+            return jsonify({"status": True})
+        else:
+            return jsonify({"status": False})
 
     # ELSE RETURN ERROR OR HANDLE ERROR
 
