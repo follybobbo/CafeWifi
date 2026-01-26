@@ -285,7 +285,7 @@ def show_venue(location):
 
 #LOGIN REQUIRED TO POST
 #uses slugified city and cafe_name
-@app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET"])
+@app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET", "PUT", "PATCH"])
 def review_venue_info(city, cafe_name):
 
     de_sluged_cafe_name = de_slugify(cafe_name)
@@ -380,12 +380,89 @@ def review_venue_info(city, cafe_name):
         #CLEAR SESSION IN NEXT ROUTE
         session.clear()
 
-        return redirect(url_for("show_location", city=city, name=normal_cafe_name))
+        return redirect(url_for("show_location", city=city, name=de_sluged_cafe_name))
     elif request.method == "POST" and review_db:
         #dynamically only update what has been filled, if user does not fill other parts, do not update them.
-        # USE AJAX ?
+        session_csrf_token = session.get("csrf_token")
+        form_csrf = request.form.get("csrf_token")
 
-        return redirect(url_for("show_location", city=city, name=normal_cafe_name))
+        if session_csrf_token != form_csrf:
+            return 'CSRF token is missing or invalid', 400
+
+        # EXTRACTS FORM DATA, AND SAVE TO VARIABLE
+        wifi = request.form.get("wifi")
+        power_sockets = request.form.get("sockets")
+        length_of_work = request.form.get("duration")
+        tables_and_chairs = request.form.get("tables")
+        is_it_quiet = request.form.get("quiet")
+        audio_and_video = request.form.get("audio")
+
+        other_people_working = request.form.get("people-working")
+        group_tables = request.form.get("group-tables")
+
+        coffee_available = request.form.get("coffee-available")
+        food_offered = request.form.get("food-offered")
+        veggie_options = request.form.get("veggie-options")
+        alcohol_offered = request.form.get("alcohol-offered")
+        credit_cards = request.form.get("credit-cards")
+
+        natural_light = request.form.get("natural-light")
+        outdoor_area = request.form.get("outdoor-area")
+        how_large = request.form.get("large-space")
+        restroom = request.form.get("restroom")
+        wheelchair_accessible = request.form.get("wheelchair-access")
+        air_conditioned = request.form.get("air-conditioned")
+        smoke_free = request.form.get("smoke-free")
+        pet_friendly = request.form.get("pet-friendly")
+        parking_space = request.form.get("parking-space")
+        summary = request.form.get("summary")
+
+        # GET ID OF CAFE AND USE TO STORE IN DB
+        # cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == de_sluged_cafe_name)).scalar()
+        # cafe_id = cafe_instance.id
+        cafe_instance = Cafe.query.filter_by(
+            name=de_sluged_cafe_name
+        ).first()
+        cafe_id = cafe_instance.id
+
+
+        review_instance =  Review.query.get(cafe_id)
+
+        #GET REVIEW DB INSTANCE TO REPLACE
+
+
+
+        # review_instance = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
+
+        review_instance.wifi = wifi
+        review_instance.power_sockets = power_sockets
+        review_instance.length_of_work = length_of_work
+        review_instance.tables_and_chairs = tables_and_chairs
+        review_instance.is_it_quiet = is_it_quiet
+        review_instance.audio_and_video = audio_and_video
+        review_instance.other_people_working = other_people_working
+        review_instance.group_tables = group_tables
+        review_instance.coffee_available = coffee_available
+        review_instance.food_offered = food_offered
+        review_instance.veggie_options = veggie_options
+        review_instance.alcohol_offered = alcohol_offered
+        review_instance.credit_cards = credit_cards
+        review_instance.natural_light = natural_light
+        review_instance.outdoor_area = outdoor_area
+        review_instance.how_large = how_large
+        review_instance.restroom = restroom
+        review_instance.wheelchair_accessible = wheelchair_accessible
+        review_instance.air_conditioned = air_conditioned
+        review_instance.smoke_free = smoke_free
+        review_instance.pet_friendly = pet_friendly
+        review_instance.parking_space = parking_space
+        review_instance.summary = summary
+
+        db.session.commit()
+
+        # print("im happening")
+
+        return redirect(url_for("show_location", city=city, name=de_sluged_cafe_name))
 
     #if review is being edited, hence existed previously, run first condition, else  run second condition
     if review_db:
@@ -408,6 +485,8 @@ def review_venue_info(city, cafe_name):
         session["csrf_token"] = csrf_token
         data_dict = {}
         return render_template("review.html", location=location_name, csrf_token=csrf_token, city=city, cafe=de_sluged_cafe_name, survey_data=survey_data, review_data=data_dict)
+
+
 
 @app.route("/cities")
 def show_cities():
