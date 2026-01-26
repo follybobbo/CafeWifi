@@ -492,6 +492,9 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
+
+
+
 @app.route("/restaurant/closed-or-opened", methods=["PATCH"])
 def report_closed_or_opened():
     request_body = request.get_json()
@@ -527,6 +530,29 @@ def check_restaurant_status():
             return jsonify({"status": False})
 
     # ELSE RETURN ERROR OR HANDLE ERROR
+
+
+@app.route("/update/summary", methods=["PATCH"])
+def update_summary():
+    request_body = request.get_json()
+    name_of_restaurant = request_body.get("name")
+    summary_value = request_body.get("summary_value")
+
+
+    #GET DB TO UPDATE
+    restaurant_to_update = db.session.execute(db.select(Cafe).where(Cafe.name == name_of_restaurant)).scalar()
+    restaurant_id = restaurant_to_update.id
+
+    #GET REVIEW DATABASE
+    review_db = db.session.execute(db.select(Review).where(Review.id == restaurant_id)).scalar()
+
+    #UPDATE DB
+
+    review_db.summary = summary_value
+    db.session.commit()
+
+    return jsonify({"status": "updated"})
+
 
 
 
