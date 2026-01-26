@@ -8,7 +8,8 @@
       <header class="header-container">
           <img class="header-img" src="{{img_url}}">
           <div class="laptop-friendly-div">
-              <span id="emoji">
+              <span id="emoji" style="padding: 4px;">
+                  <i style="font-size: 16px;" class="bi bi-heart rating-emoji"></i>
               </span>
               <span> | {{percentage_love}} LAPTOP FRIENDLY</span>
           </div>
@@ -239,15 +240,15 @@
           <div class="outer-container" id="item-six" style="text-align: center">
 
               <p>Do you like working from here?</p>
-              <div class="unto">
-                  <span>
-                      <i class="bi bi-heartbreak rating-emoji"></i>
+              <div class="unto {{summary}}">
+                  <span class="0">
+                      <i class="bi bi-heartbreak rating-emoji" id="0"></i>
                   </span>
-                  <span>
-                      <i class="bi bi-heart rating-emoji"></i>
+                  <span class="50">
+                      <i class="bi bi-heart rating-emoji" id="50"></i>
                   </span>
-                  <span>
-                      <i class="bi bi-heart rating-emoji"></i>
+                  <span class="100">
+                      <i class="bi bi-heart rating-emoji" id="100"></i>
                   </span>
               </div>
           </div>
