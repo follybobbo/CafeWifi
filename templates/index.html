@@ -9,7 +9,7 @@
         <div class="hero-text">
             <h1>PERSONAL-TIME EVERYWHERE</h1>
             <p>From coffe shops to hotel lobbies, discover everyday places to work and connect</p>
-            <button class="explore-button">Explore "Dynamic Location"</button>
+            <button class="explore-button hidden"></button>
 
             <div class="cities-containers">
                {% for location in location_list %}
@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block script %}
+<script src="{{url_for('static', filename='js/index.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 {% endblock %}
 
