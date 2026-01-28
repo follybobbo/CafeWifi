@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DecimalField
+from wtforms import StringField, SubmitField, PasswordField, DecimalField, EmailField
 from wtforms.validators import DataRequired, URL, Email
 from flask_ckeditor import CKEditorField
 
@@ -23,3 +23,20 @@ class VenueInfo(FlaskForm):
     street = StringField("Street", validators=[DataRequired()])
 
     next = SubmitField("NEXT")
+
+
+class LoginForm(FlaskForm):
+    email = EmailField("Email", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired])
+
+    login = SubmitField("LOG IN")
+
+class RegisterForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    surname = StringField("Surname", validators=[DataRequired()])
+    city = StringField("City", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired()])
+    password = PasswordField("Password (8 characters minimum)", validators=[DataRequired()])
+    password_confirm = PasswordField("Confirm password", validators=[DataRequired()])
+
+    register = SubmitField("REGISTER")
