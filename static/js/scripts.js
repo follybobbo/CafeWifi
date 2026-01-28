@@ -20,13 +20,13 @@
         //FETCH DATA FROM BACKEND AND CHECK
         const listOfPlaces = await fetchListOfPlaces();
         let exists = checkIfPlaceExist(listOfPlaces, place.displayName);
-        console.log(exists);
-        console.log(place.id);
+//        console.log(exists);
+//        console.log(place.id);
 
 
         if (exists) {
             console.log("place already exist");
-            //HIDE ALL VISIBLE SECTIONS THAT SHOULD ONLY SHOW WHEN SELECTION IS SUCCESFULL
+            //HIDE ALL VISIBLE SECTIONS THAT SHOULD ONLY SHOW WHEN SELECTION IS SUCCESFULL OR PLACE DOESNT EXIST
             let stuffToHide = document.querySelectorAll(".hidden");  //selects all inputs that are currently hidden
             stuffToHide.forEach(function (obj, index) {
               obj.classList.remove("show-hidden")    //removes show-hidden class if the restaurant entered exists in the data base
@@ -48,8 +48,10 @@
     //        console.log(place.addressComponents.length)
     //        console.log(place.addressComponents)
     //        LOOP THROUGH ADDRESS COMPONENT AND GET DETAILS OF LOCATION
-            let addressComponentArray = place.addressComponents
+            let addressComponentArray = place.addressComponents;
+            console.log(addressComponentArray)
             let streetName, country, streetNo, city, postalCode;
+
             addressComponentArray.forEach(
               function(object, index) {
                  if (object["types"][0] == "route") {
@@ -58,7 +60,7 @@
                     country = object["longText"];                        //COUNTRY
                  } else if (object["types"][0] == "street_number") {
                     streetNo = object["longText"];                      //STREET NO
-                 } else if (object["types"][0] == "administrative_area_level_2") {
+                 } else if (object["types"][0] == "postal_town") {
                      city = object["longText"];                          //CITY
                  } else if (object["types"][0] == "postal_code") {
                     postalCode = object["longText"];                     //POSTAL CODE
@@ -215,7 +217,7 @@ async function fetchListOfPlaces() {
   try {
     const response = await fetch("/api/restaurants");
     if (!response.ok) {
-      throw new Error("HTTP error! status: $(response.status)");
+      throw new Error(`HTTP error! status: $(response.status)`);
     }
     const placeList = await response.json();
 
