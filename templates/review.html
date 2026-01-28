@@ -16,6 +16,7 @@
         {% set question_bank_list = question_bank.items() | list %}
 <!--         PRODUCTIVITY-->
         {% if question_bank_list | length == 6 %}
+<!--           use get to avoid errors-->
            {% set productivity = review_data.get("PRODUCTIVITY") %}
            <div class="topic">
                <h2 class="heading">{{header}}</h2>
