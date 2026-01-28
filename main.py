@@ -5,6 +5,8 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, Float, ForeignKey
 from forms import SearchVenue
 from forms import VenueInfo
+from forms import RegisterForm
+from forms import LoginForm
 import secrets
 import os
 import re
@@ -132,42 +134,42 @@ def de_slugify(slugified_text):
 
 
 # RETURNS LIST OF PLACE TO THE FRONT END, SO USER CAN EASILY GET FEEDBACK IF THEY ENTER CAFE THAT ALREADY EXIST
-@app.route("/api/restaurants")
-def get_list_of_places():
-    list_of_places = []
-    with app.app_context():
-        restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
-
-    for restaurant in restaurants:
-        print(restaurant.name)
-        list_of_places.append(restaurant.name)
-
-    return list_of_places
-
-
-#view searches through db and gets result for latitude and longitude in list
-@app.route("/api/latlong")
-def get_lat_and_long():
-    lat_long_list = []
-    city = request.args.get("city")
-
-    result = db.session.execute(db.select(Cafe).where(Cafe.city == city)).scalars().all()
-
-    for restaurant in result:
-        latitude = restaurant.latitude
-        longitude = restaurant.longitude
-
-        lat_long_list.append({"lat": latitude, "lng": longitude, "title": restaurant.name})
-
-
-    return lat_long_list  #returns list of latitude and longitude of each location
-
-
+# @app.route("/api/restaurants")
+# def get_list_of_places():
+#     list_of_places = []
+#     with app.app_context():
+#         restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
+#
+#     for restaurant in restaurants:
+#         print(restaurant.name)
+#         list_of_places.append(restaurant.name)
+#
+#     return list_of_places
+#
+#
+# #view searches through db and gets result for latitude and longitude in list
+# @app.route("/api/latlong")
+# def get_lat_and_long():
+#     lat_long_list = []
+#     city = request.args.get("city")
+#
+#     result = db.session.execute(db.select(Cafe).where(Cafe.city == city)).scalars().all()
+#
+#     for restaurant in result:
+#         latitude = restaurant.latitude
+#         longitude = restaurant.longitude
+#
+#         lat_long_list.append({"lat": latitude, "lng": longitude, "title": restaurant.name})
+#
+#
+#     return lat_long_list  #returns list of latitude and longitude of each location
 
 
 
 
 
+
+#ROUTES
 @app.route("/")
 @cache.cached(timeout=50)
 def home():
@@ -614,6 +616,21 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
+@app.route("/login")
+def login():
+    registration_form = RegisterForm()
+
+
+    return render_template("login.html", form=registration_form)
+
+@app.route("/register")
+def register():
+    login_form = LoginForm()
+
+
+    return render_template("register.html", form=login_form)
+
+# AJAX
 
 
 #HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
@@ -699,6 +716,38 @@ def reverse_geocoding():
 
 
     return jsonify({"city": city})
+
+
+# RETURNS LIST OF PLACE TO THE FRONT END, SO USER CAN EASILY GET FEEDBACK IF THEY ENTER CAFE THAT ALREADY EXIST
+@app.route("/api/restaurants")
+def get_list_of_places():
+    list_of_places = []
+    with app.app_context():
+        restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
+
+    for restaurant in restaurants:
+        print(restaurant.name)
+        list_of_places.append(restaurant.name)
+
+    return list_of_places
+
+
+#view searches through db and gets result for latitude and longitude in list
+@app.route("/api/latlong")
+def get_lat_and_long():
+    lat_long_list = []
+    city = request.args.get("city")
+
+    result = db.session.execute(db.select(Cafe).where(Cafe.city == city)).scalars().all()
+
+    for restaurant in result:
+        latitude = restaurant.latitude
+        longitude = restaurant.longitude
+
+        lat_long_list.append({"lat": latitude, "lng": longitude, "title": restaurant.name})
+
+
+    return lat_long_list  #returns list of latitude and longitude of each location
 
 
 
