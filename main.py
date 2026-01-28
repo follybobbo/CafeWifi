@@ -212,7 +212,9 @@ def add_place():
     step = session.get("step", 1)
 
     #THIS BIT OF CODE HAPPENS WHEN USER SUBMITS THE FIRST FORM
-    if request.method == "POST" and step == 1:
+    #NO CSRF VALIDATION
+    # if request.method == "POST" and step == 1:
+    if form_search_venue.validate_on_submit() and step == 1:
 
         #store details in sessions.
         session["location_name"] = form_search_venue.location.data
@@ -238,7 +240,9 @@ def add_place():
         #     session["step"] = 2
         #
         #     return redirect(url_for("add_place"))
-    elif request.method == "POST" and step == 2:
+    # NO CSRF VALIDATION
+    # elif request.method == "POST" and step == 2:
+    elif form_venue_info.validate_on_submit() and step == 2:
         session["location_name"] = form_venue_info.name.data
         session["street_name"] = form_venue_info.street.data
 
@@ -626,9 +630,14 @@ def login():
 @app.route("/register")
 def register():
     login_form = LoginForm()
+    csrf_token = secrets.token_hex(16)
+    session["csrf_token"] = csrf_token
+    print(csrf_token)
+    if login_form.validate_on_submit(): #AUTOMATICALLY VALIDATES CSRF
+        pass
 
 
-    return render_template("register.html", form=login_form)
+    return render_template("register.html", form=login_form, csrf_token=csrf_token)
 
 # AJAX
 
