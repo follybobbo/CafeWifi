@@ -10,6 +10,7 @@ import os
 import re
 from typing import List
 from reviewquestions import survey_data
+import requests
 
 # from flask_bootstrap import Bootstrap5
 
@@ -130,7 +131,7 @@ def de_slugify(slugified_text):
 
 
 
-# VARIABLES
+# RETURNS LIST OF PLACE TO THE FRONT END, SO USER CAN EASILY GET FEEDBACK IF THEY ENTER CAFE THAT ALREADY EXIST
 @app.route("/api/restaurants")
 def get_list_of_places():
     list_of_places = []
@@ -183,11 +184,18 @@ def home():
             location_list.append(location)
 
     #ENSURES ALL SESSION DATA IS CLEARED INCASE USER COMES TO HOME ROUTE FRPM ADD_PLACE WHERE SESSION IS USED HEAVILY TO STORE TEMP DATA
-    if session:
-        session.clear()
+    # if session:
+    #     session.clear()
+    reverse_geo_location = session.get("reverse_geocoding_location")
+    # print(f"hello {reverse_geo_location}")
+    # print(f"{session['reverse_geocoding_location']} Bye Bye")
+    if reverse_geo_location:
+        return render_template("index.html", location_list=location_list, api=GOOGLE_PLACES_API_KEY, home_location=reverse_geo_location)
+    else:
+        if session:
+            session.clear()
 
-
-    return render_template("index.html", location_list=location_list)
+        return render_template("index.html", location_list=location_list, api=GOOGLE_PLACES_API_KEY)
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -196,14 +204,12 @@ def add_place():
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
 
-
-
     # if "step" not in session:
     #     session["step"] = 1
     # SET STEP = 1 IF STEP IS NOT IN SESSION
     step = session.get("step", 1)
 
-
+    #THIS BIT OF CODE HAPPENS WHEN USER SUBMITS THE FIRST FORM
     if request.method == "POST" and step == 1:
 
         #store details in sessions.
@@ -220,19 +226,19 @@ def add_place():
         # HANDLE IF RESTAURANT ALREADY EXISTS
         # IF RESTAURANT DOESN'T EXIST SAFE NEW RESTAURANT TO DATA BASE
         cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == session["location_name"])).scalar()
-        if cafe_instance:
-            flash("This This place is already listed! Check it out", "error")
-            session.clear()
-        else:
-            session["step"] = 2
+        session["step"] = 2
 
-            return redirect(url_for("add_place"))
+        return redirect(url_for("add_place"))
+        # if cafe_instance:
+        #     flash("This This place is already listed! Check it out", "error")
+        #     session.clear()
+        # else:
+        #     session["step"] = 2
+        #
+        #     return redirect(url_for("add_place"))
     elif request.method == "POST" and step == 2:
-
         session["location_name"] = form_venue_info.name.data
         session["street_name"] = form_venue_info.street.data
-
-
 
         # store details in sessions.
 
@@ -251,10 +257,44 @@ def add_place():
         db.session.add(new_cafe)
         db.session.commit()
 
+        cafe_instance = Cafe.query.filter_by(
+            name=session.get("location_name")
+        ).first()
+
+        # READ AND CREATE SEMI COMPLETE REVIEW RECORD TO AVOID ERROR IN show_location.
+        new_review = Review(
+            wifi="",
+            power_sockets="",
+            length_of_work="",
+            tables_and_chairs="",
+            is_it_quiet="",
+            audio_and_video="",
+            other_people_working="",
+            group_tables="",
+            coffee_available="",
+            food_offered="",
+            veggie_options="",
+            alcohol_offered="",
+            credit_cards="",
+            natural_light="",
+            outdoor_area="",
+            how_large="",
+            restroom="",
+            wheelchair_accessible="",
+            air_conditioned="",
+            smoke_free="",
+            pet_friendly="",
+            parking_space="",
+            summary="",
+            restaurant_id=cafe_instance.id,
+        )
+        db.session.add(new_review)
+        db.session.commit()
+
         #slugify both city and location name as they both will be used for url building in the next view
         str_city = slugify(session.get("city"))
         str_location_name = slugify(session.get("location_name"))
-        print(str_location_name)
+        # print(str_location_name)
 
         #redirect to review_venue_info view.
         return redirect(url_for("review_venue_info", city=str_city, cafe_name=str_location_name))
@@ -278,8 +318,6 @@ def show_venue(location):
     #reads db for cafes with specified location.
     cafe = db.session.execute(db.select(Cafe).where(Cafe.city == location)).scalars()
     cafes_list = cafe.all()
-    # print(cafes_list)
-    # print(len(cafes_list))
 
     return render_template("show-venue.html", cafes_list=cafes_list, location=location, api_key=GOOGLE_PLACES_API_KEY)
 
@@ -343,9 +381,12 @@ def review_venue_info(city, cafe_name):
         print(cafe_instance)
         if not cafe_instance:
             print("Gobe")
-        cafe_id = cafe_instance.id
+
+        cafe_id = cafe_db.id
+        # new_review_instance = db.get_or_404(Review, cafe_id)
 
         # STORE VARIABLES IN DATABASE INSTANCE
+
         new_review = Review(
             wifi=wifi,
             power_sockets=power_sockets,
@@ -373,7 +414,7 @@ def review_venue_info(city, cafe_name):
             restaurant_id=cafe_id
         )
 
-        # ADDS TO DATABASE
+        # # ADDS TO DATABASE
         db.session.add(new_review)
         db.session.commit()
 
@@ -515,9 +556,6 @@ def show_cities():
         session.clear()
 
 
-
-
-
     return render_template("cities.html", city_dict=city_dict)
 
 
@@ -529,11 +567,16 @@ def show_location(city, name):
     location_address = cafe_info.address
 
     #open review section of db
-
     review_info = db.session.execute(db.select(Review).where(Review.id == cafe_id)).scalar()
+    # review_info = Review.query.filter_by(
+    #     id=cafe_id
+    # ).first()
+
+    if not review_info:
+        print("Ela")
+        return redirect(url_for("review_venue_info", city=city, cafe_name=name))
+
     summary = review_info.summary
-
-
     data_dict = {
 
         "PRODUCTIVITY": {
@@ -573,7 +616,7 @@ def show_location(city, name):
 
 
 
-
+#HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
 @app.route("/restaurant/closed-or-opened", methods=["PATCH"])
 def report_closed_or_opened():
     request_body = request.get_json()
@@ -595,7 +638,7 @@ def report_closed_or_opened():
 
 
 
-
+#USES RESTAURANT NAME FROM FRONTEND TO CHECK THE OPEN STATUS FROM THE DB
 @app.route("/restaurant/status", methods=["GET"])
 def check_restaurant_status():
     restaurant_name = request.args.get("name")
@@ -610,7 +653,7 @@ def check_restaurant_status():
 
     # ELSE RETURN ERROR OR HANDLE ERROR
 
-
+#UPDATES SUMMARY VALUE IN DB, RETURNS STATUS WHEN DONE
 @app.route("/update/summary", methods=["PATCH"])
 def update_summary():
     request_body = request.get_json()
@@ -631,6 +674,31 @@ def update_summary():
     db.session.commit()
 
     return jsonify({"status": "updated"})
+
+
+#USES GOOGLE API TO SEARCH FOR USERS CITY USING LONGITUDE AND LATITUDE
+@app.route("/reverse/geo")
+def reverse_geocoding():
+    latitude = request.args.get("latitude")
+    longitude = request.args.get("longitude")
+
+    response = requests.get("https://maps.googleapis.com/maps/api/geocode/json",
+                            params={
+                                "latlng": f"{latitude}, {longitude}",
+                                "key": GOOGLE_PLACES_API_KEY
+                            })
+
+    response.raise_for_status()
+    data = response.json()
+    print(data)
+    # print(data.results[0].address_components[3].long_name)
+    city = data["results"][0]["address_components"][3]["long_name"]
+    print(city)
+    session["reverse_geocoding_location"] = city
+    print(f"{session['reverse_geocoding_location']} inside fetch")
+
+
+    return jsonify({"city": city})
 
 
 
