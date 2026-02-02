@@ -1,18 +1,27 @@
+import flask_login
+import werkzeug.security
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required
+
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, Float, ForeignKey
+from sqlalchemy.sql.functions import current_user
+
 from forms import SearchVenue
 from forms import VenueInfo
 from forms import RegisterForm
 from forms import LoginForm
+from reviewquestions import survey_data
+
 import secrets
 import os
 import re
 from typing import List
-from reviewquestions import survey_data
+
 import requests
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # from flask_bootstrap import Bootstrap5
 
@@ -45,6 +54,14 @@ db.init_app(app)
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
 cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
 
+
+
+#LOGIN MANAGER
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "register"
+
 #  DEFINE MODEL
 
 class Cafe(db.Model):
@@ -60,6 +77,16 @@ class Cafe(db.Model):
     country: Mapped[str] = mapped_column(String(250), nullable=False)
     status: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     user_review: Mapped["Review"] = relationship(back_populates="input_restaurant")
+
+class User(db.Model, UserMixin):
+    __tablename__ = "user"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(500), nullable=False)
+    surname: Mapped[str] = mapped_column(String(500), nullable=False)
+    city: Mapped[str] = mapped_column(String(500), nullable=False)
+    password: Mapped[str] = mapped_column(nullable=False)
+
 
 
     # has_sockets: Mapped[bool] = mapped_column(Boolean, nullable=False)
@@ -118,6 +145,8 @@ GOOGLE_PLACES_API_KEY = os.environ.get("API")
 
 
 
+
+
 def slugify(text):
     stringed_text = str(text)
     text = stringed_text.replace(" ", "-")
@@ -128,6 +157,14 @@ def de_slugify(slugified_text):
     normalised_text = str(slugified_text).replace("-", " ")
 
     return normalised_text
+
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = db.get_or_404(User, int(user_id))
+    return user
+
 
 
 
@@ -172,6 +209,7 @@ def de_slugify(slugified_text):
 #ROUTES
 @app.route("/")
 @cache.cached(timeout=50)
+@login_required
 def home():
     #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
     cafe = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars()
@@ -201,7 +239,9 @@ def home():
 
 
 @app.route("/add", methods=["GET", "POST"])
+@login_required
 def add_place():
+    print(current_user.is_authenticated)
 
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
@@ -627,20 +667,59 @@ def login():
 
     return render_template("login.html", form=registration_form)
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    login_form = LoginForm()
-    csrf_token = secrets.token_hex(16)
-    session["csrf_token"] = csrf_token
-    print(csrf_token)
-    if login_form.validate_on_submit(): #AUTOMATICALLY VALIDATES CSRF
-        pass
+    register_form = RegisterForm()
+    # csrf_token = secrets.token_hex(16)
+    # session["csrf_token"] = csrf_token
+
+    if register_form.validate_on_submit(): #AUTOMATICALLY VALIDATES CSRF
+        email = register_form.email.data
+        name = register_form.name.data
+        surname = register_form.surname.data
+        city = register_form.city.data
+        un_hashed_password = register_form.password.data
+        un_hashed_password_confirmation = register_form.password_confirm.data
+
+        #CHECK IF USER ALREADY EXIST
+        user_exist = db.session.execute(db.select(User).where(User.email == email)).scalar()
+        if not user_exist:
+
+            #HARSD PASSWORD
+            hashed_password = werkzeug.security.generate_password_hash(un_hashed_password, method="scrypt", salt_length=16)
+
+            new_user = User(
+                email=email,
+                name=name,
+                surname=surname,
+                city=city,
+                password=hashed_password
+                            )
+
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            flash("success", "info")
+
+            return redirect(url_for("home"))
+        else:
+            flash("User Already Exist", "error")
+            return redirect(url_for("register"))
 
 
-    return render_template("register.html", form=login_form, csrf_token=csrf_token)
+
+
+
+    return render_template("register.html", form=register_form)
+
+
+
+
+
+
+
 
 # AJAX
-
 
 #HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
 @app.route("/restaurant/closed-or-opened", methods=["PATCH"])
@@ -716,12 +795,12 @@ def reverse_geocoding():
 
     response.raise_for_status()
     data = response.json()
-    print(data)
+    # print(data)
     # print(data.results[0].address_components[3].long_name)
     city = data["results"][0]["address_components"][3]["long_name"]
-    print(city)
+    # print(city)
     session["reverse_geocoding_location"] = city
-    print(f"{session['reverse_geocoding_location']} inside fetch")
+    # print(f"{session['reverse_geocoding_location']} inside fetch")
 
 
     return jsonify({"city": city})
