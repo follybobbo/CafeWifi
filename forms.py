@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, DecimalField, EmailField
-from wtforms.validators import DataRequired, URL, Email
+from wtforms.validators import DataRequired, URL, Email, Length, EqualTo
 from flask_ckeditor import CKEditorField
+import email_validator
 
 
 class SearchVenue(FlaskForm):
@@ -27,7 +28,7 @@ class VenueInfo(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired])
+    password = PasswordField("Password", validators=[DataRequired()])
 
     login = SubmitField("LOG IN")
 
@@ -35,8 +36,10 @@ class RegisterForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
     city = StringField("City", validators=[DataRequired()])
-    email = EmailField("Email", validators=[DataRequired()])
-    password = PasswordField("Password (8 characters minimum)", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password (8 characters minimum)", validators=[DataRequired(), EqualTo(
+        "password_confirm", message="Password do not match"), Length(min=8, message="Password must be at least 8 characters long")])
+
     password_confirm = PasswordField("Confirm password", validators=[DataRequired()])
 
     register = SubmitField("REGISTER")
