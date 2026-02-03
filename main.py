@@ -1,6 +1,6 @@
 import flask_login
 import werkzeug.security
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Blueprint
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required
@@ -57,10 +57,9 @@ cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
 
 
 #LOGIN MANAGER
-
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "register"
+
 
 #  DEFINE MODEL
 
@@ -133,7 +132,7 @@ class Review(db.Model):
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("cafe.id"))
     input_restaurant: Mapped["Cafe"] = relationship(back_populates="user_review")
 
-
+#Defines user blueprint
 
 
 with app.app_context():
@@ -163,6 +162,7 @@ def de_slugify(slugified_text):
 @login_manager.user_loader
 def load_user(user_id):
     user = db.get_or_404(User, int(user_id))
+
     return user
 
 
@@ -202,17 +202,21 @@ def load_user(user_id):
 #     return lat_long_list  #returns list of latitude and longitude of each location
 
 
+#DEFINE BLUEPRINTS
+unprotected = Blueprint("unprotected", __name__)
+protected = Blueprint("protected", __name__)
 
 
 
 
 #ROUTES
-@app.route("/")
+@unprotected.route("/")
 @cache.cached(timeout=50)
-@login_required
 def home():
+    print("Current user:", current_user)
     #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
     cafe = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars()
+
 
     cafes = cafe.all()
 
@@ -238,7 +242,7 @@ def home():
         return render_template("index.html", location_list=location_list, api=GOOGLE_PLACES_API_KEY)
 
 
-@app.route("/add", methods=["GET", "POST"])
+@protected.route("/add", methods=["GET", "POST"])
 @login_required
 def add_place():
     print(current_user.is_authenticated)
@@ -358,7 +362,7 @@ def add_place():
 
 
 
-@app.route("/<location>")
+@unprotected.route("/<location>")
 def show_venue(location):
     # print(f"location is {location}")
     #reads db for cafes with specified location.
@@ -369,7 +373,8 @@ def show_venue(location):
 
 #LOGIN REQUIRED TO POST
 #uses slugified city and cafe_name
-@app.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET", "PUT", "PATCH"])
+@protected.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET", "PUT", "PATCH"])
+@login_required
 def review_venue_info(city, cafe_name):
 
     de_sluged_cafe_name = de_slugify(cafe_name)
@@ -575,7 +580,7 @@ def review_venue_info(city, cafe_name):
 
 
 
-@app.route("/cities")
+@unprotected.route("/cities")
 def show_cities():
     city_dict = {}
     data = db.session.execute(db.select(Cafe).order_by(Cafe.country)).scalars()
@@ -605,7 +610,8 @@ def show_cities():
     return render_template("cities.html", city_dict=city_dict)
 
 
-@app.route("/<city>/<name>")
+@protected.route("/<city>/<name>")
+@login_required
 def show_location(city, name):
     #open db and fetch all values
     cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
@@ -660,14 +666,15 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
-@app.route("/login")
+@unprotected.route("/login")
 def login():
     registration_form = RegisterForm()
 
 
     return render_template("login.html", form=registration_form)
 
-@app.route("/register", methods=["GET", "POST"])
+# @app.route("/register", methods=["GET", "POST"])
+@unprotected.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegisterForm()
     # csrf_token = secrets.token_hex(16)
@@ -684,11 +691,11 @@ def register():
         #CHECK IF USER ALREADY EXIST
         user_exist = db.session.execute(db.select(User).where(User.email == email)).scalar()
         if not user_exist:
-
             #HARSD PASSWORD
+            print("Hello")
             hashed_password = werkzeug.security.generate_password_hash(un_hashed_password, method="scrypt", salt_length=16)
 
-            new_user = User(
+            user = User(
                 email=email,
                 name=name,
                 surname=surname,
@@ -696,15 +703,15 @@ def register():
                 password=hashed_password
                             )
 
-            db.session.add(new_user)
+            db.session.add(user)
             db.session.commit()
-            login_user(new_user)
+            login_user(user)
             flash("success", "info")
 
-            return redirect(url_for("home"))
+            return redirect(url_for("unprotected.home"))
         else:
             flash("User Already Exist", "error")
-            return redirect(url_for("register"))
+            return redirect(url_for("unprotected.register"))
 
 
 
@@ -716,10 +723,12 @@ def register():
 
 
 
+# login_manager.login_view = "unprotected.register"
 
 
 
-# AJAX
+
+"""                                            AJAX                                                          """
 
 #HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
 @app.route("/restaurant/closed-or-opened", methods=["PATCH"])
@@ -838,7 +847,12 @@ def get_lat_and_long():
     return lat_long_list  #returns list of latitude and longitude of each location
 
 
+#REGISTER BLUEPRINT
+app.register_blueprint(unprotected)
+app.register_blueprint(protected)
 
+#SET LOGIN VIEW
+login_manager.login_view = "unprotected.login"
 
 if __name__ == "__main__":
     app.run(debug=True)
