@@ -705,12 +705,19 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
+
 @unprotected.route("/login")
 def login():
     registration_form = RegisterForm()
 
 
     return render_template("login.html", form=registration_form)
+
+
+@unprotected.route("/verify-email/<token>")
+def verify_email(token):
+    pass
+
 
 # @app.route("/register", methods=["GET", "POST"])
 @unprotected.route("/register", methods=["GET", "POST"])
@@ -746,6 +753,11 @@ def register():
             db.session.commit()
             login_user(user)
             flash("success", "info")
+
+            #SEND VERIFICATION EMAIL
+            token = make_token(current_user.email)
+            verify_url = url_for("unprotected.verify_email", token=token, _external=True)
+            send_mail(verify_url, current_user.email)
 
             return redirect(url_for("unprotected.home"))
         else:
