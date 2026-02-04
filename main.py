@@ -1,9 +1,14 @@
+import itsdangerous
+from itsdangerous.serializer import Serializer
+from itsdangerous import URLSafeTimedSerializer
+import smtplib
+
 import flask_login
 import werkzeug.security
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Blueprint
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, Float, ForeignKey
@@ -31,9 +36,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
+
+
 app = Flask(__name__)
-key = secrets.token_hex(16)
-app.secret_key = key
+# key = secrets.token_hex(16)
+# app.secret_key = key
+app.secret_key = os.environ.get("APP_SECRET_KEY")
 
 #INITIALIZE THE EXTENSION
 # create DB object
@@ -158,7 +166,7 @@ def de_slugify(slugified_text):
     return normalised_text
 
 
-
+#LOGIN MANAGER
 @login_manager.user_loader
 def load_user(user_id):
     user = db.get_or_404(User, int(user_id))
@@ -166,6 +174,27 @@ def load_user(user_id):
     return user
 
 
+
+
+#SERIALIZER FOR EMAIL VERIFICATION
+secret_key = os.environ.get("SERIALIZER_KEY")
+serializer = URLSafeTimedSerializer(secret_key, "email-verify")
+
+def make_token(email):
+    token = serializer.dumps(email, "email-varify")
+
+    return token
+
+
+def de_serializer(token, expiration=3600):
+    try:
+        email = serializer.loads(token, expiration)
+    except itsdangerous.SignatureExpired:
+        return None
+    except itsdangerous.BadSignature:
+        return None
+    else:
+        return email
 
 
 
