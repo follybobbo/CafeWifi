@@ -175,6 +175,16 @@ def load_user(user_id):
 
 
 
+#SENDER
+master_mail = os.environ.get("MASTER_EMAIL")
+password = os.environ.get("MASTER_EMAIL_PASSWORD")
+
+def send_mail(verification_url, user_email):
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(master_mail, password)
+        connection.sendmail(master_mail, user_email, msg=f"Subject:Verify Your Email\n\nPlease verify your email here {verification_url}")
+
 
 #SERIALIZER FOR EMAIL VERIFICATION
 secret_key = os.environ.get("SERIALIZER_KEY")
