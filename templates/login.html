@@ -2,8 +2,38 @@
 
 
 {% block content %}
+<div>
+    <h1>LOGIN IN</h1>
 
+    <p>Continue With</p>
+    <a>GOOGLE</a>
 
+    <p>or use your email</p>
 
+    <form action="{{url_for('login')}}" method="POST">
+        {{form.csrf_token()}}
+        <table>
+            <tr>
+                <td>{{form.email(placeholder="Email")}}</td>
+            </tr>
 
+            <tr>
+                <td>{{form.password(placeholder="Password")}}</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="checkbox">
+                    <span>Remember me</span>
+                </td>
+            </tr>
+        </table>
+        <a>Forgot password ?</a>
+        <a>LOGIN</a>
+        <div>
+            New to Laptop Friendly?
+            <a>Register</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
