@@ -712,10 +712,31 @@ def show_location(city, name):
 
 @unprotected.route("/login")
 def login():
-    registration_form = RegisterForm()
+    login_form = LoginForm()
 
+    if login_form.validate_on_submit():
+        email = login_form.email.data
+        password = login_form.password.data
 
-    return render_template("login.html", form=registration_form)
+        user = db.session.execute(db.select(User).where(User.email == email)).scalar_one_or_none()
+
+        if not user:
+            flash("User Does not Exist", "error")
+            return  redirect(url_for("unprotected.register"))
+        else:
+            is_password = werkzeug.security.check_password_hash(user.password, password)
+
+            if not is_password:
+                flash("Invalid Details", "error")
+                return redirect(url_for("unprotected.login"))
+            else:
+
+                flash("Login Success", "info")
+                login_user(user)
+
+                return redirect(url_for("protected.dashboard"))
+
+    return render_template("login.html", form=login_form)
 
 
 @unprotected.route("/verify-email/<token>")
