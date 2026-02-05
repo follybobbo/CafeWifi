@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+
+{% content block %}
+<div>
+<!--  MAKE TABLE-->
+    <div style="border-radius: 15px">
+       <a></a>
+    </div>
+
+    <div>
+        <span>{{user_data.get("name")}}</span>
+        <span>{{user_data.get("surname")}}</span>
+    </div>
+
+    <div>{{user_data.get("email")}}</div>
+
+    <div>PROFILE SETTINGS</div>
+
+    <table>
+          <tr>
+            <td>
+                {{form.photo.label}}
+            </td>
+            <td>
+               {{form.photo()}}
+            </td>
+          </tr>
+
+         <tr>
+            <td>
+                {{form.name.label()}}
+            </td>
+            <td>
+               {{form.name()}}
+            </td>
+          </tr>
+
+         <tr>
+            <td>
+                {{form.surname.label()}}
+            </td>
+            <td>
+               {{form.surname()}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <button>UPDATE</button>
+            </td>
+          </tr>
+    </table>
+
+    <div>
+        <h2>SUGGEST VENUES</h2>
+        <p>Suggest venues from your neighborhood to help other remote workers!</p>
+        <a href="{{url_for('add_place')}}">SUGGEST A VENUE</a>
+    </div>
+
+    <div>
+        <h2>VISITED VENUES</h2>
+        <p>You have not posted any reviews yet.</p>
+        <a href="{{url_for('show_cities')}}">EXPLORE LOCATIONS</a>
+    </div>
+
+    <div>
+        <h2>SIGN OUT</h2>
+        <a href="{{url_for('show_cities')}}">SIGN OUT </a>
+    </div>
+
+</div>
+{% endblock %}
