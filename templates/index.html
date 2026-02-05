@@ -13,7 +13,7 @@
 
             <div class="cities-containers">
                {% for location in location_list %}
-                    <a class="city" href="{{ url_for('show_venue', location=location) }}">{{location}}</a>
+                    <a class="city" href="{{ url_for('unprotected.show_venue', location=location) }}">{{location}}</a>
                {% endfor %}
             </div>
 
