@@ -49,7 +49,7 @@ class RegisterForm(FlaskForm):
 
 
 class DashboardForm(FlaskForm):
-    Photo = FileField()
+    photo = FileField("Photo", validators=[])
     name = StringField("Name", validators=[DataRequired()])
     surname = StringField("Surname", validators=[DataRequired()])
 
