@@ -709,6 +709,23 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
+@protected.route("/users/<id>", methods=["GET", "PATCH"])
+@login_required
+def dashboard():
+    user = current_user
+    # photo = user.photo  to be done later
+    user_data = {
+       "first_name": user.name,
+        "surname": user.surname,
+        "email": user.email,
+    }
+    #PUT FORMVALIDATE TO ACCOMODATE UPDATE TO USER PROFILE DETAILS
+
+
+
+    return render_template("dashboard.html", user_data=user_data)
+
+
 
 @unprotected.route("/login")
 def login():
@@ -766,9 +783,7 @@ def verify_email(token):
     db.session.commit()
     login_user(user)
 
-    return redirect(url_for("protected.dashboard"))
-
-
+    return redirect(url_for("protected.dashboard", id=user.id))
 
 
 
