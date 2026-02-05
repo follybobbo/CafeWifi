@@ -3,6 +3,8 @@ from itsdangerous.serializer import Serializer
 from itsdangerous import URLSafeTimedSerializer
 import smtplib
 
+from datetime import datetime
+
 import flask_login
 import werkzeug.security
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Blueprint
@@ -11,7 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Boolean, Float, ForeignKey
+from sqlalchemy import Integer, String, Boolean, Float, ForeignKey, DateTime
 from sqlalchemy.sql.functions import current_user
 
 from forms import SearchVenue
@@ -93,6 +95,8 @@ class User(db.Model, UserMixin):
     surname: Mapped[str] = mapped_column(String(500), nullable=False)
     city: Mapped[str] = mapped_column(String(500), nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
+    verified: Mapped[bool] = mapped_column(nullable=False, default=False)
+    opened: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow())
 
 
 
@@ -716,7 +720,35 @@ def login():
 
 @unprotected.route("/verify-email/<token>")
 def verify_email(token):
-    pass
+    #CHECK IF CURRENT USER IS SAME WITH EMAIL FROM DESERIALIZED TOKEN.
+    email = de_serializer(token)
+
+    #IF TOKEN HAS BEEN TAMPERED WITH OR EXPIRED
+    if not email:
+        flash("Link Expired", "danger")
+        return redirect(url_for(""))    #resend verification link page
+
+    #CHECK USER IN DB
+    user = db.session.execute(db.select(User).where(User.email == email)).scalar_one_or_none()
+    #IF WRONG EMAIL WHICH WOULD MOSTLIKELY NOT HAPPEN EXCEPT USER TAMPERS WITH TOKEN
+    if not user:
+        flash("This Email is Not Registered to Any Account", "danger")
+
+        return redirect(url_for("unprotected.register"))
+
+    #IF USER HAD ALREADY VERIFIED EMAIL.
+    if user.verified:
+        flash("Email Previously Verified", "success")
+        return redirect(url_for("protected.login"))
+
+    user.verified = True
+    db.session.commit()
+    login_user(user)
+
+    return redirect(url_for("protected.dashboard"))
+
+
+
 
 
 # @app.route("/register", methods=["GET", "POST"])
@@ -747,7 +779,7 @@ def register():
                 surname=surname,
                 city=city,
                 password=hashed_password
-                            )
+            )
 
             db.session.add(user)
             db.session.commit()
@@ -757,9 +789,10 @@ def register():
             #SEND VERIFICATION EMAIL
             token = make_token(current_user.email)
             verify_url = url_for("unprotected.verify_email", token=token, _external=True)
+            print(verify_url)
             send_mail(verify_url, current_user.email)
 
-            return redirect(url_for("unprotected.home"))
+            return redirect(url_for("unprotected.home")) #CHANGE TO DASHBOARD
         else:
             flash("User Already Exist", "error")
             return redirect(url_for("unprotected.register"))
