@@ -10,7 +10,7 @@ import werkzeug.security
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Blueprint
 from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, Float, ForeignKey, DateTime
@@ -709,6 +709,8 @@ def show_location(city, name):
 
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
+
+
 @protected.route("/users/<id>", methods=["GET", "PATCH"])
 @login_required
 def dashboard():
@@ -754,6 +756,11 @@ def login():
                 return redirect(url_for("protected.dashboard"))
 
     return render_template("login.html", form=login_form)
+
+def logout():
+    logout_user()
+
+    return redirect(url_for("unprotected.login"))
 
 
 @unprotected.route("/verify-email/<token>")
