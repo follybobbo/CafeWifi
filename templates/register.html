@@ -2,5 +2,58 @@
 
 
 {% block content %}
+    <form action="{{url_for('unprotected.register')}}" method="POST">
+        {{form.csrf_token}}
+<!--        FLASH MESSAGES-->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+                {% for message in messages %}
+                  <li>{{message}}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 
+        <div id="form-id" style="width: 30%; margin: auto;">
+            <h1>REGISTER</h1>
+            <div>
+                <span>{{form.name(placeholder="First Name")}}</span>
+                <span>{{form.surname(placeholder="Last Name")}}</span>
+            </div>
+            <div>
+                {{form.city(placeholder="City")}}
+            </div>
+            <div>
+                {{form.email(placeholder="Email")}}
+            </div>
+            <div>
+                {{form.password(placeholder="Password")}}
+            </div>
+            <div>
+                {{form.password_confirm(placeholder="Confirm Password")}}
+            </div>
+
+<!--              FORM ERRORS-->
+              {% if form.errors %}
+
+                <ul class="form-error">
+                    {% for field_errors in form.errors.values() %}
+                      {% for error in field_errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    {% endfor %}
+                </ul>
+              {% endif %}
+
+
+            {{form.register(class="form_btn")}}
+        </div>
+        <div>
+            <span>Already a member?</span >
+            <a>Login</a>
+        </div>
+
+
+    </form>
 {% endblock %}
