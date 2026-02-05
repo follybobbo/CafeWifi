@@ -3,6 +3,8 @@ from wtforms import StringField, SubmitField, PasswordField, DecimalField, Email
 from wtforms.validators import DataRequired, URL, Email, Length, EqualTo
 from flask_ckeditor import CKEditorField
 import email_validator
+from flask_wtf.file import FileField, FileRequired
+
 
 
 class SearchVenue(FlaskForm):
@@ -43,3 +45,12 @@ class RegisterForm(FlaskForm):
     password_confirm = PasswordField("Confirm password", validators=[DataRequired()])
 
     register = SubmitField("REGISTER")
+
+
+
+class DashboardForm(FlaskForm):
+    Photo = FileField()
+    name = StringField("Name", validators=[DataRequired()])
+    surname = StringField("Surname", validators=[DataRequired()])
+
+
