@@ -214,7 +214,7 @@ def de_serializer(token: str, expiration=3600):
         return None
 
 
-
+#EMAIL-VERIFICATION DECORATOR FUNCTION
 def email_verification_required(f):
     wraps(f)
     def wrapper(*args, **kwargs):
@@ -727,6 +727,7 @@ def show_location(city, name):
 
 @protected.route("/users", methods=["GET"])
 @login_required
+@email_verification_required
 def dashboard():
     dashboard_form = DashboardForm()
     print(f"my name is {current_user.id} id")
