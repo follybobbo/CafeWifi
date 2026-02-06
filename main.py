@@ -14,12 +14,12 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, cur
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean, Float, ForeignKey, DateTime
-from sqlalchemy.sql.functions import current_user
+# from sqlalchemy.sql.functions import current_user
 
 from forms import SearchVenue
 from forms import VenueInfo
 from forms import RegisterForm
-from forms import LoginForm
+from forms import LoginForm, DashboardForm
 from reviewquestions import survey_data
 
 import secrets
@@ -194,21 +194,21 @@ def send_mail(verification_url, user_email):
 secret_key = os.environ.get("SERIALIZER_KEY")
 serializer = URLSafeTimedSerializer(secret_key, "email-verify")
 
-def make_token(email):
-    token = serializer.dumps(email, "email-varify")
+def make_token(email: str) -> str:
+    token = serializer.dumps(email, salt="email-verify")
 
     return token
 
 
-def de_serializer(token, expiration=3600):
+def de_serializer(token: str, expiration=3600):
     try:
-        email = serializer.loads(token, expiration)
+        email = serializer.loads(token, max_age=3600, salt="email-verify")
+        return email
     except itsdangerous.SignatureExpired:
         return None
     except itsdangerous.BadSignature:
         return None
-    else:
-        return email
+
 
 
 
@@ -711,9 +711,11 @@ def show_location(city, name):
 
 
 
-@protected.route("/users/<id>", methods=["GET", "PATCH"])
+@protected.route("/users", methods=["GET"])
 @login_required
 def dashboard():
+    dashboard_form = DashboardForm()
+    print(f"my name is {current_user.id} id")
     user = current_user
     # photo = user.photo  to be done later
     user_data = {
@@ -725,7 +727,7 @@ def dashboard():
 
 
 
-    return render_template("dashboard.html", user_data=user_data)
+    return render_template("dashboard.html", user_data=user_data, form=dashboard_form)
 
 
 
@@ -757,6 +759,9 @@ def login():
 
     return render_template("login.html", form=login_form)
 
+def recover_account():
+    pass
+@unprotected.route("/logout")
 def logout():
     logout_user()
 
@@ -767,11 +772,13 @@ def logout():
 def verify_email(token):
     #CHECK IF CURRENT USER IS SAME WITH EMAIL FROM DESERIALIZED TOKEN.
     email = de_serializer(token)
+    print(email)
 
     #IF TOKEN HAS BEEN TAMPERED WITH OR EXPIRED
     if not email:
         flash("Link Expired", "danger")
-        return redirect(url_for(""))    #resend verification link page
+        # return redirect(url_for(""))    #resend verification link page
+        pass
 
     #CHECK USER IN DB
     user = db.session.execute(db.select(User).where(User.email == email)).scalar_one_or_none()
@@ -790,7 +797,7 @@ def verify_email(token):
     db.session.commit()
     login_user(user)
 
-    return redirect(url_for("protected.dashboard", id=user.id))
+    return redirect(url_for("protected.dashboard"))
 
 
 
@@ -830,12 +837,12 @@ def register():
             flash("success", "info")
 
             #SEND VERIFICATION EMAIL
-            token = make_token(current_user.email)
+            token = make_token(email)
             verify_url = url_for("unprotected.verify_email", token=token, _external=True)
             print(verify_url)
-            send_mail(verify_url, current_user.email)
+            send_mail(verify_url, email)
 
-            return redirect(url_for("unprotected.home")) #CHANGE TO DASHBOARD
+            return redirect(url_for("protected.dashboard")) #CHANGE TO DASHBOARD or unverified
         else:
             flash("User Already Exist", "error")
             return redirect(url_for("unprotected.register"))
