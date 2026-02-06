@@ -9,7 +9,7 @@
          <h1>ADD NEW PLACE</h1>
          <p>Let Everyone know about a new work-friendly venue!!</p>
      </div>
-     <form method="POST" action="{{url_for('add_place')}}">
+     <form method="POST" action="{{url_for('protected.add_place')}}">
          {{form.csrf_token}}
          <h2>VENUE INFORMATION</h2>
          {{form.name.label(class="form-label")}} {{form.name(size=100, class="form-input", value=name_of_venue)}}

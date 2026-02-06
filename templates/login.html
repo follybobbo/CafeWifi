@@ -10,7 +10,7 @@
 
     <p>or use your email</p>
 
-    <form action="{{url_for('login')}}" method="POST">
+    <form action="{{url_for('unprotected.login')}}" method="POST">
         {{form.csrf_token()}}
         <table>
             <tr>
@@ -32,7 +32,7 @@
         <a>LOGIN</a>
         <div>
             New to Laptop Friendly?
-            <a>Register</a>
+            <a href="{{url_for('unprotected.register')}}">Register</a>
         </div>
     </form>
 </div>

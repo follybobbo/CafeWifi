@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 
-{% content block %}
+{% block content %}
 <div>
 <!--  MAKE TABLE-->
     <div style="border-radius: 15px">
@@ -54,18 +54,18 @@
     <div>
         <h2>SUGGEST VENUES</h2>
         <p>Suggest venues from your neighborhood to help other remote workers!</p>
-        <a href="{{url_for('add_place')}}">SUGGEST A VENUE</a>
+        <a href="{{url_for('protected.add_place')}}">SUGGEST A VENUE</a>
     </div>
 
     <div>
         <h2>VISITED VENUES</h2>
         <p>You have not posted any reviews yet.</p>
-        <a href="{{url_for('show_cities')}}">EXPLORE LOCATIONS</a>
+        <a href="{{url_for('unprotected.show_cities')}}">EXPLORE LOCATIONS</a>
     </div>
 
     <div>
         <h2>SIGN OUT</h2>
-        <a href="{{url_for('show_cities')}}">SIGN OUT </a>
+        <a href="{{url_for('unprotected.logout')}}">SIGN OUT </a>
     </div>
 
 </div>

@@ -3,7 +3,7 @@
 
 
 {% block content %}
-  <form method="POST" action="{{url_for('review_venue_info', city=city, cafe_name=cafe)}}">
+  <form method="POST" action="{{url_for('protected.review_venue_info', city=city, cafe_name=cafe)}}">
 <!--      manual csrf protection-->
       <input name="csrf_token" type="hidden" value="{{csrf_token}}">
 <!--      <div>{{city}}</div>-->
