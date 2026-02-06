@@ -26,6 +26,7 @@ import secrets
 import os
 import re
 from typing import List
+from functools import wraps
 
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -155,6 +156,9 @@ with app.app_context():
 GOOGLE_PLACES_API_KEY = os.environ.get("API")
 
 
+"""CREATE DECORATOR THAT RESTRICS VIEW CAPABILITYES UNTIL EMAIL HAS BEEN VERIFIED"""
+
+
 
 
 
@@ -209,6 +213,16 @@ def de_serializer(token: str, expiration=3600):
     except itsdangerous.BadSignature:
         return None
 
+
+
+def email_verification_required(f):
+    wraps(f)
+    def wrapper(*args, **kwargs):
+        is_verified = current_user.verified
+        if not is_verified:
+            return redirect(url_for("protected.verification-page"))
+        return f(*args, **kwargs)
+    return wrapper
 
 
 
