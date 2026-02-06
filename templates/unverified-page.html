@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>Hello {{ current_user.name }}</h1>
+        <h2>We've sent a verification link to {{current_user.email}}, please click the link in that email to activate your account</h2>
+        <p>Didn't get the email ? Check your spam folder or request a new one</p>
+        <div>
+            <a>Resend Email</a>
+            <a>Log Out</a>
+        </div>
+    </div>
+{% endblock %}
