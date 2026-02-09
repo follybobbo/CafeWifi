@@ -5,6 +5,18 @@
   box-sizing: border-box;
 }
 
+html, body {
+   height: 100%; /* fallback */
+   margin: 0;    /* remove default margin */
+}
+
+body {
+
+    min-height: 100vh;  /* full viewport height */
+    max-height:100vh;
+
+}
+
 
 
 
@@ -45,6 +57,8 @@
   border-radius: 10px;
   margin: 40px 0px 30px 0px;
 }
+
+
 
 
 
@@ -576,6 +590,41 @@ select {
 
 .closed-display{
  display: none;
+}
+
+
+/*REGISTER.HTML*/
+
+.form-error {
+  list-style-type: none;
+  color: red;
+  padding-left: 0;
+  margin-bottom: 0;
+
+}
+
+
+/*Unverified*/
+
+.resend-email:hover {
+ cursor: pointer;
+
+}
+
+.card{
+  width: 50%;
+  height: 60%;
+  margin: auto;
+  padding: 70px 40px;
+  text-align: center;
+  border-radius: 12px;
+
+
+}
+
+.container {
+  display: flex;
+  align-items: center;
 }
 
 
