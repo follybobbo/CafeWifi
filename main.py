@@ -193,6 +193,8 @@ def send_mail(verification_url, user_email):
         connection.login(master_mail, password)
         connection.sendmail(master_mail, user_email, msg=f"Subject:Verify Your Email\n\nPlease verify your email here {verification_url}")
 
+    return jsonify({"status": "sent"})
+
 
 #SERIALIZER FOR EMAIL VERIFICATION
 secret_key = os.environ.get("SERIALIZER_KEY")
@@ -216,13 +218,17 @@ def de_serializer(token: str, expiration=3600):
 
 #EMAIL-VERIFICATION DECORATOR FUNCTION
 def email_verification_required(f):
-    wraps(f)
+    @wraps(f)
     def wrapper(*args, **kwargs):
         is_verified = current_user.verified
+
         if not is_verified:
-            return redirect(url_for("protected.verification-page"))
+            return redirect(url_for("protected.unverified"))
+
         return f(*args, **kwargs)
     return wrapper
+
+
 
 
 
@@ -270,6 +276,7 @@ protected = Blueprint("protected", __name__)
 @unprotected.route("/")
 @cache.cached(timeout=50)
 def home():
+
     print("Current user:", current_user)
     #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
     cafe = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars()
@@ -293,16 +300,16 @@ def home():
     if reverse_geo_location:
         return render_template("index.html", location_list=location_list, api=GOOGLE_PLACES_API_KEY, home_location=reverse_geo_location)
     else:
-        if session:
-            session.clear()
+        # if session:
+        #     session.clear()
 
         return render_template("index.html", location_list=location_list, api=GOOGLE_PLACES_API_KEY)
 
-
-@protected.route("/add", methods=["GET", "POST"])
 @login_required
+@protected.route("/add", methods=["GET", "POST"])
 def add_place():
-    print(current_user.is_authenticated)
+    # print(current_user.is_authenticated)
+
 
     form_search_venue = SearchVenue()
     form_venue_info = VenueInfo()
@@ -314,9 +321,8 @@ def add_place():
 
     #THIS BIT OF CODE HAPPENS WHEN USER SUBMITS THE FIRST FORM
     #NO CSRF VALIDATION
-    # if request.method == "POST" and step == 1:
-    if form_search_venue.validate_on_submit() and step == 1:
-
+    if request.method == "POST" and step == 1:
+    # if form_search_venue.validate_on_submit() and step == 1:
         #store details in sessions.
         session["location_name"] = form_search_venue.location.data
         session["picture_url"] = form_search_venue.photo.data
@@ -327,23 +333,10 @@ def add_place():
         session["latitude"] = form_search_venue.latitude.data
         session["step"] = 2
 
-        #CHECK FOR PRESENCE OF CAFE
-        # HANDLE IF RESTAURANT ALREADY EXISTS
-        # IF RESTAURANT DOESN'T EXIST SAFE NEW RESTAURANT TO DATA BASE
-        cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == session["location_name"])).scalar()
-        session["step"] = 2
-
-        return redirect(url_for("add_place"))
-        # if cafe_instance:
-        #     flash("This This place is already listed! Check it out", "error")
-        #     session.clear()
-        # else:
-        #     session["step"] = 2
-        #
-        #     return redirect(url_for("add_place"))
+        return redirect(url_for("protected.add_place"))
     # NO CSRF VALIDATION
-    # elif request.method == "POST" and step == 2:
-    elif form_venue_info.validate_on_submit() and step == 2:
+    elif request.method == "POST" and step == 2:
+    # elif form_venue_info.validate_on_submit() and step == 2:
         session["location_name"] = form_venue_info.name.data
         session["street_name"] = form_venue_info.street.data
 
@@ -404,7 +397,7 @@ def add_place():
         # print(str_location_name)
 
         #redirect to review_venue_info view.
-        return redirect(url_for("review_venue_info", city=str_city, cafe_name=str_location_name))
+        return redirect(url_for("protected.review_venue_info", city=str_city, cafe_name=str_location_name))
 
 
     if step == 1:
@@ -430,16 +423,16 @@ def show_venue(location):
 
 #LOGIN REQUIRED TO POST
 #uses slugified city and cafe_name
-@protected.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET", "PUT", "PATCH"])
 @login_required
+@protected.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET", "PUT", "PATCH"])
 def review_venue_info(city, cafe_name):
 
     de_sluged_cafe_name = de_slugify(cafe_name)
     normal_cafe_name = session.get("location_name")
     location_name = session.get("location_name", "")
-    print(f"{normal_cafe_name} session")
-    print(f"{cafe_name} cafe_name")
-    print(f"{de_sluged_cafe_name} deslugged")
+    # print(f"{normal_cafe_name} session")
+    # print(f"{cafe_name} cafe_name")
+    # print(f"{de_sluged_cafe_name} deslugged")
 
     cafe_db = db.session.execute(db.select(Cafe).where(Cafe.name == de_sluged_cafe_name)).scalar()
     cafe_id = cafe_db.id
@@ -486,7 +479,7 @@ def review_venue_info(city, cafe_name):
 
         # GET ID OF CAFE AND USE TO STORE IN DB
         cafe_instance = db.session.execute(db.select(Cafe).where(Cafe.name == normal_cafe_name)).scalar()
-        print(cafe_instance)
+        # print(cafe_instance)
         if not cafe_instance:
             print("Gobe")
 
@@ -657,18 +650,17 @@ def show_cities():
             city_dict[country] = [rows.city]
 
 
-    print(city_dict)
+    # print(city_dict)
 
     # ENSURES ALL SESSION DATA IS CLEARED INCASE USER COMES TO HOME ROUTE FROM ADD_PLACE WHERE SESSION IS USED HEAVILY TO STORE TEMP DATA
-    if session:
-        session.clear()
+    # if session:
+    #     session.clear()
 
 
     return render_template("cities.html", city_dict=city_dict)
 
-
-@protected.route("/<city>/<name>")
 @login_required
+@protected.route("/<city>/<name>")
 def show_location(city, name):
     #open db and fetch all values
     cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
@@ -682,7 +674,7 @@ def show_location(city, name):
     # ).first()
 
     if not review_info:
-        print("Ela")
+        # print("Ela")
         return redirect(url_for("review_venue_info", city=city, cafe_name=name))
 
     summary = review_info.summary
@@ -724,13 +716,12 @@ def show_location(city, name):
     return render_template("location.html", name=name, city=city, img_url=cafe_info.img_url, data_dict=data_dict, location_address=location_address, summary=summary)
 
 
-
 @protected.route("/users", methods=["GET"])
 @login_required
 @email_verification_required
 def dashboard():
     dashboard_form = DashboardForm()
-    print(f"my name is {current_user.id} id")
+    # print(f"my name is {current_user.id} id")
     user = current_user
     # photo = user.photo  to be done later
     user_data = {
@@ -746,7 +737,7 @@ def dashboard():
 
 
 
-@unprotected.route("/login")
+@unprotected.route("/login", methods=["GET", "POST"])
 def login():
     login_form = LoginForm()
 
@@ -776,6 +767,8 @@ def login():
 
 def recover_account():
     pass
+
+
 @unprotected.route("/logout")
 def logout():
     logout_user()
@@ -787,7 +780,7 @@ def logout():
 def verify_email(token):
     #CHECK IF CURRENT USER IS SAME WITH EMAIL FROM DESERIALIZED TOKEN.
     email = de_serializer(token)
-    print(email)
+    # print(email)
 
     #IF TOKEN HAS BEEN TAMPERED WITH OR EXPIRED
     if not email:
@@ -811,8 +804,12 @@ def verify_email(token):
     user.verified = True
     db.session.commit()
     login_user(user)
-
+    """redirect to unverified, but show diff ui"""
     return redirect(url_for("protected.dashboard"))
+
+
+
+
 
 
 
@@ -835,7 +832,7 @@ def register():
         user_exist = db.session.execute(db.select(User).where(User.email == email)).scalar()
         if not user_exist:
             #HARSD PASSWORD
-            print("Hello")
+            # print("Hello")
             hashed_password = werkzeug.security.generate_password_hash(un_hashed_password, method="scrypt", salt_length=16)
 
             user = User(
@@ -852,12 +849,13 @@ def register():
             flash("success", "info")
 
             #SEND VERIFICATION EMAIL
+            # send_verification_email(email)
             token = make_token(email)
             verify_url = url_for("unprotected.verify_email", token=token, _external=True)
-            print(verify_url)
+            # print(verify_url)
             send_mail(verify_url, email)
 
-            return redirect(url_for("protected.dashboard")) #CHANGE TO DASHBOARD or unverified
+            return redirect(url_for("protected.unverified")) #CHANGE TO DASHBOARD or unverified
         else:
             flash("User Already Exist", "error")
             return redirect(url_for("unprotected.register"))
@@ -868,6 +866,11 @@ def register():
 
     return render_template("register.html", form=register_form)
 
+@protected.route("/unverified-mail")
+@login_required
+def unverified():
+
+    return render_template("unverified-page.html")
 
 
 
@@ -878,6 +881,17 @@ def register():
 
 
 """                                            AJAX                                                          """
+
+@unprotected.route("/send-verification", methods=["POST"])
+def send_verification_email():
+    email = current_user.email
+    token = make_token(email)
+    verify_url = url_for("unprotected.verify_email", token=token, _external=True)
+    response = send_mail(verify_url, email)
+    print(response.data)
+
+    if response:
+        return jsonify({"status": "sent"})
 
 #HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
 @app.route("/restaurant/closed-or-opened", methods=["PATCH"])
@@ -972,7 +986,7 @@ def get_list_of_places():
         restaurants = db.session.execute(db.select(Cafe).order_by(Cafe.id)).scalars().all()
 
     for restaurant in restaurants:
-        print(restaurant.name)
+        # print(restaurant.name)
         list_of_places.append(restaurant.name)
 
     return list_of_places
