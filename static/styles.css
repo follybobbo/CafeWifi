@@ -625,6 +625,17 @@ select {
 .container {
   display: flex;
   align-items: center;
+  min-height: 100vh;
+}
+
+/*Login*/
+
+.login {
+  margin:auto;
+  border: 1px solid grey;
+  padding: 120px 150px;
+  border-radius: 15px;
+
 }
 
 
