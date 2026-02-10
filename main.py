@@ -883,7 +883,7 @@ def unverified():
 """                                            AJAX                                                          """
 
 @unprotected.route("/send-verification", methods=["POST"])
-def send_verification_email():
+def resend_verification_email():
     email = current_user.email
     token = make_token(email)
     verify_url = url_for("unprotected.verify_email", token=token, _external=True)
