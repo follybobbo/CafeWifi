@@ -638,6 +638,29 @@ select {
 
 }
 
+/*Register*/
+
+.register-form {
+  width: 50%;
+  height: 70%;
+  padding: 10% 10%;
+  border: 1px solid grey;
+  border-radius: 12px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.form-error {
+  text-align: center;
+  list-styling: none;
+}
+
+
+
 
 
 

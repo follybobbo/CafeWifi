@@ -15,7 +15,7 @@
             {{ country }}
         </h2>
         {% for city in city_list %}
-        <a class="city-link" href="{{ url_for('show_venue', location=city) }}">{{ city }}</a>
+        <a class="city-link" href="{{ url_for('unprotected.show_venue', location=city) }}">{{ city }}</a>
         {% endfor %}
     </section>
 {% endfor %}

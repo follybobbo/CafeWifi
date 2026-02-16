@@ -15,7 +15,7 @@
          <h1>ADD NEW PLACE</h1>
          <p>Let Everyone know about a new work-friendly venue!!</p>
      </div>
-     <form method="POST" action="{{url_for('add_place')}}">
+     <form method="POST" action="{{url_for('protected.add_place')}}">
          {{form.csrf_token}}
 
 

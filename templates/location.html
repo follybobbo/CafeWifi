@@ -37,7 +37,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[:3] %}
                              <div class="tooltip-container">
-                                 <a class="{{item[1]}}" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
+                                 <a class="{{item[1]}}" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -45,7 +45,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[3:] %}
                              <div class="tooltip-container">
-                                 <a class="{{item[1]}}" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
+                                 <a class="{{item[1]}}" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -54,7 +54,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[:5] %}
                              <div class="tooltip-container">
-                                 <a class="{{item[1]}}" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
+                                 <a class="{{item[1]}}" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -62,7 +62,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[5:] %}
                              <div class="tooltip-container">
-                                 <a class="{{item[1]}}" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
+                                 <a class="{{item[1]}}" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -71,7 +71,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[1:] %}
                              <div class="tooltip-container">
-                                 <a class="{{item[1]}}" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
+                                 <a class="{{item[1]}}" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -79,7 +79,7 @@
                        <div class="inner-div">
                            {% for key, item in content_list[:1] %}
                              <div class="tooltip-container">
-                                 <a class="{{item[1]}}" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
+                                 <a class="{{item[1]}}" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">{{key}}</a>
                                  <div class="tooltip">{{item[0]}}</div>
                              </div>
                            {% endfor %}
@@ -266,7 +266,7 @@
           <div class="outer-container" id="item-eight" style="text-align: center">
 
               <p>Missing or incorrect information?</p>
-              <a class="btn-ltn" id="update-button" href="{{url_for('review_venue_info', city=city, cafe_name=name)}}">UPDATE PAGE</a>
+              <a class="btn-ltn" id="update-button" href="{{url_for('protected.review_venue_info', city=city, cafe_name=name)}}">UPDATE PAGE</a>
               <a class="btn-ltn" id="report-closed">REPORT CLOSED</a>
           </div>
 

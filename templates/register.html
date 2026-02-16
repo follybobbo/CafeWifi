@@ -2,7 +2,10 @@
 
 
 {% block content %}
-    <form action="{{url_for('unprotected.register')}}" method="POST">
+<div class="container">
+
+
+    <form class="register-form" action="{{url_for('unprotected.register')}}" method="POST">
         {{form.csrf_token}}
 <!--        FLASH MESSAGES-->
         {% with messages = get_flashed_messages() %}
@@ -49,11 +52,10 @@
 
             {{form.register(class="form_btn")}}
         </div>
-        <div>
+        <div style="text-align: center;">
             <span>Already a member?</span >
             <a>Login</a>
         </div>
-
-
     </form>
+</div>
 {% endblock %}

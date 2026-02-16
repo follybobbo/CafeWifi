@@ -2,6 +2,7 @@ import itsdangerous
 from itsdangerous.serializer import Serializer
 from itsdangerous import URLSafeTimedSerializer
 import smtplib
+import redis
 
 from datetime import datetime
 
@@ -229,6 +230,16 @@ def email_verification_required(f):
     return wrapper
 
 
+#INITIALIZE REDIS CLASS
+
+redis_client = redis.Redis(
+    host="localhost",
+    port=6379,
+    db=0,
+    decode_responses=True
+)
+
+print(redis_client.ping())
 
 
 
@@ -877,21 +888,41 @@ def unverified():
 
 # login_manager.login_view = "unprotected.register"
 
+"""                                            FUNCTIONS                                                    """
+def can_send_email(user_id):
+    key = f"resend_verification:{user_id}"
+    can_send = redis_client.exists(key)
+
+    if not can_send:
+        redis_client.set(key, 1, nx=True, ex=30)
+        return True
+
+    return False
+
+
 
 
 
 """                                            AJAX                                                          """
 
-@unprotected.route("/send-verification", methods=["POST"])
+@app.route("/resend-verification", methods=["POST"])
 def resend_verification_email():
-    email = current_user.email
-    token = make_token(email)
-    verify_url = url_for("unprotected.verify_email", token=token, _external=True)
-    response = send_mail(verify_url, email)
-    print(response.data)
+    send_the_mail = can_send_email(current_user.id)
 
-    if response:
-        return jsonify({"status": "sent"})
+    if send_the_mail:
+        #check database for the last time user resent verification mail, comapre with current time if difference less tnan 30 sec return abort else ok
+        email = current_user.email
+        token = make_token(email)
+        verify_url = url_for("unprotected.verify_email", token=token, _external=True)
+        response = send_mail(verify_url, email)
+        print(response.data)
+
+        if response:
+            return jsonify({"status": "sent"})
+
+    else:
+        return jsonify({"message": "Please wait before sending"}), 429 #too many request
+
 
 #HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
 @app.route("/restaurant/closed-or-opened", methods=["PATCH"])
