@@ -17,6 +17,11 @@ body {
 
 }
 
+.container {
+  min-height: 100vh;
+
+}
+
 
 
 
@@ -337,6 +342,7 @@ select {
   width: 80%;
   padding: 20px 12px;
   text-align: center;
+  min-height: 100vh;
 }
 
 .city-link {
@@ -606,9 +612,14 @@ select {
 
 /*Unverified*/
 
-.resend-email:hover {
+.resend-email-btn:hover {
  cursor: pointer;
+ background-color: green;
 
+}
+
+.resend-email-btn {
+  border-radius: 8px;
 }
 
 .card{
@@ -622,10 +633,22 @@ select {
 
 }
 
-.container {
+.unverified-container {
   display: flex;
   align-items: center;
   min-height: 100vh;
+}
+
+.hide-stuff {
+ display: none;
+}
+
+.logout-btn:hover {
+ background-color: red;
+}
+
+.logout-btn {
+  border-radius: 8px;
 }
 
 /*Login*/
@@ -633,9 +656,37 @@ select {
 .login {
   margin:auto;
   border: 1px solid grey;
-  padding: 120px 150px;
-  border-radius: 15px;
+  padding: 120px 50px;
+  border-radius: 30px;
+  width: fit-content;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  /*background-color: grey;*/
 
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  /*flex-direction: row;*/
+  justify-content: center;
+  align-items: center;
+}
+
+
+.login-btn:hover {
+  background-color: green;
+}
+
+.login-btn {
+  padding:5px 20px;
+  border-radius: 3px;
+  margin-left: 5px;
+
+}
+
+.login-input {
+  padding: 5px;
+  margin-bottom: 7px;
 }
 
 /*Register*/
