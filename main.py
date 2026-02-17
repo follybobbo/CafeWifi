@@ -238,7 +238,7 @@ redis_client = redis.Redis(
     db=0,
     decode_responses=True
 )
-
+#MEMURAI
 print(redis_client.ping())
 
 
@@ -670,8 +670,9 @@ def show_cities():
 
     return render_template("cities.html", city_dict=city_dict)
 
-@login_required
 @protected.route("/<city>/<name>")
+@login_required
+@email_verification_required
 def show_location(city, name):
     #open db and fetch all values
     cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
@@ -891,8 +892,9 @@ def unverified():
 """                                            FUNCTIONS                                                    """
 def can_send_email(user_id):
     key = f"resend_verification:{user_id}"
-    can_send = redis_client.exists(key)
+    can_send = redis_client.exists(key)  #if key exist then user cannot send, if key does not exist, them user can send
 
+    #if key does not exist, then set new key with timer/expiry equals 30 secs then return truw
     if not can_send:
         redis_client.set(key, 1, nx=True, ex=30)
         return True
@@ -915,11 +917,10 @@ def resend_verification_email():
         token = make_token(email)
         verify_url = url_for("unprotected.verify_email", token=token, _external=True)
         response = send_mail(verify_url, email)
-        print(response.data)
+        # print(response.data)
 
-        if response:
-            return jsonify({"status": "sent"})
-
+        if response.data:
+            return jsonify({"message": "sent"})
     else:
         return jsonify({"message": "Please wait before sending"}), 429 #too many request
 
