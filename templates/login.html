@@ -2,8 +2,9 @@
 
 
 {% block content %}
-<div class="container">
+<div class="login-container">
     <div class="login">
+        <div class="wrapper">
         <h1>LOGIN IN</h1>
 
         <p>Continue With</p>
@@ -19,7 +20,7 @@
                 </tr>
 
                 <tr>
-                    <td>{{form.password(placeholder="Password", size=50)}}</td>
+                    <td>{{form.password(placeholder="Password", size=50, class="login-input")}}</td>
                 </tr>
 
                 <tr>
@@ -31,12 +32,13 @@
             </table>
             <a>Forgot password ?</a>
     <!--        <a href="{{url_for('unprotected.login')}}">LOGIN</a>-->
-            {{form.login()}}
-            <div>
-                New to Laptop Friendly?
+            {{form.login(class="login-btn")}}
+            <div style="margin-top: 20px;">
+                New to Cafe Wifi?
                 <a href="{{url_for('unprotected.register')}}">Register</a>
             </div>
         </form>
+        </div>
     </div>
 </div>
 {% endblock %}
