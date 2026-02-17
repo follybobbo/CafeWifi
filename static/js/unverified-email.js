@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  let resendButton = document.querySelector(".resend-email");
+  let resendButton = document.querySelector(".resend-email-btn");
   let counter = 30;
 
   //IF USER GOES TO ANOTHER PAGE AND COMES BACK, THE COUNTER MUST STILL GO ON
@@ -8,19 +8,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   resendButton.addEventListener("click", async function () {
-    console.log("clicked")
     let response = await resendVerificationLink()
 
-    if(response.status == "sent") {
+    if(response.message === "sent") {
       resendButton.innerText = "Sent";
-
+      console.log(response.status);
     }
+
   });
 
 })
 
 
 function startCountDown() {
+  let counter = 30;
+  let resendButton = document.querySelector(".resend-email-btn");
   resendButton.disabled = true //disables resend button
 
   let timer = setInterval(function () {             //performs function after every 1 second
@@ -36,25 +38,40 @@ function startCountDown() {
   }, 1000);
 }
 
+function disappearingMessage(message) {
+  let messageContainer = document.querySelector("#too-many-request");
+  messageContainer.innerText = message;
+  messageContainer.classList.remove("hide-stuff");
+
+  setTimeout(function () {
+    messageContainer.classList.add("hide-stuff")
+  }, 5000)
+
+}
+
 
 async function resendVerificationLink() {
   try {
     const response = await fetch("/resend-verification", {
      method: "POST",
-     headers: {
-      "Content-Type": "application/json"
-     }
     })
 
+    const responseData = await response.json();
+
     if (!response.ok) {
+      disappearingMessage(responseData.message)
+//      console.log(responseData.message)
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    const responseData = await response.json();
-     startCountDown();
+    startCountDown();       //START COUNTDOWN
     return responseData
 
   }catch(error) {
     console.log("Fetch Failed", error)
+     return {
+      status: 0,
+      message: "Network error"
+    };
   }
 
 
