@@ -4,16 +4,16 @@
 {% block content %}
   <div class="show-container">
 
-<!--    <div class="filters">-->
-<!--        <p>Hello</p>-->
-<!--    </div>-->
 
     <div class="venues">
         <h1 class="sv-heading" id="location-header">{{location}}</h1>
         <p class="sv-heading">The best work and study-friendly cafes, restaurants, libraries, and hotel lobbies in {{city}}. Expand your
             coworking map with our list of casual spots with free and reliable Wi-Fi, ample power sockets, and comfy seating areas</p>
+        <hr>
+
         <h2 class="sv-heading">{{cafes_list | length}} WORK-FRIENDLY PLACES</h2>
         <div class="cities-container">
+<!--            displays all venue cards-->
            {% for cafe in cafes_list: %}
             <a href="{{ url_for('protected.show_location', name=cafe.name, city=cafe.city) }}">
             <div class="pub-container">
@@ -23,13 +23,11 @@
             </a>
            {% endfor %}
 
-            <a href="{{url_for('protected.add_place')}}" id="suggest" style="text-decoration: none; padding: 100px 0; display: inline; width: 50%">
+            <a href="{{url_for('protected.add_place')}}" id="suggest" style="text-decoration: none; padding-top: 50px; display: inline; width: 50%">
                 <i class="bi bi-house-add-fill" style="font-size: 2.5rem;"></i>
                 <p>SUGGEST A PLACE</p>
             </a>
         </div>
-
-
     </div>
 
     <div id="sv-map"></div>
@@ -80,7 +78,6 @@
 
 {% block script %}
 <script src="{{ url_for('static', filename='js/show-venue.js') }}"></script>
-
 <script async defer src="http://maps.google.com/maps/api/js?key={{api_key}}" type="text/javascript"></script>
 {% endblock %}
 
