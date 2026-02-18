@@ -19,22 +19,26 @@
         {% endwith %}
 
         <div id="form-id">
-            <h1>REGISTER</h1>
-            <div>
-                <span>{{form.name(placeholder="First Name")}}</span>
-                <span>{{form.surname(placeholder="Last Name")}}</span>
+            <h1 style="padding: 0 2px 20px 2px;">REGISTER</h1>
+            <div class="register-entry-container">
+                <span style="margin-right:2px;">{{form.name(placeholder="First Name")}}</span>
+                <span style="margin-left:2px;">{{form.surname(placeholder="Last Name")}}</span>
             </div>
-            <div>
-                {{form.city(placeholder="City")}}
+
+            <div class="register-entry-container">
+                {{form.city(placeholder="City", size=47)}}
             </div>
-            <div>
-                {{form.email(placeholder="Email")}}
+
+            <div class="register-entry-container">
+                {{form.email(placeholder="Email", size=47)}}
             </div>
-            <div>
-                {{form.password(placeholder="Password")}}
+
+            <div class="register-entry-container">
+                {{form.password(placeholder="Password", size=47)}}
             </div>
-            <div>
-                {{form.password_confirm(placeholder="Confirm Password")}}
+
+            <div class="register-entry-container">
+                {{form.password_confirm(placeholder="Confirm Password", size=47)}}
             </div>
 
 <!--              FORM ERRORS-->
@@ -49,8 +53,9 @@
                 </ul>
               {% endif %}
 
-
-            {{form.register(id="register-form_btn")}}
+            <div id="register-submit-container">
+                {{form.register(id="register-form-btn")}}
+            </div>
         </div>
         <div style="text-align: center;">
             <span>Already a member?</span >
