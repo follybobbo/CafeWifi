@@ -19,12 +19,12 @@
     if (place) {
         //FETCH DATA FROM BACKEND AND CHECK
         const listOfPlaces = await fetchListOfPlaces();
-        let exists = checkIfPlaceExist(listOfPlaces, place.displayName);
+        let existsResult = checkIfPlaceExist(listOfPlaces, place.displayName);
 //        console.log(exists);
 //        console.log(place.id);
 
-
-        if (exists) {
+        console.log(existsResult.exist);
+        if (existsResult.exist) {
             console.log("place already exist");
             //HIDE ALL VISIBLE SECTIONS THAT SHOULD ONLY SHOW WHEN SELECTION IS SUCCESFULL OR PLACE DOESNT EXIST
             let stuffToHide = document.querySelectorAll(".hidden");  //selects all inputs that are currently hidden
@@ -35,6 +35,20 @@
             //DISPLAY ERROR MESSAGE
             let errorMessage = document.querySelector(".error-msg");
             errorMessage.classList.add("show-err-msg");
+
+            errorMessage.addEventListener("click", async function () {
+               let placeDetails = existsResult.placeDetails;
+               console.log(placeDetails);
+               getRequestToLocation(placeDetails.city, placeDetails.name)
+//               let fetchResponse = await getRequestToLocation(placeDetails.city, placeDetails.name)
+//
+//               if (!fetchResponse.ok) {
+//                 console.log(fetchResponse.data?.message)
+//                 return
+//               }
+//               console.log(fetchResponse.status);
+//              call function
+            });
 
             //clear any previously stored elements to prevent posting wrong things to backend
         } else {
@@ -79,8 +93,7 @@
             let formStreet = document.querySelector(".street-one");
             formStreet.value = address;
 
-    //        console.log(place.formattedAddress)
-    //        console.log(place.displayName);
+
     //      SETS DISPLAY NAME TO FORM INPUT
             locationInput.value = place.displayName;        //NEEDED
 
@@ -231,9 +244,23 @@ async function fetchListOfPlaces() {
 //FUNCTION CHECKS IF RESTAURANT INPUT BY USER EXISTS.
 //ARGUMENTS LIST = LIST OF PLACES SENT FROM BACKEND, PLACE, NAME OF RESTAURANT ENETERED BY USER.
 function checkIfPlaceExist(List, place) {
+  for (item of List) {
+    if (item.name == place) {
+      return {exist: true, placeDetails: item}
+    } else {
+      return {exist: false}
+    }
+  }
 
-  return List.includes(place)
+//  return List.includes(place)
 
+}
+
+
+
+//function to make get request if user click on HERE
+function getRequestToLocation(city, name) {
+  window.location.href = `/${encodeURIComponent(city)}/${encodeURIComponent(name)}`
 }
 
 
