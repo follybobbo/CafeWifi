@@ -29,6 +29,7 @@ from functools import wraps
 
 import requests
 from decorators.ratelimit import login_token_bucket_limiter
+from decorators.email_verification import email_verification_required
 
 # from flask_bootstrap import Bootstrap5
 
@@ -221,16 +222,16 @@ def de_serializer(token: str, expiration=3600):
 
 
 #EMAIL-VERIFICATION DECORATOR FUNCTION
-def email_verification_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        is_verified = current_user.verified
-
-        if not is_verified:
-            return redirect(url_for("protected.unverified"))
-
-        return f(*args, **kwargs)
-    return wrapper
+# def email_verification_required(f):
+#     @wraps(f)
+#     def wrapper(*args, **kwargs):
+#         is_verified = current_user.verified
+#
+#         if not is_verified:
+#             return redirect(url_for("protected.unverified"))
+#
+#         return f(*args, **kwargs)
+#     return wrapper
 
 
 #INITIALIZE REDIS CLASS
@@ -322,8 +323,9 @@ def home():
 
         return render_template("index.html", location_list=location_list, api=GOOGLE_PLACES_API_KEY)
 
-@login_required
+
 @protected.route("/add", methods=["GET", "POST"])
+@login_required
 def add_place():
     # print(current_user.is_authenticated)
 
@@ -441,8 +443,9 @@ def show_venue(location):
 
 #LOGIN REQUIRED TO POST
 #uses slugified city and cafe_name
-@login_required
+
 @protected.route("/<path:city>/<path:cafe_name>/review", methods=["POST", "GET", "PUT", "PATCH"])
+@login_required
 def review_venue_info(city, cafe_name):
 
     de_sluged_cafe_name = de_slugify(cafe_name)
