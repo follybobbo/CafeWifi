@@ -26,7 +26,7 @@ def login_token_bucket_limiter(limit, rate):
 
 
             response = f(*args, **kwargs)
-            response.headers["X-RateLimit-Remaining"] = f"{int(request_allowed)}"
+            response.headers["X-RateLimit-Remaining"] = f"{int(token_left)}"
             return response
 
         return wrapper_function
