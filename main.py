@@ -1,12 +1,12 @@
 import itsdangerous
-from itsdangerous.serializer import Serializer
 from itsdangerous import URLSafeTimedSerializer
 import smtplib
 import redis
 
+from dotenv import load_dotenv
+
 from datetime import datetime
 
-import flask_login
 import werkzeug.security
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Blueprint
 from flask_caching import Cache
@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Boolean, Float, ForeignKey, DateTime
+from sqlalchemy import String, Boolean, Float, ForeignKey, DateTime
 # from sqlalchemy.sql.functions import current_user
 
 from forms import SearchVenue
@@ -25,14 +25,16 @@ from reviewquestions import survey_data
 
 import secrets
 import os
-import re
-from typing import List
 from functools import wraps
 
 import requests
-from werkzeug.security import generate_password_hash, check_password_hash
+from decorators.ratelimit import login_token_bucket_limiter
 
 # from flask_bootstrap import Bootstrap5
+
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 
@@ -185,7 +187,7 @@ def load_user(user_id):
 
 
 #SENDER
-master_mail = os.environ.get("MASTER_EMAIL")
+master_mail = os.environ.get("SERIALIZER_KEY")
 password = os.environ.get("MASTER_EMAIL_PASSWORD")
 
 def send_mail(verification_url, user_email):
@@ -198,7 +200,8 @@ def send_mail(verification_url, user_email):
 
 
 #SERIALIZER FOR EMAIL VERIFICATION
-secret_key = os.environ.get("SERIALIZER_KEY")
+secret_key = os.environ.get("APP_SECRET_KEY")
+
 serializer = URLSafeTimedSerializer(secret_key, "email-verify")
 
 def make_token(email: str) -> str:
@@ -240,6 +243,9 @@ redis_client = redis.Redis(
 )
 #MEMURAI
 print(redis_client.ping())
+
+
+
 
 
 
@@ -429,6 +435,7 @@ def show_venue(location):
     #reads db for cafes with specified location.
     cafe = db.session.execute(db.select(Cafe).where(Cafe.city == location)).scalars()
     cafes_list = cafe.all()
+
 
     return render_template("show-venue.html", cafes_list=cafes_list, location=location, api_key=GOOGLE_PLACES_API_KEY)
 
@@ -674,6 +681,7 @@ def show_cities():
 @login_required
 @email_verification_required
 def show_location(city, name):
+    print(name)
     #open db and fetch all values
     cafe_info = db.session.execute(db.select(Cafe).where(Cafe.name == name)).scalar()
     cafe_id = cafe_info.id
@@ -750,6 +758,7 @@ def dashboard():
 
 
 @unprotected.route("/login", methods=["GET", "POST"])
+@login_token_bucket_limiter(limit=10, rate=5)
 def login():
     login_form = LoginForm()
 
@@ -871,12 +880,8 @@ def register():
         else:
             flash("User Already Exist", "error")
             return redirect(url_for("unprotected.register"))
-
-
-
-
-
     return render_template("register.html", form=register_form)
+
 
 @protected.route("/unverified-mail")
 @login_required
@@ -900,7 +905,6 @@ def can_send_email(user_id):
         return True
 
     return False
-
 
 
 
@@ -946,7 +950,6 @@ def report_closed_or_opened():
 
 
 
-
 #USES RESTAURANT NAME FROM FRONTEND TO CHECK THE OPEN STATUS FROM THE DB
 @app.route("/restaurant/status", methods=["GET"])
 def check_restaurant_status():
@@ -961,6 +964,7 @@ def check_restaurant_status():
             return jsonify({"status": False})
 
     # ELSE RETURN ERROR OR HANDLE ERROR
+
 
 #UPDATES SUMMARY VALUE IN DB, RETURNS STATUS WHEN DONE
 @app.route("/update/summary", methods=["PATCH"])
@@ -985,7 +989,7 @@ def update_summary():
     return jsonify({"status": "updated"})
 
 
-#USES GOOGLE API TO SEARCH FOR USERS CITY USING LONGITUDE AND LATITUDE
+#USES GOOGLE API TO SEARCH FOR USERS CITY USING LONGITUDE AND LATITUDE used in index.js
 @app.route("/reverse/geo")
 def reverse_geocoding():
     latitude = request.args.get("latitude")
@@ -1019,12 +1023,12 @@ def get_list_of_places():
 
     for restaurant in restaurants:
         # print(restaurant.name)
-        list_of_places.append(restaurant.name)
+        list_of_places.append({"name": restaurant.name, "city": restaurant.city})
 
     return list_of_places
 
 
-#view searches through db and gets result for latitude and longitude in list
+#view searches through db and gets result for latitude and longitude in list used in show-venue.js
 @app.route("/api/latlong")
 def get_lat_and_long():
     lat_long_list = []
