@@ -8,7 +8,7 @@ client = redis.Redis("localhost", 6379, 0, decode_responses=True)
 
 
 
-def login_rate_limiter(limit, rate):
+def login_token_bucket_limiter(limit, rate):
     token_bucket = RedisBucket(client)
     def decorator(f):
         @wraps(f)
