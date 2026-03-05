@@ -22,10 +22,12 @@ def login_token_bucket_limiter(limit: int, rate: int):
 
             if not request_allowed:
                 response = jsonify({"error": "Too many request"})
+                response.headers["Retry-After"] = "1 second"
                 response.status_code = 429
 
 
             response = f(*args, **kwargs)
+            response.headers["X-RateLimit-Limit"] = limit
             response.headers["X-RateLimit-Remaining"] = f"{int(token_left)}"
             return response
 
