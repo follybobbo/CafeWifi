@@ -34,6 +34,8 @@ from decorators.email_verification import email_verification_required
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+from . import unprotected, protected
+
 # from flask_bootstrap import Bootstrap5
 
 
@@ -55,6 +57,7 @@ app.secret_key = os.environ.get("APP_SECRET_KEY")
 
 #INITIALIZE THE EXTENSION
 # create DB object
+
 class Base(DeclarativeBase):
     pass
 
@@ -296,16 +299,16 @@ print(redis_client.ping())
 
 
 #DEFINE BLUEPRINTS
-unprotected = Blueprint("unprotected", __name__)
-protected = Blueprint("protected", __name__)
+# unprotected = Blueprint("unprotected", __name__)
+# protected = Blueprint("protected", __name__)
 
 
 
 
 #ROUTES
 @unprotected.route("/")
-@limiter.limit("1/minute")
-# @limiter.limit("2/second")
+@limiter.limit("10/minute")
+@limiter.limit("2/second")
 @cache.cached(timeout=50)
 def home():
 
@@ -339,6 +342,8 @@ def home():
 
 
 @protected.route("/add", methods=["GET", "POST"])
+@limiter.limit("10/minute")
+@limiter.limit("2/second")
 @login_required
 def add_place():
     # print(current_user.is_authenticated)
@@ -446,6 +451,8 @@ def add_place():
 
 
 @unprotected.route("/<location>")
+@limiter.limit("10/minute")
+@limiter.limit("2/second")
 def show_venue(location):
     # print(f"location is {location}")
     #reads db for cafes with specified location.
@@ -666,6 +673,8 @@ def review_venue_info(city, cafe_name):
 
 
 @unprotected.route("/cities")
+@limiter.limit("10/minute")
+@limiter.limit("2/second")
 def show_cities():
     city_dict = {}
     data = db.session.execute(db.select(Cafe).order_by(Cafe.country)).scalars()
@@ -853,6 +862,8 @@ def verify_email(token):
 
 # @app.route("/register", methods=["GET", "POST"])
 @unprotected.route("/register", methods=["GET", "POST"])
+@limiter.limit("10/minute")
+@limiter.limit("2/second")
 def register():
     register_form = RegisterForm()
     # csrf_token = secrets.token_hex(16)
