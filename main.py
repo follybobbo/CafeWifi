@@ -31,6 +31,9 @@ import requests
 from decorators.ratelimit import login_token_bucket_limiter
 from decorators.email_verification import email_verification_required
 
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 # from flask_bootstrap import Bootstrap5
 
 
@@ -74,6 +77,15 @@ cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
 #LOGIN MANAGER
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+#LIMITER
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["10 per minute"],
+    storage_uri="redis://localhost:6379/2",
+    strategy="fixed-window"
+)
 
 
 #  DEFINE MODEL
@@ -292,6 +304,8 @@ protected = Blueprint("protected", __name__)
 
 #ROUTES
 @unprotected.route("/")
+@limiter.limit("1/minute")
+# @limiter.limit("2/second")
 @cache.cached(timeout=50)
 def home():
 
