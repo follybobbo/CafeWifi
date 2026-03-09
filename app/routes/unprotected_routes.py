@@ -30,7 +30,7 @@ def home():
 
     # print("Current user:", current_user)
     #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
-
+    session.pop("step", None)
     result = get_all_cafes_and_order_by_id()
     cafes = result.all()
 
