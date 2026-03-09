@@ -1,4 +1,4 @@
-#key : (list_of_options, id, name)
+#key : ([list_of_options], id & name)
 survey_data = {
         "PRODUCTIVITY": {
             "Is there Wi-Fi": ([("No", "low"), ("Yes, but can be unstable or limited", "medium"), ("Definitely, it's very reliable!", "high")], "wifi"),

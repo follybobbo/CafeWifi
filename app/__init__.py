@@ -1,0 +1,37 @@
+from .extensions import db
+from flask import Flask, Blueprint
+import os
+from dotenv import load_dotenv
+from app.extensions import login_manager, cache, limiter
+from app.routes import unprotected, protected
+
+
+load_dotenv()
+
+
+
+
+def create_flask_app():
+    app = Flask(__name__)
+    app.secret_key = os.environ.get("APP_SECRET_KEY")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
+
+
+    #initialise db extension
+    db.init_app(app)
+    #initialise login manager extension
+    login_manager.init_app(app)
+    login_manager.login_view = "unprotected.login"
+    #initialise cache extension
+    cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
+    #initialise Limiter
+    limiter.init_app(app)
+
+    # register Blueprint
+    app.register_blueprint(unprotected)
+    app.register_blueprint(protected)
+
+
+    return app
+
+
