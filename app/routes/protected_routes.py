@@ -41,6 +41,7 @@ def add_place():
     #     session["step"] = 1
     # SET STEP = 1 IF STEP IS NOT IN SESSION
     step = session.get("step", 1)
+    print(step)
 
     #THIS BIT OF CODE HAPPENS WHEN USER SUBMITS THE FIRST FORM
     #NO CSRF VALIDATION
@@ -184,7 +185,7 @@ def review_venue_info(city, cafe_name):
                                                         restroom, wheelchair_accessible, air_conditioned, smoke_free,
                                                         pet_friendly,
                                                         parking_space, summary)
-        print(result)
+        # print(result)
 
         return redirect(url_for("show_location", city=city, name=de_sluged_cafe_name))
 
