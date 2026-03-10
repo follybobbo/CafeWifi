@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from app.services import (get_all_cafes_and_order_by_id, get_cafe_city_list, get_all_cafe_instance_by_location,
                           get_all_cafe_and_order_by_country, create_country_city_list_dictionary, get_user_by_email,
-                          de_serializer, update_user_email_verification_status, create_new_user, make_token, send_mail)
+                          de_serializer, update_user_email_verification_status, create_new_user, make_token, send_mail,
+                          remove_certain_keys_session)
 from dotenv import load_dotenv
 import os
 from app import cache, limiter
@@ -30,7 +31,8 @@ def home():
 
     # print("Current user:", current_user)
     #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
-    session.pop("step", None)
+    list_of_key = ["csrf_token", "location_name", "picture_url", "country", "city", "street_name", "longitude", "latitude", "step"]
+    remove_certain_keys_session(list_of_key)
     result = get_all_cafes_and_order_by_id()
     cafes = result.all()
 
