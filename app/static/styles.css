@@ -29,6 +29,25 @@ body {
 
 
 
+/*Flash Message Error*/
+.success {
+ color: green;
+}
+
+.error {
+ color: red;
+}
+
+.info {
+ color: blue;
+}
+
+.flashes {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 
 
 
@@ -754,17 +773,6 @@ select {
 }
 
 /*Register*/
-
-
-
-
-
-
-
-
-
-
-
 
 
 
