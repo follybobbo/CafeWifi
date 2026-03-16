@@ -3,7 +3,17 @@
 
 {% block content %}
 <div class="login-container">
+
     <div class="login">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{category}}">{{message}}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
         <div class="wrapper">
         <h1>LOGIN</h1>
 
@@ -33,6 +43,7 @@
             <a>Forgot password ?</a>
     <!--        <a href="{{url_for('unprotected.login')}}">LOGIN</a>-->
             {{form.login(class="login-btn")}}
+            <div id="back-off-counter-label"></div>
             <div style="margin-top: 20px;">
                 New to Cafe Wifi?
                 <a href="{{url_for('unprotected.register')}}">Register</a>
@@ -41,4 +52,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+  <script src="{{url_for('static', filename='js/login.js')}}"></script>
+
 {% endblock %}
