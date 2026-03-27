@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //    function 1
         function (flashMessage) {
             setTimeout(function () {
-                flashMessage.classList.add("hide-stuff")
+                flashMessage.classList.add("hide-flash-message")
             }, 4000);
         },
 
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //        colors timer text red
         containerOfCounter.classList.add("color-red");
         let coolDownValue = containerOfCounter.innerText;
-//        console.log(coolDownValue)
+        console.log(coolDownValue)
 
 //        formats time on first display
         formatTimer(coolDownValue);
@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
             coolDownValue--;
             if (coolDownValue == 0) {
                   clearInterval(timer);
-                  containerOfCounter.classList.add("hide-stuff");
+                  let tinerContainer = document.querySelector("#cooldown-time-container")
+                  tinerContainer.classList.add("hide-flash-message")
+                  containerOfCounter.classList.add("hide-flash-message");
                   containerOfCounter.classList.remove("color-red");
                     //flash tou ca now login
             }
@@ -58,15 +60,13 @@ document.addEventListener("DOMContentLoaded", function () {
 //        format timer from ss to min:sec
         function formatTimer(timeInSeconds) {
             if (timeInSeconds < 60) {
-            containerOfCounter.innerText = `00:${timeInSeconds}`
+                containerOfCounter.innerText = `00:${timeInSeconds}`
             }else {
-            let min, sec
-            min = Math.trunc(timeInSeconds/60)
-            sec = timeInSeconds % 60
-            containerOfCounter.innerText = `${min}:${sec}`
+                let min, sec
+                min = Math.trunc(timeInSeconds/60)
+                sec = timeInSeconds % 60
+                containerOfCounter.innerText = `${min}:${sec}`
             }
-
-
         }
 
 
