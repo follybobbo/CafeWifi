@@ -59,7 +59,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //        format timer from ss to min:sec
         function formatTimer(timeInSeconds) {
-            if (timeInSeconds < 60) {
+            if (timeInSeconds < 10) {
+                containerOfCounter.innerText = `00:0${timeInSeconds}`;
+            }else if (timeInSeconds < 60) {
                 containerOfCounter.innerText = `00:${timeInSeconds}`
             }else {
                 let min, sec
