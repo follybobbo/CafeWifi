@@ -197,7 +197,9 @@ form li {
 .show-container {
   display: grid;
   grid-template-columns: 45% 55%;
-  height: 100vh;
+  /*height: 100vh;*/
+  /*overflow: hidden;*/
+  min-height: 100vh;
 }
 
 .show-container > div {
