@@ -43,7 +43,20 @@
             <a>Forgot password ?</a>
     <!--        <a href="{{url_for('unprotected.login')}}">LOGIN</a>-->
             {{form.login(class="login-btn")}}
-            <div id="back-off-counter-label"></div>
+
+            {% if cooldown_time %}
+                <div id="cooldown-time-container">
+                    <span>Time remaining:</span>
+                     <span id="cooldown-time">{{cooldown_time}}</span>
+                </div>
+
+            {% endif %}
+<!--            {{cooldown_time}}-->
+
+<!--            {% if cooldown_time %}-->
+<!--               <div id="back-off-counter-label">{{ cooldown_time }}</div>-->
+<!--            {% endif %}-->
+
             <div style="margin-top: 20px;">
                 New to Cafe Wifi?
                 <a href="{{url_for('unprotected.register')}}">Register</a>
