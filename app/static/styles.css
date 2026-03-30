@@ -749,7 +749,15 @@ select {
 
 }
 
+#cooldown-time-container {
+    margin-top: 8px;
+}
 
+.hide-flash-message {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
 
 .login-container {
   min-height: 100vh;
