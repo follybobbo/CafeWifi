@@ -10,7 +10,9 @@ lua_script = """
  local token_per_request = ARGV[3]
  local token
  
- --get redis time returns list of time, first item in seconds, second item in micro seconds
+ --get redis time returns list of time, first item in seconds, second item in micro seconds, convert second time value to sec using 
+ --time in ms/1000000
+ 
  local time_data = redis.call("TIME")
  local time_now_in_seconds = tonumber(time_data[1]) + (tonumber(time_data[2])/1000000)
  
@@ -21,10 +23,11 @@ lua_script = """
  
  --refill block
  
- --used or not and in order to prevent errors that arises from partial state write
+ --used 'or' not 'and' conditional in order to prevent errors that arises from partial state write
  
  --first conditional block runs on first request
  --second conditional block runs subsequently
+ 
  if not bucket[1] or not bucket[2] then
    token = bucket_capacity
    last_bucket_refill_time = time_now_in_seconds
@@ -55,6 +58,7 @@ lua_script = """
  local time_to_fill_bucket = bucket_capacity/rate_of_refill
  redis.call("EXPIRE", key, time_to_fill_bucket * 2)
  
+ --return token remaining and if request is allowed
  return {token, request_allowed}
 """
 
