@@ -726,6 +726,8 @@ select {
  display: none;
 }
 
+
+
 .logout-btn:hover {
  background-color: red;
 }
@@ -746,6 +748,8 @@ select {
   /*background-color: grey;*/
 
 }
+
+
 
 .login-container {
   min-height: 100vh;
@@ -770,6 +774,17 @@ select {
 .login-input {
   padding: 5px;
   margin-bottom: 7px;
+}
+
+.color-red {
+    color: red;
+}
+
+#flash-list {
+ margin: auto;
+ text-align: center;
+ padding: 10px 0;
+
 }
 
 /*Register*/
