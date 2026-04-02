@@ -802,6 +802,23 @@ select {
 
 /*Register*/
 
+/*Dashboard*/
+
+.dashboard-container {
+    margin: auto;
+    width: 70%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.dashboard-divs {
+    text-align: center;
+    padding: 5px 0px 5px 0px;
+}
 
 
 /* handles responsiveness */
