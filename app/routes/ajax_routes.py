@@ -151,3 +151,76 @@ def get_lat_and_long():
 
 
     return lat_long_list  #returns list of latitude and longitude of each location
+
+@app.route("/change-display-picture", methods=["POST", "GET"])
+def change_display_picture():
+    if request.method == "POST":
+
+        #structure of request.files :
+        # ImmutableMultiDict([
+        #   ('name_on_input', <FileStorage: 'image_name or filename', ('image/jpg or MIME type')>)
+        # ])
+
+        # if request has no file: hence form field does not have name = file
+        if "profile_pic" not in request.files:
+            flash("No file part In Form", "error")
+            return redirect(request.url)
+
+        file = request.files.get("profile_pic")
+        if file.filename == "":
+            flash("No File Selected", "error")
+            return redirect(request.url)
+
+
+        if file and is_photo_file_allowed(file.filename, ALLOWED_EXTENSIONS):
+            print(current_user)
+            folder = f"./static/uploads/users/{current_user.id}"
+            #make folder per user
+            os.mkdir(folder)
+
+            #store file in users folder
+            filename = secure_filename(file.filename)
+            path = os.path.join(folder, filename)
+
+
+            try:
+                file.save(path)
+            except Exception as e:
+                flash(f"An Error Occurred: {e}", "info")
+            else:
+                update_user_display_picture(current_user.id, path)
+
+
+
+
+
+
+
+
+
+
+
+
+# @app.route("/api/get-backoff", methods=["POST", "GET"])
+# def get_time_for_backoff():
+#     print(request.method)
+#     # request_body = request.get_json()
+#     # user_email = request_body.get("user_email")
+#     user_email = request.args.get("email")
+#     print(user_email)
+#
+#     user_key = f"auth:login:{user_email}:cooldown"
+#
+#     print(f"get_time_for_backoff {user_key}")
+#     user_exist : bool
+#
+#     user_exist = redis_client.exists(user_key)
+#     print(f"get_time_for_backoff {user_exist}")
+#
+#     if user_exist:
+#         time_remaining = redis_client.ttl(user_key)
+#
+#         return jsonify({"is_back_off": True, "result": time_remaining})
+#     else:
+#         return jsonify({"is_back_off": False, "result": 0})                 # can change later
+
