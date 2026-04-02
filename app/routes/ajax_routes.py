@@ -166,7 +166,7 @@ def change_display_picture():
             flash("No file part In Form", "error")
             return redirect(request.url)
 
-        file = request.files.get("profile_pic")
+        file = request.files.get("photo")
         if file.filename == "":
             flash("No File Selected", "error")
             return redirect(request.url)
