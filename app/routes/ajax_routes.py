@@ -162,7 +162,7 @@ def change_display_picture():
         # ])
 
         # if request has no file: hence form field does not have name = file
-        if "profile_pic" not in request.files:
+        if "photo" not in request.files:
             flash("No file part In Form", "error")
             return redirect(request.url)
 
