@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(nullable=False)
     verified: Mapped[bool] = mapped_column(nullable=False, default=False)
     opened: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow())
+    # profile_picture: Mapped[str] = mapped_column()
 
 
 class Review(db.Model):
