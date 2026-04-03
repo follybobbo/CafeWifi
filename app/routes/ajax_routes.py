@@ -136,7 +136,7 @@ def get_list_of_places():
 
 
 #view searches through db and gets result for latitude and longitude in list used in show-venue.js
-@app.route("/api/latlong")
+@ajax_rule.route("/api/latlong")
 def get_lat_and_long():
     lat_long_list = []
     city = request.args.get("city")
