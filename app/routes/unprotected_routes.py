@@ -32,7 +32,7 @@ back_off = BackOff(redis_client)
 @cache.cached(timeout=50)
 def home():
 
-    # print("Current user:", current_user)
+    # print(request.url)
     #Reads DB and stores location in list, conditional statement ensures there is no repetition of location
     list_of_key = ["csrf_token", "location_name", "picture_url", "country", "city", "street_name", "longitude", "latitude", "step"]
     remove_certain_keys_session(list_of_key)
