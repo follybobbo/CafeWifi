@@ -152,7 +152,8 @@ def get_lat_and_long():
 
     return lat_long_list  #returns list of latitude and longitude of each location
 
-@app.route("/change-display-picture", methods=["POST", "GET"])
+@ajax_rule.route("/change-display-picture", methods=["POST", "GET"])
+@login_required
 def change_display_picture():
     if request.method == "POST":
 
