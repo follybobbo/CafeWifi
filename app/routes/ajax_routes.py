@@ -62,7 +62,7 @@ def report_closed_or_opened():
 
 
 #USES RESTAURANT NAME FROM FRONTEND TO CHECK THE OPEN STATUS FROM THE DB
-@app.route("/restaurant/status", methods=["GET"])
+@ajax_rule.route("/restaurant/status", methods=["GET"])
 def check_restaurant_status():
     restaurant_name = request.args.get("name")
     db_restaurant = get_single_cafe_by_cafe_name(restaurant_name)
