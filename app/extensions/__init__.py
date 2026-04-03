@@ -1,0 +1,1 @@
+from .extensions import db, limiter, login_manager, cache
