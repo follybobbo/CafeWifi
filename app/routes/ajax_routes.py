@@ -77,7 +77,7 @@ def check_restaurant_status():
 
 
 #UPDATES SUMMARY VALUE IN DB, RETURNS STATUS WHEN DONE
-@app.route("/update/summary", methods=["PATCH"])
+@ajax_rule.route("/update/summary", methods=["PATCH"])
 def update_summary():
     request_body = request.get_json()
     name_of_restaurant = request_body.get("name")
