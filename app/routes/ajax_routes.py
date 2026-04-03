@@ -125,9 +125,9 @@ def reverse_geocoding():
 @ajax_rule.route("/api/restaurants")
 def get_list_of_places():
     list_of_places = []
-    with app.app_context():
-        cafe_instance = get_all_cafes_and_order_by_id()
-        restaurants = cafe_instance.all()
+
+    cafe_instance = get_all_cafes_and_order_by_id()
+    restaurants = cafe_instance.all()
 
     for restaurant in restaurants:
         list_of_places.append({"name": restaurant.name, "city": restaurant.city})
