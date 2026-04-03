@@ -122,7 +122,7 @@ def reverse_geocoding():
 
 
 # RETURNS LIST OF PLACE TO THE FRONT END, SO USER CAN EASILY GET FEEDBACK IF THEY ENTER CAFE THAT ALREADY EXIST
-@app.route("/api/restaurants")
+@ajax_rule.route("/api/restaurants")
 def get_list_of_places():
     list_of_places = []
     with app.app_context():
