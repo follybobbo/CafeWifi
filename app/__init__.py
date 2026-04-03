@@ -7,7 +7,7 @@ from app.routes import unprotected, protected, ajax_rule
 
 
 load_dotenv()
-
+UPLOAD_FOLDER = './static/uploads'
 
 
 
