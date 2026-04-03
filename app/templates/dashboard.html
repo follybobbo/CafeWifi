@@ -16,16 +16,21 @@
     <div>{{user_data.get("email")}}</div>
 
     <div>PROFILE SETTINGS</div>
-
-    <table>
-          <tr>
-            <td>
-                {{form.photo.label}}
-            </td>
-            <td>
-               {{form.photo()}}
-            </td>
-          </tr>
+    <div id="dashboard-table">
+        <table>
+              <tr>
+                <td>
+                    {{form.photo.label}}
+                </td>
+                <td>
+                    <form id="update-picture-form" action="{{url_for('ajax.change_display_picture')}}" method="POST" enctype="multipart/form-data">
+                        <div>
+                           <span>{{form.photo()}}</span>
+                            <button id="submit-profile-picture" type="submit">update profile picture</button>
+                        </div>
+                    </form>
+                </td>
+              </tr>
 
          <tr>
             <td>
