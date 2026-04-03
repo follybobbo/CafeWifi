@@ -37,14 +37,14 @@
                 </td>
               </tr>
 
-         <tr>
-            <td>
-                {{form.name.label()}}
-            </td>
-            <td>
-               {{form.name()}}
-            </td>
-          </tr>
+             <tr>
+                <td>
+                    {{form.name.label()}}
+                </td>
+                <td>
+                   {{form.name()}}
+                </td>
+              </tr>
 
              <tr>
                 <td>
@@ -80,4 +80,9 @@
     </div>
 
 </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{{url_for('static', filename='js/dashboard.js')}}"></script>
 {% endblock %}
