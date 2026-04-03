@@ -31,6 +31,8 @@ def create_flask_app():
     # register Blueprint
     app.register_blueprint(unprotected)
     app.register_blueprint(protected)
+    app.register_blueprint(ajax_rule)
+    # print(app.url_map)
 
 
     return app
