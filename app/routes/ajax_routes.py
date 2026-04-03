@@ -48,7 +48,7 @@ def resend_verification_email():
 
 
 #HANDLES A PATCH REQUEST THAT EDITS THE CLOSED STATUS IN THE DB
-@app.route("/restaurant/closed-or-opened", methods=["PATCH"])
+@ajax_rule.route("/restaurant/closed-or-opened", methods=["PATCH"])
 def report_closed_or_opened():
     request_body = request.get_json()
     restaurant_name = request_body.get("name")
