@@ -191,6 +191,12 @@ def change_display_picture():
             else:
                 update_user_display_picture(current_user.id, path)
 
+            response = make_response()
+            response.status_code = 200
+            response.json({"message": "picture updated successfully"})
+
+            return response
+
 
 
 
