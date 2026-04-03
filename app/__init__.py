@@ -15,6 +15,9 @@ def create_flask_app():
     app = Flask(__name__)
     app.secret_key = os.environ.get("APP_SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cafes.db"
+    app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+    #maximum size of image set to 16mb
+    app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
 
 
     #initialise db extension
