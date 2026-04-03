@@ -1,4 +1,3 @@
-from .extensions import db
 from flask import Flask, Blueprint
 import os
 from dotenv import load_dotenv
