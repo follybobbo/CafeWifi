@@ -31,10 +31,7 @@ def create_flask_app():
     login_manager.init_app(app)
     login_manager.login_view = "unprotected.login"
     login_manager.login_message_category = "info"
-    #initialise cache extension
-    cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
-    #initialise Limiter
-    limiter.init_app(app)
+
 
     # register Blueprint
     app.register_blueprint(unprotected)
