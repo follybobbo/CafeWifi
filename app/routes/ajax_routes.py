@@ -1,4 +1,3 @@
-from app import create_flask_app
 from app.services import (check_if_user_can_resend_verification_email, redis_client, make_token, send_mail,
                           get_single_cafe_by_cafe_name, update_status_of_cafe_to_opened_closed, get_review_record_using_id,
                           update_review_summary, get_all_cafes_and_order_by_id, get_all_cafe_instance_by_location, update_user_display_picture)
@@ -15,7 +14,7 @@ import os
 load_dotenv()
 
 
-app = create_flask_app()
+# app = create_flask_app()
 
 ajax_rule = Blueprint("ajax", __name__)
 GOOGLE_PLACES_API_KEY = os.environ.get("API")
