@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, redirect, url_for, flash
+from flask import Blueprint, render_template, session, redirect, url_for, flash, request
 from app.services import (get_all_cafes_and_order_by_id, get_cafe_city_list, get_all_cafe_instance_by_location,
                           get_all_cafe_and_order_by_country, create_country_city_list_dictionary, get_user_by_email,
                           de_serializer, update_user_email_verification_status, create_new_user, make_token, send_mail,
