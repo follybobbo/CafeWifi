@@ -99,7 +99,7 @@ def update_summary():
 
 
 #USES GOOGLE API TO SEARCH FOR USERS CITY USING LONGITUDE AND LATITUDE used in index.js
-@app.route("/reverse/geo")
+@ajax_rule.route("/reverse/geo")
 def reverse_geocoding():
     latitude = request.args.get("latitude")
     longitude = request.args.get("longitude")
