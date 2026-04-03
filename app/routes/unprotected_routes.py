@@ -67,6 +67,7 @@ def show_venue(location):
 @limiter.limit("10/minute")
 @limiter.limit("2/second")
 def show_cities():
+    # print(request.url)
     storage = {}
     #STORAGE FORMAT BELOW
     # storage = {
