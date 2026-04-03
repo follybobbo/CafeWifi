@@ -28,7 +28,7 @@ ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg"]
 
 
 
-@app.route("/resend-verification", methods=["POST"])
+@ajax_rule.route("/resend-verification", methods=["POST"])
 def resend_verification_email():
     can_send_the_mail = check_if_user_can_resend_verification_email(current_user.id, redis_client)
 
