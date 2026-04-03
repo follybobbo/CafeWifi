@@ -17,7 +17,7 @@ load_dotenv()
 
 app = create_flask_app()
 
-ajax = Blueprint("ajax", __name__)
+ajax_rule = Blueprint("ajax", __name__)
 GOOGLE_PLACES_API_KEY = os.environ.get("API")
 ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg"]
 
