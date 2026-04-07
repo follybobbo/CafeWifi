@@ -177,10 +177,14 @@ def change_display_picture():
 
 
         if file and is_photo_file_allowed(file.filename, ALLOWED_EXTENSIONS):
-            print(current_user)
-            folder = f"./static/uploads/users/{current_user.id}"
-            #make folder per user
-            os.mkdir(folder)
+            folder = os.path.join(current_app.root_path, "static", "uploads", "users", str(current_user.id))
+
+            #loop through files in folder
+            delete_existing_pictures_in_folder(folder)
+
+
+            # make folder per user
+            os.makedirs(folder, exist_ok=True)
 
             #store file in users folder
             filename = secure_filename(file.filename)
