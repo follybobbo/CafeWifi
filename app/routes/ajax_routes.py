@@ -171,6 +171,10 @@ def change_display_picture():
             flash("No File Selected", "error")
             return redirect(request.url)
 
+        if not is_photo_file_allowed(file.filename, ALLOWED_EXTENSIONS):
+            flash("Upload only: png, jpg, jpeg", "error")
+            return redirect(url_for("protected.dashboard"))
+
 
         if file and is_photo_file_allowed(file.filename, ALLOWED_EXTENSIONS):
             print(current_user)
