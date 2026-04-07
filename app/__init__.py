@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from app.extensions import login_manager, cache, limiter, db
 from app.routes import unprotected, protected, ajax_rule
+from flask_migrate import Migrate
 
 
 load_dotenv()
