@@ -191,7 +191,7 @@ def change_display_picture():
             file_path = os.path.join(folder, filename)
 
             try:
-                file.save(path)
+                file.save(file_path)
             except Exception as e:
                 flash(f"An Error Occurred: {e}", "info")
             else:
