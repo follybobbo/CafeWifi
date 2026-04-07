@@ -194,6 +194,7 @@ def change_display_picture():
                 file.save(file_path)
             except Exception as e:
                 flash(f"An Error Occurred: {e}", "info")
+                return jsonify({"message":"Failed to save picture"}), 400
             else:
                 update_user_display_picture(current_user.id, path)
 
