@@ -164,7 +164,7 @@ def change_display_picture():
         # if request has no file: hence form field does not have name = file
         if "photo" not in request.files:
             flash("No file part In Form", "error")
-            return redirect(request.url)
+            return redirect(url_for("protected.dashboard"))
 
         file = request.files.get("photo")
         if file.filename == "":
