@@ -21,46 +21,24 @@
     <div>{{user_data.get("email")}}</div>
 
     <div>PROFILE SETTINGS</div>
-    <div id="dashboard-table">
-        <table>
-              <tr>
-                <td>
-                    {{form.photo.label}}
-                </td>
-                <td>
-                    <form id="update-picture-form" action="{{url_for('ajax.change_display_picture')}}" method="POST" enctype="multipart/form-data">
-                        <div>
-                           <span>{{form.photo()}}</span>
-                            <button id="submit-profile-picture" type="submit">update profile picture</button>
-                        </div>
-                    </form>
-                </td>
-              </tr>
-
-             <tr>
-                <td>
-                    {{form.name.label()}}
-                </td>
-                <td>
-                   {{form.name()}}
-                </td>
-              </tr>
-
-             <tr>
-                <td>
-                    {{form.surname.label()}}
-                </td>
-                <td>
-                   {{form.surname()}}
-                </td>
-              </tr>
-              <tr id="update-btn">
-                <td>
-                    <button>UPDATE</button>
-                </td>
-              </tr>
-        </table>
-    </div>
+<!--    <div id="dashboard-table">-->
+<!--        -->
+<!--    </div>-->
+    <form id="update-picture-form" action="{{url_for('ajax.change_display_picture')}}" method="POST" enctype="multipart/form-data">
+        <div>
+            <span>{{form.photo()}}</span>
+        </div>
+        <button style="margin: 10px auto;" id="submit-profile-picture" type="submit">update profile picture</button>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul id="flash-list" class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{category}}">{{message}}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </form>
 
     <div class="dashboard-divs">
         <h2>SUGGEST VENUES</h2>
