@@ -188,8 +188,7 @@ def change_display_picture():
 
             #store file in users folder
             filename = secure_filename(file.filename)
-            path = os.path.join(folder, filename)
-
+            file_path = os.path.join(folder, filename)
 
             try:
                 file.save(path)
