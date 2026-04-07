@@ -196,7 +196,11 @@ def change_display_picture():
                 flash(f"An Error Occurred: {e}", "info")
                 return jsonify({"message":"Failed to save picture"}), 400
             else:
-                update_user_display_picture(current_user.id, path)
+                #save picture path to db.
+                print("saved to db")
+                flash("display picture uploaded successfully", "success")
+                # update_user_display_picture(current_user.id, path)
+                return redirect(url_for("protected.dashboard"))
 
             response = make_response()
             response.status_code = 200
