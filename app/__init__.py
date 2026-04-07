@@ -22,6 +22,10 @@ def create_flask_app():
 
     #initialise db extension
     db.init_app(app)
+
+    #create Flask-Migrate instance
+    migrate = Migrate(app, db)
+
     # initialise cache extension
     cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
     # initialise Limiter
