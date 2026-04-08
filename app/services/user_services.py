@@ -36,6 +36,7 @@ def create_user_data_for_dashboard(the_current_user):
         "first_name": the_current_user.name,
         "surname": the_current_user.surname,
         "email": the_current_user.email,
+        "picture_url": the_current_user.profile_picture_url
     }
 
     return user_data
