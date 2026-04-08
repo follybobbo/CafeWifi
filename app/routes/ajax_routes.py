@@ -197,8 +197,13 @@ def change_display_picture():
                 flash(f"An Error Occurred: {e}", "info")
                 return jsonify({"message":"Failed to save picture"}), 400
             else:
-                #save picture path to db.
-                print("saved to db")
+
+
+                # relative_path_for_picture_storage = os.path.join("uploads", "users", f"{current_user.id}", f"{filename}")
+                relative_path_for_picture_storage = str(PurePosixPath("uploads") / "users" / f"{str(current_user.id)}" / f"{filename}")
+
+                # save picture path to db.
+                update_user_display_picture(current_user.id, relative_path_for_picture_storage)
                 flash("display picture uploaded successfully", "success")
                 # update_user_display_picture(current_user.id, path)
                 return redirect(url_for("protected.dashboard"))
