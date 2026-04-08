@@ -206,7 +206,6 @@ def change_display_picture():
                 # save picture path to db.
                 update_user_display_picture(current_user.id, relative_path_for_picture_storage)
                 flash("display picture uploaded successfully", "success")
-                # update_user_display_picture(current_user.id, path)
                 return redirect(url_for("protected.dashboard"))
 
 
