@@ -5,7 +5,7 @@
 <div class="dashboard-container">
 <!--  MAKE TABLE-->
 <!--    <div style="border-radius: 15px">-->
-    <img src="" onerror="this.src=`data:image/svg+xml;utf8,
+    <img src="{{ url_for( 'static', filename=user_data.get('picture_url') ) }}" onerror="this.src=`data:image/svg+xml;utf8,
             <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
             <rect width='100' height='100' fill='%23e5e7eb'/>
             <circle cx='35' cy='35' r='10' fill='%239ca3af'/>
