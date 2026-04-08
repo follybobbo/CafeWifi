@@ -50,7 +50,7 @@ def update_user_email_verification_status(the_user, update_status: bool):
 def update_user_display_picture(user_id: int, picture_path: str):
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalar_one_or_none()
     if user:
-        user.profile_picture = picture_path
+        user.profile_picture_url = picture_path
         db.session.commit()
 
 
