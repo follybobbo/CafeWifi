@@ -79,6 +79,10 @@
             </div>
         </footer>
     </div>
+  <script>
+      let yearSpan = document.querySelector("#year");
+      yearSpan.innerText = new Date().getFullYear();
+  </script>
   {% endblock %}
 
   {% block script %}{% endblock %}
